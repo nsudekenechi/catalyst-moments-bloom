@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 
@@ -9,10 +8,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <Link to="/" className="flex items-center space-x-2">
-              <div className="bg-primary/20 w-8 h-8 rounded-full flex items-center justify-center">
-                <div className="bg-primary w-4 h-4 rounded-full"></div>
-              </div>
-              <span className="font-bold text-lg">Catalyst<span className="text-primary">Mom</span></span>
+              <img 
+                src="/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png" 
+                alt="Catalyst Mom Logo" 
+                className="h-8 w-8"
+              />
+              <span className="font-bold text-lg">Catalyst<span className="text-secondary-foreground">Mom</span></span>
             </Link>
             <p className="mt-2 text-sm text-muted-foreground">
               Empowering women through every stage of motherhood with fitness, nutrition, and community.
@@ -55,10 +56,10 @@ const Footer = () => {
             © {new Date().getFullYear()} CatalystMom. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            <Link to="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+            <Link to="/privacy" className="text-xs text-muted-foreground hover:text-secondary-foreground transition-colors">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+            <Link to="/terms" className="text-xs text-muted-foreground hover:text-secondary-foreground transition-colors">
               Terms of Service
             </Link>
             <span className="text-xs flex items-center text-muted-foreground">

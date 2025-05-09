@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -59,6 +58,8 @@ export default {
 					peach: '#FDE1D3',
 					blue: '#D3E4FD',
 					lightPurple: '#E5DEFF',
+					copper: '#C17F45', // Adding the copper color from your logo
+					brown: '#5D2906',  // Adding a dark brown from your logo
 				}
 			},
 			borderRadius: {

@@ -23,10 +23,12 @@ const Navbar = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2" onClick={closeMenu}>
-          <div className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center">
-            <div className="bg-primary w-6 h-6 rounded-full animate-pulse-soft"></div>
-          </div>
-          <span className="font-bold text-xl">Catalyst<span className="text-primary">Mom</span></span>
+          <img 
+            src="/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png" 
+            alt="Catalyst Mom Logo" 
+            className="h-10 w-10"
+          />
+          <span className="font-bold text-xl">Catalyst<span className="text-secondary-foreground">Mom</span></span>
         </Link>
 
         {/* Desktop Navigation */}
