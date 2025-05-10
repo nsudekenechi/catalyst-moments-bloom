@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -42,9 +43,12 @@ const Index = () => {
                 <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden max-w-sm md:max-w-md mx-auto">
                   <AspectRatio ratio={4/5} className="bg-muted">
                     <img 
-                      src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
+                      src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7" 
                       alt="Mom with baby using laptop" 
                       className="object-cover h-full w-full"
+                      onError={(e) => {
+                        e.currentTarget.src = "/placeholder.svg";
+                      }}
                     />
                   </AspectRatio>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
@@ -171,18 +175,24 @@ const Index = () => {
                   <div className="rounded-xl overflow-hidden shadow-soft">
                     <AspectRatio ratio={1/1}>
                       <img 
-                        src="https://images.unsplash.com/photo-1518310952931-b1de897abd5e"
+                        src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
                         alt="Mother and baby"
                         className="object-cover h-full w-full"
+                        onError={(e) => {
+                          e.currentTarget.src = "/placeholder.svg";
+                        }}
                       />
                     </AspectRatio>
                   </div>
                   <div className="rounded-xl overflow-hidden shadow-soft translate-x-6">
                     <AspectRatio ratio={4/5}>
                       <img 
-                        src="https://images.unsplash.com/photo-1561989776-9d6fb5f782ed"
+                        src="https://images.unsplash.com/photo-1518770660439-4636190af475"
                         alt="Mother doing yoga"
                         className="object-cover h-full w-full"
+                        onError={(e) => {
+                          e.currentTarget.src = "/placeholder.svg";
+                        }}
                       />
                     </AspectRatio>
                   </div>
@@ -191,18 +201,24 @@ const Index = () => {
                   <div className="rounded-xl overflow-hidden shadow-soft">
                     <AspectRatio ratio={4/5}>
                       <img 
-                        src="https://images.unsplash.com/photo-1567427359966-87be53a3f3db"
+                        src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
                         alt="Pregnant woman stretching"
                         className="object-cover h-full w-full"
+                        onError={(e) => {
+                          e.currentTarget.src = "/placeholder.svg";
+                        }}
                       />
                     </AspectRatio>
                   </div>
                   <div className="rounded-xl overflow-hidden shadow-soft">
                     <AspectRatio ratio={1/1}>
                       <img 
-                        src="https://images.unsplash.com/photo-1562538930-05d47b114bab"
+                        src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
                         alt="Family outdoors"
                         className="object-cover h-full w-full"
+                        onError={(e) => {
+                          e.currentTarget.src = "/placeholder.svg";
+                        }}
                       />
                     </AspectRatio>
                   </div>
@@ -320,7 +336,14 @@ const TestimonialCard = ({
         <p className="mb-6 text-foreground/90 italic leading-relaxed">{`"${quote}"`}</p>
         <div className="flex items-center">
           <div className="h-12 w-12 rounded-full overflow-hidden mr-4 border-2 border-catalyst-copper/20">
-            <img src={image} alt={name} className="h-full w-full object-cover" />
+            <img 
+              src={image} 
+              alt={name} 
+              className="h-full w-full object-cover" 
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder.svg";
+              }}
+            />
           </div>
           <div>
             <p className="font-semibold">{name}</p>
