@@ -43,7 +43,7 @@ const Index = () => {
                 <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden max-w-sm md:max-w-md mx-auto">
                   <AspectRatio ratio={4/5} className="bg-muted">
                     <img 
-                      src="https://images.unsplash.com/photo-1533640924469-f04e06f8898d" 
+                      src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" 
                       alt="Mom with baby using laptop" 
                       className="object-cover h-full w-full"
                       onError={(e) => {
@@ -175,7 +175,7 @@ const Index = () => {
                   <div className="rounded-xl overflow-hidden shadow-soft">
                     <AspectRatio ratio={1/1}>
                       <img 
-                        src="https://images.unsplash.com/photo-1492725764893-90b379c2b6e7" 
+                        src="https://images.unsplash.com/photo-1609220136736-443140cffec6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" 
                         alt="Mother and baby"
                         className="object-cover h-full w-full"
                         onError={(e) => {
@@ -187,7 +187,7 @@ const Index = () => {
                   <div className="rounded-xl overflow-hidden shadow-soft translate-x-6">
                     <AspectRatio ratio={4/5}>
                       <img 
-                        src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b"
+                        src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
                         alt="Mother doing yoga"
                         className="object-cover h-full w-full"
                         onError={(e) => {
@@ -201,7 +201,7 @@ const Index = () => {
                   <div className="rounded-xl overflow-hidden shadow-soft">
                     <AspectRatio ratio={4/5}>
                       <img 
-                        src="https://images.unsplash.com/photo-1544650039-42d386480625"
+                        src="https://images.unsplash.com/photo-1530530824905-661c730c77e0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHByZWduYW50JTIwc3RyZXRjaGluZ3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60"
                         alt="Pregnant woman stretching"
                         className="object-cover h-full w-full"
                         onError={(e) => {
@@ -213,7 +213,7 @@ const Index = () => {
                   <div className="rounded-xl overflow-hidden shadow-soft">
                     <AspectRatio ratio={1/1}>
                       <img 
-                        src="https://images.unsplash.com/photo-1607962837359-5e7e89f86776"
+                        src="https://images.unsplash.com/photo-1591343395082-e120087004b4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80"
                         alt="Family outdoors"
                         className="object-cover h-full w-full"
                         onError={(e) => {
@@ -247,20 +247,20 @@ const Index = () => {
               quote="Finding time for fitness seemed impossible until I discovered Catalyst Mom. The 10-minute workouts fit perfectly into my chaotic schedule."
               name="Sarah T."
               role="Mom of 2, Postpartum"
-              image="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91"
+              image="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=988&q=80"
             />
             <TestimonialCard
               quote="The pregnancy workouts helped me stay active safely. My delivery recovery was so much faster than with my first baby."
               name="Michelle K."
               role="Mom of 1, Pregnant"
-              image="https://images.unsplash.com/photo-1438761681033-6461ffad8d80"
+              image="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1364&q=80"
               featured
             />
             <TestimonialCard
               quote="The community aspect of Catalyst Mom has been my lifeline. It's like having a village of supportive moms in my pocket."
               name="Jessica M."
               role="Mom of 3, Toddler Phase"
-              image="https://images.unsplash.com/photo-1544005313-94ddf0286df2"
+              image="https://images.unsplash.com/photo-1499557354967-2b2d8910bcca?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
             />
           </div>
         </div>
