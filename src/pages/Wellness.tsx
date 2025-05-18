@@ -1,4 +1,3 @@
-
 import PageLayout from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,6 +15,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
 
 const Wellness = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -31,7 +31,8 @@ const Wellness = () => {
             </p>
           </div>
           
-          <div className="mt-4 md:mt-0">
+          <div className="mt-4 md:mt-0 flex items-center gap-3">
+            <WellnessCoachButton />
             <Button>
               <PenLine className="mr-2 h-4 w-4" /> Log Today
             </Button>
@@ -234,10 +235,11 @@ const Wellness = () => {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" size="sm" className="w-full" asChild>
+              <CardFooter className="flex justify-between items-center">
+                <Button variant="outline" size="sm" className="flex-1 mr-2" asChild>
                   <Link to="/wellness/self-care">View More Ideas</Link>
                 </Button>
+                <WellnessCoachButton variant="secondary" size="sm" showLabel={false} />
               </CardFooter>
             </Card>
           </div>

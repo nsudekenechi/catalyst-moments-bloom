@@ -1,4 +1,3 @@
-
 import PageLayout from '@/components/layout/PageLayout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Search, Clock, Dumbbell, Filter, Baby, Heart, Activity } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
 
 interface WorkoutCardProps {
   title: string;
@@ -32,6 +32,7 @@ const Workouts = () => {
           </div>
           
           <div className="flex items-center space-x-2">
+            <WellnessCoachButton variant="secondary" size="sm" showLabel={false} className="mr-1" />
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input 

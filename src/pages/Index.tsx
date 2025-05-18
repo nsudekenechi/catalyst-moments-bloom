@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +8,7 @@ import { Activity, Baby, Calendar, Heart, Users, ArrowRight, Play, CheckCircle }
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import VideoModal from "@/components/ui/video-modal";
+import WellnessCoachButton from "@/components/wellness-coach/WellnessCoachButton";
 
 const Index = () => {
   const [videoModalOpen, setVideoModalOpen] = useState(false);
@@ -37,7 +37,7 @@ const Index = () => {
               <p className="text-lg mb-8 text-muted-foreground max-w-lg leading-relaxed">
                 Catalyst Mom empowers you with personalized fitness, nutrition, self-care, and community support — designed for every stage of motherhood.
               </p>
-              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-6">
                 <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
                   <Link to="/dashboard">Get Started</Link>
                 </Button>
@@ -47,6 +47,7 @@ const Index = () => {
                   </Link>
                 </Button>
               </div>
+              <WellnessCoachButton variant="secondary" size="lg" className="mt-2" />
             </div>
             <div className="md:w-1/2 flex justify-center">
               <div className="relative">
@@ -128,11 +129,7 @@ const Index = () => {
               <p className="text-muted-foreground mb-6">
                 Nutrition guidance, expert advice, personalized plans, and tools that grow with you.
               </p>
-              <Button variant="ghost" asChild className="mt-auto text-catalyst-copper hover:text-catalyst-copper/90 hover:bg-catalyst-copper/5">
-                <Link to="/features" className="flex items-center">
-                  Explore All Features <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
+              <WellnessCoachButton variant="ghost" className="mt-auto text-catalyst-copper hover:text-catalyst-copper/90 hover:bg-catalyst-copper/5" />
             </div>
           </div>
         </div>
@@ -292,7 +289,7 @@ const Index = () => {
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Join thousands of moms who are prioritizing their well-being and finding balance in motherhood.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
             <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
               <Link to="/dashboard">Get Started Now</Link>
             </Button>
@@ -306,6 +303,7 @@ const Index = () => {
               Watch Demo
             </Button>
           </div>
+          <WellnessCoachButton variant="secondary" size="lg" className="mt-3" />
         </div>
       </section>
 
