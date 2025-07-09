@@ -8,6 +8,8 @@ import { Search, Clock, Dumbbell, Filter, Baby, Heart, Activity } from 'lucide-r
 import { Link } from 'react-router-dom';
 import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
 import GlowAndGoPrenatalCard from '@/components/workouts/GlowAndGoPrenatalCard';
+import PostpartumRecoveryCard from '@/components/workouts/PostpartumRecoveryCard';
+import EnergyStrengthCard from '@/components/workouts/EnergyStrengthCard';
 
 interface WorkoutCardProps {
   title: string;
@@ -156,93 +158,9 @@ const Workouts = () => {
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-6">Workout Programs</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Featured Glow & Go Prenatal Program */}
             <GlowAndGoPrenatalCard />
-            <Card className="overflow-hidden">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-                <img 
-                  src="https://images.unsplash.com/photo-1518495973542-4542c06a5843" 
-                  alt="Postpartum Recovery Program" 
-                  className="w-full h-48 object-cover"
-                />
-                <div className="absolute bottom-4 left-4 z-20">
-                  <Badge className="bg-primary hover:bg-primary">4 Weeks</Badge>
-                </div>
-              </div>
-              <CardHeader>
-                <CardTitle>Postpartum Recovery Program</CardTitle>
-                <CardDescription>
-                  A structured 4-week program to safely rebuild strength after birth
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="flex items-center">
-                    <Dumbbell className="h-4 w-4 mr-1 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">Beginner</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">15-20 min/day</span>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="flex -space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs">+</div>
-                    <div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center text-xs">+</div>
-                    <div className="w-6 h-6 rounded-full bg-primary/40 flex items-center justify-center text-xs">+</div>
-                  </div>
-                  <span className="text-xs text-muted-foreground">245 moms enrolled</span>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full">Start Program</Button>
-              </CardFooter>
-            </Card>
-            
-            <Card className="overflow-hidden">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-                <img 
-                  src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7" 
-                  alt="Energy & Strength" 
-                  className="w-full h-48 object-cover"
-                />
-                <div className="absolute bottom-4 left-4 z-20">
-                  <Badge className="bg-primary hover:bg-primary">6 Weeks</Badge>
-                </div>
-              </div>
-              <CardHeader>
-                <CardTitle>Energy & Strength for Moms</CardTitle>
-                <CardDescription>
-                  Build sustainable energy and functional strength for mom life
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="flex items-center">
-                    <Dumbbell className="h-4 w-4 mr-1 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">Intermediate</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">20-30 min/day</span>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="flex -space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs">+</div>
-                    <div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center text-xs">+</div>
-                    <div className="w-6 h-6 rounded-full bg-primary/40 flex items-center justify-center text-xs">+</div>
-                  </div>
-                  <span className="text-xs text-muted-foreground">189 moms enrolled</span>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full">Start Program</Button>
-              </CardFooter>
-            </Card>
+            <PostpartumRecoveryCard />
+            <EnergyStrengthCard />
           </div>
         </div>
       </div>
