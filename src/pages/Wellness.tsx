@@ -16,9 +16,21 @@ import { Calendar } from "@/components/ui/calendar";
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
+import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
+import { SleepTracker } from '@/components/wellness/SleepTracker';
+import { SelfCareTracker } from '@/components/wellness/SelfCareTracker';
+import { useWellnessData } from '@/hooks/useWellnessData';
 
 const Wellness = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const { wellnessEntries, wellnessScore, loading } = useWellnessData();
+  
+  // Get latest wellness data for display
+  const latestEntry = wellnessEntries[0];
+  const moodDisplay = latestEntry ? `${latestEntry.mood_score}/10` : "Not tracked";
+  const sleepDisplay = latestEntry ? `${latestEntry.sleep_hours}h` : "Not tracked";
+  const selfCareDisplay = latestEntry ? (latestEntry.self_care_completed ? "✓ Done" : "Pending") : "Not tracked";
+  const hydrationDisplay = latestEntry ? `${latestEntry.hydration_glasses}/8` : "0/8";
   
   return (
     <PageLayout>
@@ -43,29 +55,29 @@ const Wellness = () => {
           <WellnessQuickCard
             title="Mood"
             icon={<SmilePlus className="h-5 w-5 text-primary" />}
-            value="Good"
-            trend="Stable this week"
+            value={moodDisplay}
+            trend={wellnessScore ? `Wellness Score: ${wellnessScore}%` : "Complete mood check-in"}
             color="bg-yellow-100"
           />
           <WellnessQuickCard
             title="Sleep"
             icon={<MoonStar className="h-5 w-5 text-primary" />}
-            value="6.2h"
-            trend="↑ 0.8h from last week"
+            value={sleepDisplay}
+            trend={latestEntry ? "Last night's sleep" : "Log your sleep"}
             color="bg-blue-100"
           />
           <WellnessQuickCard
             title="Self-Care"
             icon={<Heart className="h-5 w-5 text-primary" />}
-            value="2/3"
-            trend="Daily goal progress"
+            value={selfCareDisplay}
+            trend="Daily self-care goal"
             color="bg-red-100"
           />
           <WellnessQuickCard
             title="Hydration"
             icon={<Utensils className="h-5 w-5 text-primary" />}
-            value="4/8"
-            trend="Glasses of water"
+            value={hydrationDisplay}
+            trend="Glasses of water today"
             color="bg-blue-100"
           />
         </div>
@@ -143,13 +155,33 @@ const Wellness = () => {
               </TabsContent>
               
               <TabsContent value="mood">
-                <div className="text-center py-8 border rounded-lg bg-muted/30">
-                  <SmilePlus className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                  <h3 className="font-medium mb-1">Mood Tracking</h3>
-                  <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                    Track your daily mood to identify patterns and improve your emotional wellbeing.
-                  </p>
-                  <Button>Track Today's Mood</Button>
+                <div className="space-y-6">
+                  <div className="text-center py-8 border rounded-lg bg-muted/30">
+                    <SmilePlus className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                    <h3 className="font-medium mb-1">Mood Tracking</h3>
+                    <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                      Track your daily mood to identify patterns and improve your emotional wellbeing.
+                    </p>
+                    <MoodCheckIn />
+                  </div>
+                  
+                  {wellnessEntries.length > 0 && (
+                    <div className="space-y-4">
+                      <h3 className="font-semibold">Recent Mood Entries</h3>
+                      {wellnessEntries.slice(0, 3).map((entry) => (
+                        <div key={entry.id} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div>
+                            <p className="font-medium">
+                              Mood: {entry.mood_score}/10 | Energy: {entry.energy_level}/10 | Stress: {entry.stress_level}/10
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {new Date(entry.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </TabsContent>
               
@@ -160,7 +192,7 @@ const Wellness = () => {
                   <p className="text-muted-foreground mb-4 max-w-md mx-auto">
                     Monitor your sleep patterns to improve rest quality and energy levels.
                   </p>
-                  <Button>Log Last Night's Sleep</Button>
+                  <SleepTracker />
                 </div>
               </TabsContent>
               
@@ -171,7 +203,7 @@ const Wellness = () => {
                   <p className="text-muted-foreground mb-4 max-w-md mx-auto">
                     Track and schedule regular self-care activities to maintain your wellbeing.
                   </p>
-                  <Button>Add Self-Care Activity</Button>
+                  <SelfCareTracker />
                 </div>
               </TabsContent>
             </Tabs>
