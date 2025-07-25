@@ -2,7 +2,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useToast } from "@/hooks/use-toast";
 
-export type MotherhoodStage = "pregnant" | "postpartum" | "toddler" | "none";
+export type MotherhoodStage = "ttc" | "pregnant" | "postpartum" | "toddler" | "none";
 
 export interface UserProfile {
   id: string;
