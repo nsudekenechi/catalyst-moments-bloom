@@ -10,6 +10,8 @@ import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton
 import GlowAndGoPrenatalCard from '@/components/workouts/GlowAndGoPrenatalCard';
 import PostpartumRecoveryCard from '@/components/workouts/PostpartumRecoveryCard';
 import EnergyStrengthCard from '@/components/workouts/EnergyStrengthCard';
+import { TTCWorkoutCard } from '@/components/ttc/TTCWorkoutCard';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface WorkoutCardProps {
   title: string;
@@ -23,6 +25,9 @@ interface WorkoutCardProps {
 }
 
 const Workouts = () => {
+  const { user } = useAuth();
+  const isTTC = user?.motherhoodStage === 'ttc';
+  
   return (
     <PageLayout>
       <div className="container px-4 mx-auto">
@@ -30,7 +35,12 @@ const Workouts = () => {
           <div>
             <h1 className="text-3xl font-bold mb-2">Workouts</h1>
             <p className="text-muted-foreground mb-4 md:mb-0">
-              Exercise designed for your current motherhood stage: Postpartum (8 weeks)
+              Exercise designed for your current motherhood stage: {
+                isTTC ? 'Trying to Conceive' :
+                user?.motherhoodStage === 'pregnant' ? 'Pregnant' :
+                user?.motherhoodStage === 'postpartum' ? 'Postpartum' :
+                user?.motherhoodStage === 'toddler' ? 'Toddler Mom' : 'Postpartum (8 weeks)'
+              }
             </p>
           </div>
           
@@ -53,59 +63,97 @@ const Workouts = () => {
         <Tabs defaultValue="recommended" className="mb-8">
           <TabsList>
             <TabsTrigger value="recommended">Recommended</TabsTrigger>
-            <TabsTrigger value="postpartum">Postpartum</TabsTrigger>
+            <TabsTrigger value={isTTC ? "fertility" : "postpartum"}>
+              {isTTC ? "Fertility" : "Postpartum"}
+            </TabsTrigger>
             <TabsTrigger value="quickWorkouts">Quick Workouts</TabsTrigger>
             <TabsTrigger value="favorites">Favorites</TabsTrigger>
           </TabsList>
           
           <TabsContent value="recommended" className="mt-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <WorkoutCard 
-                title="Gentle Postpartum Core Recovery"
-                description="Safe, effective exercises to rebuild core strength after childbirth"
-                duration="15 min"
-                level="Beginner"
-                image="https://images.unsplash.com/photo-1518495973542-4542c06a5843"
-                category="Postpartum"
-                tags={["Core", "Recovery"]}
-                featured={true}
-              />
-              <WorkoutCard 
-                title="Energy Boost: Quick Standing Workout"
-                description="No equipment needed - perfect for when baby is napping"
-                duration="10 min"
-                level="Beginner"
-                image="https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
-                category="Quick"
-                tags={["Energy", "No Equipment"]}
-              />
-              <WorkoutCard 
-                title="Diastasis Recti Healing Sequence"
-                description="Targeted moves to help heal abdominal separation"
-                duration="20 min"
-                level="Beginner"
-                image="https://images.unsplash.com/photo-1521322800607-8c38375eef04"
-                category="Postpartum"
-                tags={["Recovery", "Core"]}
-              />
-              <WorkoutCard 
-                title="Pelvic Floor Restoration"
-                description="Strengthen your pelvic floor with these gentle exercises"
-                duration="15 min"
-                level="Beginner"
-                image="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07"
-                category="Postpartum"
-                tags={["Recovery", "Strength"]}
-              />
-              <WorkoutCard 
-                title="Baby & Me: Bonding Workout"
-                description="Include your baby in this gentle workout routine"
-                duration="20 min"
-                level="Beginner"
-                image="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
-                category="Baby & Me"
-                tags={["Bonding", "Gentle"]}
-              />
+              {isTTC ? (
+                <>
+                  <TTCWorkoutCard />
+                  <WorkoutCard 
+                    title="Fertility-Boosting Strength Training"
+                    description="Gentle strength exercises to support reproductive health"
+                    duration="25 min"
+                    level="Beginner"
+                    image="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b"
+                    category="TTC"
+                    tags={["Strength", "Fertility"]}
+                    featured={true}
+                  />
+                  <WorkoutCard 
+                    title="Stress-Relief Walking Meditation"
+                    description="Mindful movement to reduce stress and promote conception"
+                    duration="15 min"
+                    level="All Levels"
+                    image="https://images.unsplash.com/photo-1506905925346-21bda4d32df4"
+                    category="TTC"
+                    tags={["Mindfulness", "Stress Relief"]}
+                  />
+                  <WorkoutCard 
+                    title="Hip-Opening Flow"
+                    description="Gentle yoga to improve circulation and flexibility"
+                    duration="20 min"
+                    level="Beginner"
+                    image="https://images.unsplash.com/photo-1540206395-68808572332f"
+                    category="TTC"
+                    tags={["Yoga", "Flexibility"]}
+                  />
+                </>
+              ) : (
+                <>
+                  <WorkoutCard 
+                    title="Gentle Postpartum Core Recovery"
+                    description="Safe, effective exercises to rebuild core strength after childbirth"
+                    duration="15 min"
+                    level="Beginner"
+                    image="https://images.unsplash.com/photo-1518495973542-4542c06a5843"
+                    category="Postpartum"
+                    tags={["Core", "Recovery"]}
+                    featured={true}
+                  />
+                  <WorkoutCard 
+                    title="Energy Boost: Quick Standing Workout"
+                    description="No equipment needed - perfect for when baby is napping"
+                    duration="10 min"
+                    level="Beginner"
+                    image="https://images.unsplash.com/photo-1649972904349-6e44c42644a7"
+                    category="Quick"
+                    tags={["Energy", "No Equipment"]}
+                  />
+                  <WorkoutCard 
+                    title="Diastasis Recti Healing Sequence"
+                    description="Targeted moves to help heal abdominal separation"
+                    duration="20 min"
+                    level="Beginner"
+                    image="https://images.unsplash.com/photo-1521322800607-8c38375eef04"
+                    category="Postpartum"
+                    tags={["Recovery", "Core"]}
+                  />
+                  <WorkoutCard 
+                    title="Pelvic Floor Restoration"
+                    description="Strengthen your pelvic floor with these gentle exercises"
+                    duration="15 min"
+                    level="Beginner"
+                    image="https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07"
+                    category="Postpartum"
+                    tags={["Recovery", "Strength"]}
+                  />
+                  <WorkoutCard 
+                    title="Baby & Me: Bonding Workout"
+                    description="Include your baby in this gentle workout routine"
+                    duration="20 min"
+                    level="Beginner"
+                    image="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+                    category="Baby & Me"
+                    tags={["Bonding", "Gentle"]}
+                  />
+                </>
+              )}
               <Card className="border border-dashed flex flex-col items-center justify-center p-6 h-full">
                 <div className="text-center">
                   <div className="bg-primary/10 rounded-full p-3 mx-auto mb-4 w-fit">
@@ -113,7 +161,7 @@ const Workouts = () => {
                   </div>
                   <h3 className="font-medium mb-2">Discover More Workouts</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    We have 50+ workouts designed for every stage of motherhood
+                    {isTTC ? 'We have 30+ fertility-focused workouts designed to support your TTC journey' : 'We have 50+ workouts designed for every stage of motherhood'}
                   </p>
                   <Button variant="outline">View Library</Button>
                 </div>
@@ -121,14 +169,17 @@ const Workouts = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="postpartum">
+          <TabsContent value={isTTC ? "fertility" : "postpartum"}>
             <div className="text-center py-8 border rounded-lg bg-muted/30">
               <Baby className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-              <h3 className="font-medium mb-1">Postpartum Collection</h3>
+              <h3 className="font-medium mb-1">{isTTC ? 'Fertility Collection' : 'Postpartum Collection'}</h3>
               <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                Specialized workouts for your postpartum recovery will appear here as you continue your journey.
+                {isTTC ? 
+                  'Specialized workouts to support fertility and reproductive health will appear here.' :
+                  'Specialized workouts for your postpartum recovery will appear here as you continue your journey.'
+                }
               </p>
-              <Button>Explore Postpartum Workouts</Button>
+              <Button>{isTTC ? 'Explore Fertility Workouts' : 'Explore Postpartum Workouts'}</Button>
             </div>
           </TabsContent>
           

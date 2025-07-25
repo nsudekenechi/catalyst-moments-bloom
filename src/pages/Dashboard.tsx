@@ -11,6 +11,10 @@ import { useWellnessData } from '@/hooks/useWellnessData';
 import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
 import { NutritionSection } from '@/components/dashboard/NutritionSection';
 import { WeeklyProgress } from '@/components/dashboard/WeeklyProgress';
+import { TTCTracker } from '@/components/ttc/TTCTracker';
+import { TTCNutritionSection } from '@/components/ttc/TTCNutritionSection';
+import { TTCCommunitySection } from '@/components/ttc/TTCCommunitySection';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface StatsCardProps {
   title: string;
@@ -23,6 +27,9 @@ interface StatsCardProps {
 const Dashboard = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
+  const { user } = useAuth();
+  
+  const isTTC = user?.motherhoodStage === 'ttc';
   
   // Auto-refresh data every 30 seconds for real-time updates
   useEffect(() => {
@@ -35,13 +42,19 @@ const Dashboard = () => {
       <div className="container px-4 mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold mb-1">Welcome back, Ashley!</h1>
-            <p className="text-muted-foreground">Here's your wellness overview for today</p>
+            <h1 className="text-3xl font-bold mb-1">Welcome back, {user?.name || 'Ashley'}!</h1>
+            <p className="text-muted-foreground">
+              {isTTC ? 'Your TTC journey tracker and support center' : 'Here\'s your wellness overview for today'}
+            </p>
           </div>
           <div className="mt-4 md:mt-0 flex items-center space-x-2">
             <span className="text-sm text-muted-foreground">Motherhood stage:</span>
             <Button variant="outline" size="sm" className="gap-2">
-              <Baby className="h-4 w-4" /> Postpartum (8 weeks)
+              <Baby className="h-4 w-4" /> 
+              {isTTC ? 'Trying to Conceive' : 
+               user?.motherhoodStage === 'pregnant' ? 'Pregnant' :
+               user?.motherhoodStage === 'postpartum' ? 'Postpartum' :
+               user?.motherhoodStage === 'toddler' ? 'Toddler Mom' : 'Postpartum (8 weeks)'}
             </Button>
           </div>
         </div>
@@ -83,21 +96,21 @@ const Dashboard = () => {
               
               <TabsContent value="today">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-                  <WeeklyProgress />
+                  {isTTC ? <TTCTracker /> : <WeeklyProgress />}
                   <MoodCheckIn />
                 </div>
                 <div className="space-y-4">
                   <PlanCard
-                    title="10-Minute Core Workout"
+                    title={isTTC ? "Fertility Flow Yoga" : "10-Minute Core Workout"}
                     category="Workout"
-                    description="Gentle core strengthening for postpartum recovery"
+                    description={isTTC ? "Gentle yoga to support reproductive health and reduce stress" : "Gentle core strengthening for postpartum recovery"}
                     completed={false}
                     icon={<Activity className="h-5 w-5" />}
-                    time="10 mins"
-                    link="/workouts/postpartum-core"
+                    time={isTTC ? "20 mins" : "10 mins"}
+                    link={isTTC ? "/workouts/fertility-flow-yoga" : "/workouts/postpartum-core"}
                     buttonText="Start Workout"
                     progress={0}
-                    tags={["Postpartum", "Core", "Beginner"]}
+                    tags={isTTC ? ["TTC", "Fertility", "Gentle"] : ["Postpartum", "Core", "Beginner"]}
                   />
                 </div>
               </TabsContent>
@@ -133,7 +146,7 @@ const Dashboard = () => {
           </div>
           
           <div className="space-y-6">
-            <NutritionSection />
+            {isTTC ? <TTCNutritionSection /> : <NutritionSection />}
             
             <Card>
               <CardHeader>
@@ -157,39 +170,43 @@ const Dashboard = () => {
               </CardFooter>
             </Card>
             
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Users className="mr-2 h-5 w-5" />
-                  Community Updates
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="rounded-full bg-primary/20 h-10 w-10 flex items-center justify-center flex-shrink-0">
-                    <User className="h-5 w-5 text-primary" />
+{isTTC ? (
+              <TTCCommunitySection />
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Users className="mr-2 h-5 w-5" />
+                    Community Updates
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="rounded-full bg-primary/20 h-10 w-10 flex items-center justify-center flex-shrink-0">
+                      <User className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm"><span className="font-medium">Jessica</span> completed the 30-day Challenge</p>
+                      <p className="text-xs text-muted-foreground">2 hours ago</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm"><span className="font-medium">Jessica</span> completed the 30-day Challenge</p>
-                    <p className="text-xs text-muted-foreground">2 hours ago</p>
+                  <div className="flex items-start space-x-3">
+                    <div className="rounded-full bg-primary/20 h-10 w-10 flex items-center justify-center flex-shrink-0">
+                      <User className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm"><span className="font-medium">Maria</span> shared a new postpartum recipe</p>
+                      <p className="text-xs text-muted-foreground">Yesterday</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="rounded-full bg-primary/20 h-10 w-10 flex items-center justify-center flex-shrink-0">
-                    <User className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm"><span className="font-medium">Maria</span> shared a new postpartum recipe</p>
-                    <p className="text-xs text-muted-foreground">Yesterday</p>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" size="sm" className="w-full" asChild>
-                  <Link to="/community">View Community</Link>
-                </Button>
-              </CardFooter>
-            </Card>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="outline" size="sm" className="w-full" asChild>
+                    <Link to="/community">View Community</Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+            )}
           </div>
         </div>
       </div>

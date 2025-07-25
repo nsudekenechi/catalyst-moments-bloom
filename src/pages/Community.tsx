@@ -9,9 +9,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Heart, MessageCircle, Share2, Users, ThumbsUp, Calendar, Search } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Community = () => {
   const [activeFilter, setActiveFilter] = useState('all');
+  const { user } = useAuth();
+  
+  const isTTC = user?.motherhoodStage === 'ttc';
   
   return (
     <PageLayout>
@@ -60,7 +64,10 @@ const Community = () => {
                 </Card>
                 
                 <div className="flex space-x-2 overflow-x-auto pb-2">
-                  {['all', 'postpartum', 'toddlers', 'sleep', 'fitness', 'nutrition'].map((filter) => (
+                  {(isTTC ? 
+                    ['all', 'ttc', 'fertility', 'nutrition', 'stress-relief', 'cycle-tracking'] :
+                    ['all', 'postpartum', 'toddlers', 'sleep', 'fitness', 'nutrition']
+                  ).map((filter) => (
                     <Button 
                       key={filter} 
                       variant={activeFilter === filter ? "default" : "outline"} 
@@ -68,42 +75,80 @@ const Community = () => {
                       onClick={() => setActiveFilter(filter)}
                       className="capitalize"
                     >
-                      {filter}
+                      {filter === 'ttc' ? 'TTC' : filter.replace('-', ' ')}
                     </Button>
                   ))}
                 </div>
                 
-                <CommunityPost 
-                  avatar="J"
-                  name="Jessica Miller"
-                  badge="Newborn Mom"
-                  time="2 hours ago"
-                  content="Just completed my first postpartum workout! It was only 10 minutes but I feel so accomplished. Any other moms finding it hard to get back into fitness with a newborn?"
-                  likes={24}
-                  comments={8}
-                  tags={["Postpartum", "Fitness"]}
-                />
-                <CommunityPost 
-                  avatar="S"
-                  name="Sarah Thompson"
-                  badge="Toddler Mom"
-                  time="Yesterday"
-                  content="My toddler finally slept through the night after we tried the gentle sleep training method from the Wellness section! I've had my first full night's sleep in months. Has anyone else had success with this?"
-                  likes={42}
-                  comments={16}
-                  tags={["Sleep", "Toddler"]}
-                />
-                <CommunityPost 
-                  avatar="M"
-                  name="Michelle Kennedy"
-                  badge="Pregnancy"
-                  time="2 days ago"
-                  content="I've been doing the prenatal yoga sequence every morning and it's made such a difference with my back pain. Sharing a quick pic from today's session. Anyone else loving the prenatal workouts?"
-                  image="https://images.unsplash.com/photo-1518495973542-4542c06a5843"
-                  likes={38}
-                  comments={7}
-                  tags={["Pregnancy", "Yoga"]}
-                />
+{isTTC ? (
+                  <>
+                    <CommunityPost 
+                      avatar="ER"
+                      name="Emma Rodriguez"
+                      badge="TTC Journey"
+                      time="1 hour ago"
+                      content="Month 8 TTC and feeling hopeful! Started the fertility yoga sequence this week and it's been amazing for managing stress. The breathing exercises really help during the two-week wait. Anyone else find mindfulness helpful during their TTC journey?"
+                      likes={18}
+                      comments={12}
+                      tags={["TTC", "Fertility Yoga", "Mindfulness"]}
+                    />
+                    <CommunityPost 
+                      avatar="LM"
+                      name="Lisa Martinez"
+                      badge="TTC Community"
+                      time="4 hours ago"
+                      content="Just wanted to share some love with this amazing community! Using the cycle tracker has helped me understand my body so much better. Knowledge is power! Sending baby dust to everyone on this journey 💕✨"
+                      likes={34}
+                      comments={15}
+                      tags={["TTC Support", "Cycle Tracking"]}
+                    />
+                    <CommunityPost 
+                      avatar="KC"
+                      name="Kimberly Chen"
+                      badge="TTC Nutritionist"
+                      time="Yesterday"
+                      content="Made the fertility smoothie from the nutrition section this morning - so delicious! The combination of spinach, berries, and walnuts is perfect. Here's my version with some extra chia seeds for omega-3s."
+                      image="https://images.unsplash.com/photo-1555939594-58d7cb561ad1"
+                      likes={42}
+                      comments={9}
+                      tags={["TTC Nutrition", "Fertility Foods"]}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <CommunityPost 
+                      avatar="J"
+                      name="Jessica Miller"
+                      badge="Newborn Mom"
+                      time="2 hours ago"
+                      content="Just completed my first postpartum workout! It was only 10 minutes but I feel so accomplished. Any other moms finding it hard to get back into fitness with a newborn?"
+                      likes={24}
+                      comments={8}
+                      tags={["Postpartum", "Fitness"]}
+                    />
+                    <CommunityPost 
+                      avatar="S"
+                      name="Sarah Thompson"
+                      badge="Toddler Mom"
+                      time="Yesterday"
+                      content="My toddler finally slept through the night after we tried the gentle sleep training method from the Wellness section! I've had my first full night's sleep in months. Has anyone else had success with this?"
+                      likes={42}
+                      comments={16}
+                      tags={["Sleep", "Toddler"]}
+                    />
+                    <CommunityPost 
+                      avatar="M"
+                      name="Michelle Kennedy"
+                      badge="Pregnancy"
+                      time="2 days ago"
+                      content="I've been doing the prenatal yoga sequence every morning and it's made such a difference with my back pain. Sharing a quick pic from today's session. Anyone else loving the prenatal workouts?"
+                      image="https://images.unsplash.com/photo-1518495973542-4542c06a5843"
+                      likes={38}
+                      comments={7}
+                      tags={["Pregnancy", "Yoga"]}
+                    />
+                  </>
+                )}
               </div>
               
               <div className="md:w-1/3 space-y-6">
@@ -114,40 +159,81 @@ const Community = () => {
                     </h3>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center">
-                          <span className="text-xs">PP</span>
+                    {isTTC ? (
+                      <>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="bg-pink-100 w-10 h-10 rounded-full flex items-center justify-center">
+                              <span className="text-xs">TTC</span>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">TTC Journey Support</p>
+                              <p className="text-xs text-muted-foreground">892 members</p>
+                            </div>
+                          </div>
+                          <Badge variant="outline" className="text-xs">New posts</Badge>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium">Postpartum Support</p>
-                          <p className="text-xs text-muted-foreground">1,245 members</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="bg-green-100 w-10 h-10 rounded-full flex items-center justify-center">
+                              <span className="text-xs">FN</span>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Fertility Nutrition</p>
+                              <p className="text-xs text-muted-foreground">534 members</p>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                      <Badge variant="outline" className="text-xs">New posts</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="bg-secondary/60 w-10 h-10 rounded-full flex items-center justify-center">
-                          <span className="text-xs">WM</span>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center">
+                              <span className="text-xs">MW</span>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Mindful Wellness</p>
+                              <p className="text-xs text-muted-foreground">721 members</p>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium">Working Moms</p>
-                          <p className="text-xs text-muted-foreground">876 members</p>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center">
+                              <span className="text-xs">PP</span>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Postpartum Support</p>
+                              <p className="text-xs text-muted-foreground">1,245 members</p>
+                            </div>
+                          </div>
+                          <Badge variant="outline" className="text-xs">New posts</Badge>
                         </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="bg-accent/80 w-10 h-10 rounded-full flex items-center justify-center">
-                          <span className="text-xs">FT</span>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="bg-secondary/60 w-10 h-10 rounded-full flex items-center justify-center">
+                              <span className="text-xs">WM</span>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Working Moms</p>
+                              <p className="text-xs text-muted-foreground">876 members</p>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium">Fitness Together</p>
-                          <p className="text-xs text-muted-foreground">2,104 members</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="bg-accent/80 w-10 h-10 rounded-full flex items-center justify-center">
+                              <span className="text-xs">FT</span>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">Fitness Together</p>
+                              <p className="text-xs text-muted-foreground">2,104 members</p>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
+                      </>
+                    )}
                   </CardContent>
                   <CardFooter>
                     <Button variant="outline" size="sm" className="w-full">
