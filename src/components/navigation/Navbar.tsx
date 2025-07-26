@@ -16,6 +16,7 @@ const Navbar = () => {
     { name: 'Recipes', href: '/recipes' },
     { name: 'Wellness', href: '/wellness' },
     { name: 'Community', href: '/community' },
+    { name: 'Plan Creator', href: '/questionnaire' },
   ];
 
   const closeMenu = () => setIsMenuOpen(false);

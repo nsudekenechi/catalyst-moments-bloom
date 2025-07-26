@@ -19,6 +19,7 @@ import Register from "./pages/auth/Register";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import FoodCalorieChecker from "./pages/FoodCalorieChecker";
+import Questionnaire from "./pages/Questionnaire";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -77,6 +78,11 @@ const App = () => (
             <Route path="/profile" element={
               <PrivateRoute>
                 <Profile />
+              </PrivateRoute>
+            } />
+            <Route path="/questionnaire" element={
+              <PrivateRoute>
+                <Questionnaire />
               </PrivateRoute>
             } />
             
