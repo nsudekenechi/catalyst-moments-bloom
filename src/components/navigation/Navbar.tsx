@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Menu } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Menu, Sparkles } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import AuthLinks from './AuthLinks';
 
@@ -16,7 +17,7 @@ const Navbar = () => {
     { name: 'Recipes', href: '/recipes' },
     { name: 'Wellness', href: '/wellness' },
     { name: 'Community', href: '/community' },
-    { name: 'Plan Creator', href: '/questionnaire' },
+    { name: 'Plan Creator', href: '/questionnaire', isNew: true },
   ];
 
   const closeMenu = () => setIsMenuOpen(false);
@@ -36,9 +37,10 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-muted-foreground hover:text-foreground transition-colors font-medium"
+                className="text-muted-foreground hover:text-foreground transition-colors font-medium flex items-center gap-2"
               >
                 {link.name}
+                {link.isNew && <Badge variant="secondary" className="text-xs bg-primary/20">NEW</Badge>}
               </Link>
             ))}
           </nav>

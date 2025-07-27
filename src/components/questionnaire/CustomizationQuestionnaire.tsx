@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight, Sparkles, Lock, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { PlanPreview } from './PlanPreview';
 
 interface QuestionnaireState {
   motherhoodStage: string;
@@ -92,76 +93,22 @@ const CustomizationQuestionnaire = () => {
   };
 
   if (showPreview) {
-    const preview = generatePlanPreview();
-    
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 to-accent/5 p-4">
-        <div className="max-w-md mx-auto">
-          <div className="text-center mb-8">
-            <Sparkles className="w-16 h-16 text-primary mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-foreground mb-2">Your Plan is Ready!</h1>
-            <p className="text-muted-foreground text-sm">We've created something special just for you</p>
-          </div>
-
-          <Card className="relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 blur-sm"></div>
-            <CardContent className="relative p-6 space-y-4">
-              <div className="text-center mb-4">
-                <Badge className="mb-2">Personalized for You</Badge>
-                <h3 className="font-semibold text-lg">Your Custom Mom Plan</h3>
-              </div>
-
-              <div className="space-y-3 text-sm opacity-60">
-                {(answers.planType === 'workout' || answers.planType === 'both') && (
-                  <div className="p-3 bg-background/50 rounded-lg">
-                    <div className="font-medium mb-1">🏋️ Workout Plan</div>
-                    <div className="text-muted-foreground">{preview.workout}</div>
-                  </div>
-                )}
-                
-                {(answers.planType === 'meal' || answers.planType === 'both') && (
-                  <div className="p-3 bg-background/50 rounded-lg">
-                    <div className="font-medium mb-1">🍽️ Meal Plan</div>
-                    <div className="text-muted-foreground">{preview.meal}</div>
-                  </div>
-                )}
-
-                <div className="p-3 bg-background/50 rounded-lg">
-                  <div className="font-medium mb-1">📱 Mobile Access</div>
-                  <div className="text-muted-foreground">Track progress on-the-go</div>
-                </div>
-              </div>
-
-              <div className="absolute inset-0 bg-background/20 backdrop-blur-[1px] flex items-center justify-center">
-                <Lock className="w-8 h-8 text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="mt-6 text-center">
-            <h3 className="font-semibold mb-2">Unlock Your Custom Plan Now</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Join thousands of moms who've transformed their wellness journey
-            </p>
-            
-            <Button className="w-full mb-3" size="lg">
-              Upgrade to Access
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              onClick={() => {
-                setShowPreview(false);
-                setCurrentStep(0);
-              }}
-              className="text-sm"
-            >
-              Start Over
-            </Button>
-          </div>
-        </div>
-      </div>
+      <PlanPreview 
+        answers={answers} 
+        onStartOver={() => {
+          setShowPreview(false);
+          setCurrentStep(0);
+          setAnswers({
+            motherhoodStage: '',
+            fitnessGoal: '',
+            workoutDays: '',
+            dietaryPreferences: [],
+            planType: '',
+            additionalNotes: ''
+          });
+        }} 
+      />
     );
   }
 

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Heart, Thermometer, Droplets, Moon, Target } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { CycleCalendar } from './CycleCalendar';
 
 export const TTCTracker = () => {
   const { toast } = useToast();
@@ -102,9 +103,7 @@ export const TTCTracker = () => {
           </ul>
         </div>
 
-        <Button className="w-full" variant="default">
-          View Full Cycle Calendar
-        </Button>
+        <CycleCalendar />
       </CardContent>
     </Card>
   );

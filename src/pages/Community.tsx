@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Heart, MessageCircle, Share2, Users, ThumbsUp, Calendar, Search } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
+import { ProgressTracker } from '@/components/gamification/ProgressTracker';
 
 const Community = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -80,78 +82,11 @@ const Community = () => {
                   ))}
                 </div>
                 
-{isTTC ? (
-                  <>
-                    <CommunityPost 
-                      avatar="ER"
-                      name="Emma Rodriguez"
-                      badge="TTC Journey"
-                      time="1 hour ago"
-                      content="Month 8 TTC and feeling hopeful! Started the fertility yoga sequence this week and it's been amazing for managing stress. The breathing exercises really help during the two-week wait. Anyone else find mindfulness helpful during their TTC journey?"
-                      likes={18}
-                      comments={12}
-                      tags={["TTC", "Fertility Yoga", "Mindfulness"]}
-                    />
-                    <CommunityPost 
-                      avatar="LM"
-                      name="Lisa Martinez"
-                      badge="TTC Community"
-                      time="4 hours ago"
-                      content="Just wanted to share some love with this amazing community! Using the cycle tracker has helped me understand my body so much better. Knowledge is power! Sending baby dust to everyone on this journey 💕✨"
-                      likes={34}
-                      comments={15}
-                      tags={["TTC Support", "Cycle Tracking"]}
-                    />
-                    <CommunityPost 
-                      avatar="KC"
-                      name="Kimberly Chen"
-                      badge="TTC Nutritionist"
-                      time="Yesterday"
-                      content="Made the fertility smoothie from the nutrition section this morning - so delicious! The combination of spinach, berries, and walnuts is perfect. Here's my version with some extra chia seeds for omega-3s."
-                      image="https://images.unsplash.com/photo-1555939594-58d7cb561ad1"
-                      likes={42}
-                      comments={9}
-                      tags={["TTC Nutrition", "Fertility Foods"]}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <CommunityPost 
-                      avatar="J"
-                      name="Jessica Miller"
-                      badge="Newborn Mom"
-                      time="2 hours ago"
-                      content="Just completed my first postpartum workout! It was only 10 minutes but I feel so accomplished. Any other moms finding it hard to get back into fitness with a newborn?"
-                      likes={24}
-                      comments={8}
-                      tags={["Postpartum", "Fitness"]}
-                    />
-                    <CommunityPost 
-                      avatar="S"
-                      name="Sarah Thompson"
-                      badge="Toddler Mom"
-                      time="Yesterday"
-                      content="My toddler finally slept through the night after we tried the gentle sleep training method from the Wellness section! I've had my first full night's sleep in months. Has anyone else had success with this?"
-                      likes={42}
-                      comments={16}
-                      tags={["Sleep", "Toddler"]}
-                    />
-                    <CommunityPost 
-                      avatar="M"
-                      name="Michelle Kennedy"
-                      badge="Pregnancy"
-                      time="2 days ago"
-                      content="I've been doing the prenatal yoga sequence every morning and it's made such a difference with my back pain. Sharing a quick pic from today's session. Anyone else loving the prenatal workouts?"
-                      image="https://images.unsplash.com/photo-1518495973542-4542c06a5843"
-                      likes={38}
-                      comments={7}
-                      tags={["Pregnancy", "Yoga"]}
-                    />
-                  </>
-                )}
+                <DynamicCommunityFeed isTTC={isTTC} />
               </div>
               
               <div className="md:w-1/3 space-y-6">
+                <ProgressTracker userStage={user?.motherhoodStage} />
                 <Card>
                   <CardHeader className="pb-2">
                     <h3 className="font-semibold flex items-center">
