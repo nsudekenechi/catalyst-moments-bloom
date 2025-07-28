@@ -17,7 +17,6 @@ const Navbar = () => {
     { name: 'Recipes', href: '/recipes' },
     { name: 'Wellness', href: '/wellness' },
     { name: 'Community', href: '/community' },
-    { name: 'Library', href: '/library' },
     { name: 'Plan Creator', href: '/questionnaire', isNew: true },
   ];
 

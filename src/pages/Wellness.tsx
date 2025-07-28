@@ -23,6 +23,7 @@ import { useWellnessData } from '@/hooks/useWellnessData';
 
 const Wellness = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [activeTab, setActiveTab] = useState("insights");
   const { wellnessEntries, wellnessScore, loading } = useWellnessData();
   
   // Get latest wellness data for display
@@ -84,7 +85,7 @@ const Wellness = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <Tabs defaultValue="insights" className="mb-8">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
               <TabsList>
                 <TabsTrigger value="insights">Insights</TabsTrigger>
                 <TabsTrigger value="mood">Mood</TabsTrigger>
@@ -125,6 +126,7 @@ const Wellness = () => {
                       time="5 min read"
                       icon={<MoonStar className="h-5 w-5" />}
                       color="bg-blue-100"
+                      onClick={() => window.open('/wellness/sleep-strategies', '_blank')}
                     />
                     <WellnessResourceCard
                       title="5-Minute Mindfulness Practices"
@@ -133,6 +135,7 @@ const Wellness = () => {
                       time="Audio: 5 min"
                       icon={<Heart className="h-5 w-5" />}
                       color="bg-red-100"
+                      onClick={() => window.open('/wellness/mindfulness', '_blank')}
                     />
                     <WellnessResourceCard
                       title="Postpartum Mood Tracker"
@@ -141,6 +144,7 @@ const Wellness = () => {
                       time="Interactive Tool"
                       icon={<SmilePlus className="h-5 w-5" />}
                       color="bg-yellow-100"
+                      onClick={() => setActiveTab('mood')}
                     />
                     <WellnessResourceCard
                       title="Hydration & Energy Guide"
@@ -149,6 +153,7 @@ const Wellness = () => {
                       time="8 min read"
                       icon={<Utensils className="h-5 w-5" />}
                       color="bg-green-100"
+                      onClick={() => window.open('/wellness/hydration-guide', '_blank')}
                     />
                   </div>
                 </div>
@@ -311,10 +316,11 @@ interface WellnessResourceCardProps {
   time: string;
   icon: React.ReactNode;
   color: string;
+  onClick?: () => void;
 }
 
-const WellnessResourceCard = ({ title, description, category, time, icon, color }: WellnessResourceCardProps) => (
-  <Card className="card-hover">
+const WellnessResourceCard = ({ title, description, category, time, icon, color, onClick }: WellnessResourceCardProps) => (
+  <Card className="card-hover cursor-pointer" onClick={onClick}>
     <CardContent className="p-6">
       <div className="flex items-start space-x-3 mb-3">
         <div className={`${color} p-2 rounded-md flex-shrink-0`}>
