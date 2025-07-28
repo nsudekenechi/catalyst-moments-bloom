@@ -85,9 +85,9 @@ const BenefitsSection = () => {
               <div className="space-y-4 translate-y-10">
                 <div className="rounded-xl overflow-hidden shadow-soft">
                   <AspectRatio ratio={4/5}>
-                    <img 
-                      src="https://images.unsplash.com/photo-1530530824905-661c730c77e0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fHByZWduYW50JTIwc3RyZXRjaGluZ3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60"
-                      alt="Pregnant woman stretching"
+                     <img 
+                       src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=800&q=80"
+                       alt="Woman using wellness app"
                       className="object-cover h-full w-full"
                       onError={(e) => {
                         e.currentTarget.src = "/placeholder.svg";
