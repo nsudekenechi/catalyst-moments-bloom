@@ -51,7 +51,8 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     energyLevel?: 'low' | 'medium' | 'high';
     goals?: string[];
     onboarded: boolean;
-  }>({ onboarded: false });
+    motherhoodStage?: 'ttc' | 'pregnant' | 'postpartum' | 'general';
+  }>({ onboarded: false, motherhoodStage: 'postpartum' });
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
@@ -66,8 +67,11 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       setTimeout(() => {
+        const stage = userProfile.motherhoodStage || 'postpartum';
+        const welcomeMessage = getWelcomeMessage(stage);
+        
         addCoachMessage(
-          "Hi there! I'm your postpartum wellness coach. I'm here to support you on your wellness journey. How are you feeling today?",
+          welcomeMessage,
           [
             { 
               id: 'feeling-good', 
@@ -83,12 +87,30 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
               id: 'feeling-overwhelmed', 
               text: "I'm feeling overwhelmed", 
               action: () => handleFeelingResponse("overwhelmed") 
+            },
+            { 
+              id: 'feeling-excited', 
+              text: "I'm feeling excited", 
+              action: () => handleFeelingResponse("excited") 
             }
           ]
         );
       }, 500);
     }
   }, [isOpen]);
+
+  const getWelcomeMessage = (stage: string) => {
+    switch (stage) {
+      case 'ttc':
+        return "Hi there! I'm your fertility wellness coach. I'm here to support you on your TTC journey with workouts, nutrition, and stress management. How are you feeling today?";
+      case 'pregnant':
+        return "Hi there! I'm your pregnancy wellness coach. I'm here to support you and your growing baby with safe workouts and nutrition. How are you feeling today?";
+      case 'postpartum':
+        return "Hi there! I'm your postpartum wellness coach. I'm here to support you on your recovery and wellness journey. How are you feeling today?";
+      default:
+        return "Hi there! I'm your wellness coach. I'm here to support you on your motherhood wellness journey. How are you feeling today?";
+    }
+  };
 
   const addCoachMessage = (content: string, options: CoachOption[] = []) => {
     setMessages(prev => [
@@ -147,30 +169,53 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     addUserMessage(`I'm feeling ${feeling} today`);
     
     setTimeout(() => {
+      const stage = userProfile.motherhoodStage || 'postpartum';
+      
       if (feeling === "good") {
-        addCoachMessage(
-          "That's wonderful to hear! Would you like to build on this positive energy with a quick workout or some healthy meal ideas?",
-          [
-            { id: 'good-workout', text: 'Show me workouts', action: suggestWorkouts },
-            { id: 'good-meal', text: 'Show me meal ideas', action: suggestMeals }
-          ]
-        );
+        const message = stage === 'ttc' 
+          ? "That's wonderful to hear! Positive energy is great for fertility. Would you like to build on this with some fertility-supporting workouts or nutrition tips?"
+          : stage === 'pregnant'
+          ? "That's wonderful to hear! Let's keep this positive energy going with some safe pregnancy workouts or nutrition ideas for you and baby."
+          : "That's wonderful to hear! Would you like to build on this positive energy with a quick workout or some healthy meal ideas?";
+        
+        addCoachMessage(message, [
+          { id: 'good-workout', text: 'Show me workouts', action: suggestWorkouts },
+          { id: 'good-meal', text: 'Show me meal ideas', action: suggestMeals }
+        ]);
       } else if (feeling === "tired") {
-        addCoachMessage(
-          "I understand. Being a mom is demanding work. Would you like some gentle energy-boosting exercises or nutrition tips to help with fatigue?",
-          [
-            { id: 'tired-workout', text: 'Energy-boosting exercises', action: suggestLowEnergyWorkouts },
-            { id: 'tired-meal', text: 'Energy-boosting foods', action: suggestEnergyMeals }
-          ]
-        );
+        const message = stage === 'ttc' 
+          ? "I understand. TTC can be emotionally and physically draining. Would you like some gentle energy-boosting exercises or fertility-supporting nutrition tips?"
+          : stage === 'pregnant'
+          ? "Fatigue is so common during pregnancy! Would you like some gentle energy-boosting exercises safe for pregnancy or nutrition tips to help combat tiredness?"
+          : "I understand. Being a mom is demanding work. Would you like some gentle energy-boosting exercises or nutrition tips to help with fatigue?";
+        
+        addCoachMessage(message, [
+          { id: 'tired-workout', text: 'Energy-boosting exercises', action: suggestLowEnergyWorkouts },
+          { id: 'tired-meal', text: 'Energy-boosting foods', action: suggestEnergyMeals }
+        ]);
       } else if (feeling === "overwhelmed") {
-        addCoachMessage(
-          "I'm sorry you're feeling overwhelmed. That's completely normal as a new mom. Would you like me to suggest some quick stress-relief techniques or simple self-care ideas?",
-          [
-            { id: 'overwhelmed-breathe', text: 'Stress-relief techniques', action: suggestBreathingExercise },
-            { id: 'overwhelmed-selfcare', text: 'Simple self-care ideas', action: suggestSelfCare }
-          ]
-        );
+        const message = stage === 'ttc' 
+          ? "I'm sorry you're feeling overwhelmed. The TTC journey can be emotionally challenging. Would you like some stress-relief techniques to support fertility or calming self-care ideas?"
+          : stage === 'pregnant'
+          ? "I'm sorry you're feeling overwhelmed. Pregnancy can bring many emotions. Would you like some safe stress-relief techniques or self-care ideas for expectant moms?"
+          : "I'm sorry you're feeling overwhelmed. That's completely normal as a new mom. Would you like me to suggest some quick stress-relief techniques or simple self-care ideas?";
+        
+        addCoachMessage(message, [
+          { id: 'overwhelmed-breathe', text: 'Stress-relief techniques', action: suggestBreathingExercise },
+          { id: 'overwhelmed-selfcare', text: 'Simple self-care ideas', action: suggestSelfCare }
+        ]);
+      } else if (feeling === "excited") {
+        const message = stage === 'ttc' 
+          ? "That's amazing! Excitement and positive emotions can be beneficial for fertility. How can I help channel this energy today?"
+          : stage === 'pregnant'
+          ? "That's wonderful! Pregnancy excitement is beautiful. How can I help you make the most of this positive energy today?"
+          : "That's amazing! I love seeing moms excited about their wellness journey. How can I help you make the most of this energy today?";
+        
+        addCoachMessage(message, [
+          { id: 'excited-workout', text: 'I want to move my body!', action: suggestWorkouts },
+            { id: 'excited-plan', text: 'Help me plan my day', action: () => addCoachMessage("Let me create a daily plan for you! Check out the Plan Creator for a personalized schedule.") },
+            { id: 'excited-learn', text: 'Teach me something new', action: () => addCoachMessage("Great! Visit our Video Library for expert courses on motherhood wellness.") }
+        ]);
       }
     }, 1000);
   };

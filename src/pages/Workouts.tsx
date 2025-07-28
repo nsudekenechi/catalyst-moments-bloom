@@ -163,7 +163,9 @@ const Workouts = () => {
                   <p className="text-sm text-muted-foreground mb-4">
                     {isTTC ? 'We have 30+ fertility-focused workouts designed to support your TTC journey' : 'We have 50+ workouts designed for every stage of motherhood'}
                   </p>
-                  <Button variant="outline">View Library</Button>
+                  <Button variant="outline" asChild>
+                    <Link to="/library">View Library</Link>
+                  </Button>
                 </div>
               </Card>
             </div>
@@ -179,7 +181,9 @@ const Workouts = () => {
                   'Specialized workouts for your postpartum recovery will appear here as you continue your journey.'
                 }
               </p>
-              <Button>{isTTC ? 'Explore Fertility Workouts' : 'Explore Postpartum Workouts'}</Button>
+              <Button asChild>
+                <Link to="/library">{isTTC ? 'Explore Fertility Workouts' : 'Explore Postpartum Workouts'}</Link>
+              </Button>
             </div>
           </TabsContent>
           
@@ -190,7 +194,9 @@ const Workouts = () => {
               <p className="text-muted-foreground mb-4 max-w-md mx-auto">
                 Short, effective workouts designed for busy moms will appear here.
               </p>
-              <Button>Explore Quick Workouts</Button>
+              <Button asChild>
+                <Link to="/library">Explore Quick Workouts</Link>
+              </Button>
             </div>
           </TabsContent>
           
@@ -201,7 +207,9 @@ const Workouts = () => {
               <p className="text-muted-foreground mb-4 max-w-md mx-auto">
                 Save your favorite workouts for easy access. They'll appear here.
               </p>
-              <Button>Browse Workouts</Button>
+              <Button asChild>
+                <Link to="/workouts">Browse Workouts</Link>
+              </Button>
             </div>
           </TabsContent>
         </Tabs>

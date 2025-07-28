@@ -164,8 +164,8 @@ const Dashboard = () => {
                 />
               </CardContent>
               <CardFooter>
-                <Button variant="outline" size="sm" className="w-full">
-                  View Schedule
+                <Button variant="outline" size="sm" className="w-full" asChild>
+                  <Link to="/wellness">View Schedule</Link>
                 </Button>
               </CardFooter>
             </Card>
