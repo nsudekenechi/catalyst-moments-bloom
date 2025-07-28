@@ -15,12 +15,12 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, logout, updateProfile, isLoading, isAuthenticated } = useAuth();
+  const { user, profile, logout, updateProfile, isLoading, isAuthenticated } = useAuth();
 
-  const [name, setName] = useState(user?.name || "");
+  const [name, setName] = useState(profile?.display_name || "");
   const [email, setEmail] = useState(user?.email || "");
-  const [motherhoodStage, setMotherhoodStage] = useState<MotherhoodStage>(user?.motherhoodStage || "none");
-  const [bio, setBio] = useState(user?.bio || "");
+  const [motherhoodStage, setMotherhoodStage] = useState<MotherhoodStage>((profile?.motherhood_stage as MotherhoodStage) || "none");
+  const [bio, setBio] = useState(profile?.bio || "");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,9 +51,8 @@ const Profile = () => {
     
     try {
       await updateProfile({
-        name,
-        email,
-        motherhoodStage,
+        display_name: name,
+        motherhood_stage: motherhoodStage,
         bio
       });
       setSuccess(true);
@@ -92,9 +91,9 @@ const Profile = () => {
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4">
               <Avatar className="h-32 w-32">
-                <AvatarImage src={user?.profileImage} alt={user?.name} />
+                <AvatarImage src="" alt={profile?.display_name || 'User'} />
                 <AvatarFallback className="text-2xl bg-primary/20">
-                  {user?.name ? getInitials(user.name) : "CM"}
+                  {profile?.display_name ? getInitials(profile.display_name) : user?.email?.[0]?.toUpperCase() || "CM"}
                 </AvatarFallback>
               </Avatar>
               <Button variant="outline" className="w-full">

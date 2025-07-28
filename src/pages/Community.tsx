@@ -15,9 +15,9 @@ import { ProgressTracker } from '@/components/gamification/ProgressTracker';
 
 const Community = () => {
   const [activeFilter, setActiveFilter] = useState('all');
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   
-  const isTTC = user?.motherhoodStage === 'ttc';
+  const isTTC = profile?.motherhood_stage === 'ttc';
   
   return (
     <PageLayout>
@@ -86,7 +86,7 @@ const Community = () => {
               </div>
               
               <div className="md:w-1/3 space-y-6">
-                <ProgressTracker userStage={user?.motherhoodStage} />
+                <ProgressTracker userStage={profile?.motherhood_stage} />
                 <Card>
                   <CardHeader className="pb-2">
                     <h3 className="font-semibold flex items-center">

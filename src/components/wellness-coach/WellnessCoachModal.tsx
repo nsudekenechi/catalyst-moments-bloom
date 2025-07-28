@@ -227,18 +227,12 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     );
     
     setTimeout(() => {
+      const workoutList = quickWorkouts.map(workout => 
+        `${workout.title} (${workout.duration}) - Focus: ${workout.focus}`
+      ).join('\n');
+      
       addCoachMessage(
-        `<div class="space-y-3">
-          ${quickWorkouts.map(workout => (
-            `<div class="p-3 bg-primary/5 rounded-lg">
-              <div class="font-medium">${workout.title}</div>
-              <div class="text-sm text-muted-foreground flex justify-between">
-                <span>${workout.duration}</span>
-                <span>Focus: ${workout.focus}</span>
-              </div>
-            </div>`
-          )).join('')}
-        </div>`,
+        `Here are some great workout options:\n\n${workoutList}`,
         [
           { id: 'workout-more', text: 'Show me more workouts', action: () => window.location.href = '/workouts' },
           { id: 'workout-thanks', text: 'Thank you!', action: () => addCoachMessage("You're welcome! Let me know if you try any of these or need more suggestions.") }
@@ -255,29 +249,11 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     
     setTimeout(() => {
       addCoachMessage(
-        `<div class="space-y-3">
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Gentle Stretching Sequence</div>
-            <div class="text-sm text-muted-foreground flex justify-between">
-              <span>5 min</span>
-              <span>Focus: Flexibility</span>
-            </div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Energy-Boosting Breathing</div>
-            <div class="text-sm text-muted-foreground flex justify-between">
-              <span>3 min</span>
-              <span>Focus: Energy</span>
-            </div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Seated Arm Movements</div>
-            <div class="text-sm text-muted-foreground flex justify-between">
-              <span>5 min</span>
-              <span>Focus: Circulation</span>
-            </div>
-          </div>
-        </div>`,
+        `Here are some gentle low-energy exercises:
+
+• Gentle Stretching Sequence (5 min) - Focus: Flexibility
+• Energy-Boosting Breathing (3 min) - Focus: Energy  
+• Seated Arm Movements (5 min) - Focus: Circulation`,
         [
           { id: 'energy-more', text: 'Show me more', action: () => window.location.href = '/workouts' },
           { id: 'energy-rest', text: 'I think I need rest instead', action: suggestRestIdeas }
@@ -294,20 +270,11 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     
     setTimeout(() => {
       addCoachMessage(
-        `<div class="space-y-3">
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">10-Minute Power Nap</div>
-            <div class="text-sm text-muted-foreground">When baby sleeps, set a timer and close your eyes</div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Legs Up The Wall</div>
-            <div class="text-sm text-muted-foreground">A restorative yoga pose - just 5 minutes helps circulation</div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Guided Relaxation</div>
-            <div class="text-sm text-muted-foreground">Try a 5-minute meditation focused on rest</div>
-          </div>
-        </div>`,
+        `Here are some restful self-care ideas:
+
+• 10-Minute Power Nap - When baby sleeps, set a timer and close your eyes
+• Legs Up The Wall - A restorative yoga pose - just 5 minutes helps circulation  
+• Guided Relaxation - Try a 5-minute meditation focused on rest`,
         [
           { id: 'rest-thanks', text: 'Thank you, this helps', action: () => addCoachMessage("You're welcome! Remember, resting when you need it is a form of self-care, not laziness. Your body is still recovering.") }
         ]
@@ -322,15 +289,12 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     );
     
     setTimeout(() => {
+      const mealList = mealIdeas.map(meal => 
+        `${meal.meal}: ${meal.suggestion} - Benefits: ${meal.benefits}`
+      ).join('\n\n');
+      
       addCoachMessage(
-        `<div class="space-y-3">
-          ${mealIdeas.map(meal => (
-            `<div class="p-3 bg-primary/5 rounded-lg">
-              <div class="font-medium">${meal.meal}: ${meal.suggestion}</div>
-              <div class="text-sm text-muted-foreground">Benefits: ${meal.benefits}</div>
-            </div>`
-          )).join('')}
-        </div>`,
+        `Here are some nutritious meal ideas:\n\n${mealList}`,
         [
           { id: 'meal-more', text: 'More meal ideas', action: () => window.location.href = '/recipes' },
           { id: 'meal-thanks', text: 'This is helpful!', action: () => addCoachMessage("I'm glad! Proper nutrition is so important during postpartum recovery. If you have any dietary restrictions or preferences, just let me know.") }
@@ -347,20 +311,11 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     
     setTimeout(() => {
       addCoachMessage(
-        `<div class="space-y-3">
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Banana with almond butter (200 cal)</div>
-            <div class="text-sm text-muted-foreground">Quick energy + sustained protein</div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Trail mix with nuts and dark chocolate (250 cal)</div>
-            <div class="text-sm text-muted-foreground">Healthy fats, protein, and a bit of caffeine</div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Oatmeal with berries and seeds (300 cal)</div>
-            <div class="text-sm text-muted-foreground">Sustained energy release + antioxidants</div>
-          </div>
-        </div>`,
+        `Here are some quick energy-boosting options:
+
+• Banana with almond butter (200 cal) - Quick energy + sustained protein
+• Trail mix with nuts and dark chocolate (250 cal) - Healthy fats, protein, and a bit of caffeine
+• Oatmeal with berries and seeds (300 cal) - Sustained energy release + antioxidants`,
         [
           { id: 'energy-meal-more', text: 'More energy foods', action: () => window.location.href = '/recipes' },
           { id: 'energy-meal-hydration', text: 'What about hydration?', action: suggestHydrationTips }
@@ -377,20 +332,11 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     
     setTimeout(() => {
       addCoachMessage(
-        `<div class="space-y-3">
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Drink when you breastfeed</div>
-            <div class="text-sm text-muted-foreground">Keep a water bottle at your feeding station</div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Infused water options</div>
-            <div class="text-sm text-muted-foreground">Try cucumber + mint or strawberry + basil for flavor</div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Hydrating foods</div>
-            <div class="text-sm text-muted-foreground">Watermelon, cucumber, oranges, and soup all contribute to hydration</div>
-          </div>
-        </div>`,
+        `Here are some hydration tips:
+
+• Drink when you breastfeed - Keep a water bottle at your feeding station
+• Infused water options - Try cucumber + mint or strawberry + basil for flavor
+• Hydrating foods - Watermelon, cucumber, oranges, and soup all contribute to hydration`,
         [
           { id: 'hydration-thanks', text: 'Thank you!', action: () => addCoachMessage("You're welcome! Aim for about 3 liters of total fluids daily while breastfeeding. Your urine should be light yellow - that's a good indicator of proper hydration.") }
         ]
@@ -423,16 +369,13 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     
     setTimeout(() => {
       addCoachMessage(
-        `<div class="p-4 bg-primary/5 rounded-lg space-y-3">
-          <div class="font-medium">60-Second Box Breathing</div>
-          <ol class="list-decimal list-inside space-y-2 text-sm">
-            <li>Breathe in slowly for 4 counts</li>
-            <li>Hold your breath for 4 counts</li>
-            <li>Exhale slowly for 4 counts</li>
-            <li>Hold for 4 counts before breathing in again</li>
-            <li>Repeat 3-5 times</li>
-          </ol>
-        </div>`,
+        `60-Second Box Breathing:
+
+1. Breathe in slowly for 4 counts
+2. Hold your breath for 4 counts
+3. Exhale slowly for 4 counts
+4. Hold for 4 counts before breathing in again
+5. Repeat 3-5 times`,
         [
           { id: 'breathing-done', text: 'I did it', action: () => addCoachMessage("Wonderful! How do you feel now? Remember you can use this technique anytime you feel stressed or overwhelmed. Even just one minute can make a difference.") },
           { id: 'breathing-more', text: 'Show me more techniques', action: suggestMoreCalming }
@@ -449,20 +392,11 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     
     setTimeout(() => {
       addCoachMessage(
-        `<div class="space-y-3">
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">5-4-3-2-1 Grounding</div>
-            <div class="text-sm text-muted-foreground">Name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, and 1 you taste</div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Progressive Muscle Relaxation</div>
-            <div class="text-sm text-muted-foreground">Tense and release each muscle group for 5 seconds, starting from your toes</div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Hand on Heart</div>
-            <div class="text-sm text-muted-foreground">Place your hand on your heart, breathe deeply, and think of someone you love</div>
-          </div>
-        </div>`,
+        `Here are more calming techniques:
+
+• 5-4-3-2-1 Grounding - Name 5 things you see, 4 you can touch, 3 you hear, 2 you smell, and 1 you taste
+• Progressive Muscle Relaxation - Tense and release each muscle group for 5 seconds, starting from your toes
+• Hand on Heart - Place your hand on your heart, breathe deeply, and think of someone you love`,
         [
           { id: 'calming-wellness', text: 'Go to Wellness resources', action: () => window.location.href = '/wellness' },
           { id: 'calming-thanks', text: 'Thank you', action: () => addCoachMessage("You're welcome! These techniques are always available to you, even during the busiest moments. Your mental health matters.") }
@@ -496,20 +430,11 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     
     setTimeout(() => {
       addCoachMessage(
-        `<div class="space-y-3">
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">2-Minute Face Refresh</div>
-            <div class="text-sm text-muted-foreground">Splash cool water, apply moisturizer, take 3 deep breaths</div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">One Song Dance Party</div>
-            <div class="text-sm text-muted-foreground">Play a favorite upbeat song and move freely - with or without baby</div>
-          </div>
-          <div class="p-3 bg-primary/5 rounded-lg">
-            <div class="font-medium">Sensory Reset</div>
-            <div class="text-sm text-muted-foreground">Apply a nice-smelling lotion, drink a warm beverage slowly, or step outside for fresh air</div>
-          </div>
-        </div>`,
+        `Here are simple self-care ideas:
+
+• 2-Minute Face Refresh - Splash cool water, apply moisturizer, take 3 deep breaths
+• One Song Dance Party - Play a favorite upbeat song and move freely - with or without baby
+• Sensory Reset - Apply a nice-smelling lotion, drink a warm beverage slowly, or step outside for fresh air`,
         [
           { id: 'selfcare-wellness', text: 'More wellness ideas', action: () => window.location.href = '/wellness' },
           { id: 'selfcare-thanks', text: "I'll try these", action: () => addCoachMessage("Wonderful! Even these small moments of self-care add up. Remember that caring for yourself is part of caring for your family.") }
@@ -566,10 +491,9 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
                     ? "bg-muted border-none" 
                     : "bg-primary text-primary-foreground ml-auto"
                 )}>
-                  <div 
-                    className="text-sm"
-                    dangerouslySetInnerHTML={{ __html: message.content }}
-                  />
+                  <div className="text-sm whitespace-pre-line">
+                    {message.content}
+                  </div>
                 </Card>
               </div>
               {message.options && message.options.length > 0 && (

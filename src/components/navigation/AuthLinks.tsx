@@ -15,7 +15,7 @@ import {
 import { LogIn, UserPlus, User, Settings, LogOut } from "lucide-react";
 
 const AuthLinks = () => {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, profile, isAuthenticated, logout } = useAuth();
 
   const getInitials = (name: string) => {
     return name
@@ -31,9 +31,9 @@ const AuthLinks = () => {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-9 w-9 rounded-full">
             <Avatar className="h-9 w-9">
-              <AvatarImage src={user.profileImage} alt={user.name} />
+              <AvatarImage src={profile?.display_name} alt={profile?.display_name || 'User'} />
               <AvatarFallback className="text-xs">
-                {getInitials(user.name)}
+                {profile?.display_name ? getInitials(profile.display_name) : user.email?.[0]?.toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>
           </Button>

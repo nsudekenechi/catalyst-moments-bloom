@@ -27,9 +27,9 @@ interface StatsCardProps {
 const Dashboard = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   
-  const isTTC = user?.motherhoodStage === 'ttc';
+  const isTTC = profile?.motherhood_stage === 'ttc';
   
   // Auto-refresh data every 30 seconds for real-time updates
   useEffect(() => {
@@ -42,7 +42,7 @@ const Dashboard = () => {
       <div className="container px-4 mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-bold mb-1">Welcome back, {user?.name || 'Ashley'}!</h1>
+            <h1 className="text-3xl font-bold mb-1">Welcome back, {profile?.display_name || user?.email?.split('@')[0] || 'Ashley'}!</h1>
             <p className="text-muted-foreground">
               {isTTC ? 'Your TTC journey tracker and support center' : 'Here\'s your wellness overview for today'}
             </p>
@@ -52,9 +52,9 @@ const Dashboard = () => {
             <Button variant="outline" size="sm" className="gap-2">
               <Baby className="h-4 w-4" /> 
               {isTTC ? 'Trying to Conceive' : 
-               user?.motherhoodStage === 'pregnant' ? 'Pregnant' :
-               user?.motherhoodStage === 'postpartum' ? 'Postpartum' :
-               user?.motherhoodStage === 'toddler' ? 'Toddler Mom' : 'Postpartum (8 weeks)'}
+               profile?.motherhood_stage === 'pregnant' ? 'Pregnant' :
+               profile?.motherhood_stage === 'postpartum' ? 'Postpartum' :
+               profile?.motherhood_stage === 'toddler' ? 'Toddler Mom' : 'Postpartum (8 weeks)'}
             </Button>
           </div>
         </div>

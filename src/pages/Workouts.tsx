@@ -25,8 +25,8 @@ interface WorkoutCardProps {
 }
 
 const Workouts = () => {
-  const { user } = useAuth();
-  const isTTC = user?.motherhoodStage === 'ttc';
+  const { user, profile } = useAuth();
+  const isTTC = profile?.motherhood_stage === 'ttc';
   
   return (
     <PageLayout>
@@ -37,9 +37,9 @@ const Workouts = () => {
             <p className="text-muted-foreground mb-4 md:mb-0">
               Exercise designed for your current motherhood stage: {
                 isTTC ? 'Trying to Conceive' :
-                user?.motherhoodStage === 'pregnant' ? 'Pregnant' :
-                user?.motherhoodStage === 'postpartum' ? 'Postpartum' :
-                user?.motherhoodStage === 'toddler' ? 'Toddler Mom' : 'Postpartum (8 weeks)'
+                profile?.motherhood_stage === 'pregnant' ? 'Pregnant' :
+                profile?.motherhood_stage === 'postpartum' ? 'Postpartum' :
+                profile?.motherhood_stage === 'toddler' ? 'Toddler Mom' : 'Postpartum (8 weeks)'
               }
             </p>
           </div>

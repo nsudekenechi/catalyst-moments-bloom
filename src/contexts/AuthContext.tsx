@@ -1,96 +1,115 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 export type MotherhoodStage = "ttc" | "pregnant" | "postpartum" | "toddler" | "none";
 
 export interface UserProfile {
   id: string;
-  name: string;
-  email: string;
-  motherhoodStage: MotherhoodStage;
-  profileImage?: string;
-  bio?: string;
-  createdAt: Date;
+  user_id: string;
+  display_name: string | null;
+  motherhood_stage: string | null;
+  bio: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 interface AuthContextType {
-  user: UserProfile | null;
+  user: User | null;
+  profile: UserProfile | null;
+  session: Session | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string, stage: MotherhoodStage) => Promise<void>;
-  logout: () => void;
-  updateProfile: (data: Partial<UserProfile>) => Promise<void>;
+  logout: () => Promise<void>;
+  updateProfile: (data: { display_name?: string; motherhood_stage?: string; bio?: string }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock users for demo
-const MOCK_USERS: Record<string, { password: string, profile: UserProfile }> = {
-  "user@example.com": {
-    password: "password123",
-    profile: {
-      id: "1",
-      name: "Sarah Johnson",
-      email: "user@example.com",
-      motherhoodStage: "postpartum",
-      profileImage: "https://images.unsplash.com/photo-1544005313-94ddf0286df2",
-      bio: "Mom of 2, fitness enthusiast, always looking for quick workouts!",
-      createdAt: new Date(),
-    }
-  }
-};
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { toast } = useToast();
-  const [user, setUser] = useState<UserProfile | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  
-  // Check if user is logged in from localStorage
-  useEffect(() => {
-    const storedUser = localStorage.getItem("catalyst_user");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser({
-          ...parsedUser,
-          createdAt: new Date(parsedUser.createdAt)
-        });
-      } catch (error) {
-        console.error("Failed to parse stored user:", error);
-        localStorage.removeItem("catalyst_user");
+
+  // Fetch user profile from the profiles table
+  const fetchProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') { // PGRST116 means no rows returned
+        console.error('Error fetching profile:', error);
+        return;
       }
+
+      setProfile(data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
     }
-    setIsLoading(false);
+  };
+
+  // Set up auth state listener and check for existing session
+  useEffect(() => {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          // Defer profile fetching to avoid potential deadlocks
+          setTimeout(() => {
+            fetchProfile(session.user.id);
+          }, 0);
+        } else {
+          setProfile(null);
+        }
+        
+        if (event === 'SIGNED_OUT') {
+          setProfile(null);
+        }
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      }
+      
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      const mockUser = MOCK_USERS[email];
-      
-      if (!mockUser || mockUser.password !== password) {
-        throw new Error("Invalid credentials");
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        throw error;
       }
-      
-      setUser(mockUser.profile);
-      localStorage.setItem("catalyst_user", JSON.stringify(mockUser.profile));
-      
-      toast({
-        title: "Logged in successfully",
-        description: `Welcome back, ${mockUser.profile.name}!`,
-      });
+
+      toast.success("Logged in successfully!");
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Login failed",
-        description: error instanceof Error ? error.message : "An error occurred"
-      });
+      console.error('Login error:', error);
+      toast.error(error instanceof Error ? error.message : "Login failed");
       throw error;
     } finally {
       setIsLoading(false);
@@ -101,98 +120,75 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 800));
+      const redirectUrl = `${window.location.origin}/`;
       
-      if (MOCK_USERS[email]) {
-        throw new Error("Email already in use");
-      }
-      
-      const newUser: UserProfile = {
-        id: Math.random().toString(36).substring(2, 15),
-        name,
+      const { error } = await supabase.auth.signUp({
         email,
-        motherhoodStage: stage,
-        createdAt: new Date()
-      };
-      
-      // In a real app, we'd store this in a database
-      MOCK_USERS[email] = {
         password,
-        profile: newUser
-      };
-      
-      setUser(newUser);
-      localStorage.setItem("catalyst_user", JSON.stringify(newUser));
-      
-      toast({
-        title: "Registration successful",
-        description: `Welcome to Catalyst Mom, ${name}!`,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            name: name,
+            full_name: name,
+            motherhood_stage: stage
+          }
+        }
       });
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success("Registration successful! Please check your email to verify your account.");
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Registration failed",
-        description: error instanceof Error ? error.message : "An error occurred"
-      });
+      console.error('Registration error:', error);
+      toast.error(error instanceof Error ? error.message : "Registration failed");
       throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("catalyst_user");
-    toast({
-      title: "Logged out",
-      description: "You have been logged out successfully"
-    });
+  const logout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        throw error;
+      }
+
+      toast.success("Logged out successfully");
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error("Error during logout");
+      throw error;
+    }
   };
 
-  const updateProfile = async (data: Partial<UserProfile>) => {
+  const updateProfile = async (data: { display_name?: string; motherhood_stage?: string; bio?: string }) => {
+    if (!user) {
+      throw new Error("Not authenticated");
+    }
+
     setIsLoading(true);
     
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      if (!user) {
-        throw new Error("Not authenticated");
+      const { error } = await supabase
+        .from('profiles')
+        .update(data)
+        .eq('user_id', user.id);
+
+      if (error) {
+        throw error;
       }
+
+      // Refresh profile data
+      await fetchProfile(user.id);
       
-      const updatedUser = { ...user, ...data };
-      
-      if (user.email !== data.email && data.email && MOCK_USERS[data.email]) {
-        throw new Error("Email already in use");
-      }
-      
-      if (data.email && user.email !== data.email) {
-        // If email changed, update the mock users record
-        const currentUserData = MOCK_USERS[user.email];
-        delete MOCK_USERS[user.email];
-        MOCK_USERS[data.email] = {
-          ...currentUserData,
-          profile: updatedUser
-        };
-      } else if (user.email) {
-        // Update the existing record
-        MOCK_USERS[user.email].profile = updatedUser;
-      }
-      
-      setUser(updatedUser);
-      localStorage.setItem("catalyst_user", JSON.stringify(updatedUser));
-      
-      toast({
-        title: "Profile updated",
-        description: "Your profile has been updated successfully"
-      });
+      toast.success("Profile updated successfully");
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Profile update failed",
-        description: error instanceof Error ? error.message : "An error occurred"
-      });
+      console.error('Profile update error:', error);
+      toast.error(error instanceof Error ? error.message : "Profile update failed");
       throw error;
     } finally {
       setIsLoading(false);
@@ -201,8 +197,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const contextValue: AuthContextType = {
     user,
+    profile,
+    session,
     isLoading,
-    isAuthenticated: !!user,
+    isAuthenticated: !!session?.user,
     login,
     register,
     logout,
