@@ -176,12 +176,12 @@ export const WeeklyCheckIn = () => {
           {weekRange}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Progress Photo Upload */}
-          <div className="space-y-2">
-            <Label className="flex items-center gap-2">
-              <Camera className="h-4 w-4" />
+      <CardContent className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Progress Photo Upload Section */}
+          <div className="space-y-3">
+            <Label className="flex items-center gap-2 text-base font-semibold">
+              <Camera className="h-5 w-5" />
               Upload Progress Pictures
             </Label>
             
