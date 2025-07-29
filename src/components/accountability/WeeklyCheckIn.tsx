@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
+import progressPhotoGuide from '@/assets/progress-photo-guide.png';
 
 export const WeeklyCheckIn = () => {
   const { toast } = useToast();
@@ -157,33 +158,19 @@ export const WeeklyCheckIn = () => {
               Upload Progress Pictures
             </Label>
             
-            {/* Example Photos Section */}
+            {/* Professional Photo Guide */}
             <div className="bg-muted/30 rounded-lg p-4 mb-4">
-              <h4 className="text-sm font-medium mb-3">Photo Examples - Copy This Style:</h4>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <div className="bg-gradient-to-b from-gray-100 to-gray-200 rounded-lg aspect-[3/4] flex items-center justify-center border-2 border-dashed border-gray-300">
-                    <div className="text-center text-gray-600">
-                      <div className="w-16 h-20 mx-auto mb-2 bg-gray-300 rounded-full relative">
-                        <div className="absolute inset-2 bg-gray-400 rounded-full"></div>
-                      </div>
-                      <p className="text-xs">Front View</p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-center text-muted-foreground">Stand straight, arms at sides</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="bg-gradient-to-b from-gray-100 to-gray-200 rounded-lg aspect-[3/4] flex items-center justify-center border-2 border-dashed border-gray-300">
-                    <div className="text-center text-gray-600">
-                      <div className="w-12 h-20 mx-auto mb-2 bg-gray-300 rounded-full relative">
-                        <div className="absolute inset-2 bg-gray-400 rounded-full"></div>
-                      </div>
-                      <p className="text-xs">Side View</p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-center text-muted-foreground">Profile, natural posture</p>
-                </div>
+              <h4 className="text-sm font-medium mb-3">Photo Pose Guide - Copy These Positions:</h4>
+              <div className="bg-background rounded-lg p-3">
+                <img
+                  src={progressPhotoGuide}
+                  alt="Progress photo pose guide showing front, side, and back view positions"
+                  className="w-full h-auto max-h-40 object-contain"
+                />
               </div>
+              <p className="text-xs text-center text-muted-foreground mt-2">
+                Take photos from these three angles: Front • Side • Back
+              </p>
             </div>
 
             <div className="text-xs text-muted-foreground mb-2 space-y-1 bg-blue-50 p-3 rounded-lg">
