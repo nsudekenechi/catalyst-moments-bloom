@@ -156,12 +156,45 @@ export const WeeklyCheckIn = () => {
               <Camera className="h-4 w-4" />
               Upload Progress Pictures
             </Label>
-            <div className="text-xs text-muted-foreground mb-2 space-y-1">
-              <p>• Take photos in good lighting</p>
-              <p>• Stand straight against a plain background</p>
-              <p>• Take front and side view photos</p>
-              <p>• Wear fitted clothing for accurate tracking</p>
+            
+            {/* Example Photos Section */}
+            <div className="bg-muted/30 rounded-lg p-4 mb-4">
+              <h4 className="text-sm font-medium mb-3">Photo Examples - Copy This Style:</h4>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <div className="bg-gradient-to-b from-gray-100 to-gray-200 rounded-lg aspect-[3/4] flex items-center justify-center border-2 border-dashed border-gray-300">
+                    <div className="text-center text-gray-600">
+                      <div className="w-16 h-20 mx-auto mb-2 bg-gray-300 rounded-full relative">
+                        <div className="absolute inset-2 bg-gray-400 rounded-full"></div>
+                      </div>
+                      <p className="text-xs">Front View</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-center text-muted-foreground">Stand straight, arms at sides</p>
+                </div>
+                <div className="space-y-2">
+                  <div className="bg-gradient-to-b from-gray-100 to-gray-200 rounded-lg aspect-[3/4] flex items-center justify-center border-2 border-dashed border-gray-300">
+                    <div className="text-center text-gray-600">
+                      <div className="w-12 h-20 mx-auto mb-2 bg-gray-300 rounded-full relative">
+                        <div className="absolute inset-2 bg-gray-400 rounded-full"></div>
+                      </div>
+                      <p className="text-xs">Side View</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-center text-muted-foreground">Profile, natural posture</p>
+                </div>
+              </div>
             </div>
+
+            <div className="text-xs text-muted-foreground mb-2 space-y-1 bg-blue-50 p-3 rounded-lg">
+              <p className="font-medium text-blue-900">📸 Photo Tips:</p>
+              <p>• Use good natural lighting (near a window)</p>
+              <p>• Stand against a plain, light-colored wall</p>
+              <p>• Wear fitted clothing or workout attire</p>
+              <p>• Take photos at the same time of day</p>
+              <p>• Keep the same distance from camera</p>
+            </div>
+            
             <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-4 text-center">
               {previewUrl ? (
                 <div className="space-y-2">
