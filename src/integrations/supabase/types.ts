@@ -110,6 +110,48 @@ export type Database = {
         }
         Relationships: []
       }
+      weekly_checkins: {
+        Row: {
+          chest_measurement: number | null
+          created_at: string
+          hip_measurement: number | null
+          id: string
+          notes: string | null
+          progress_image_url: string | null
+          updated_at: string
+          upper_arm_measurement: number | null
+          user_id: string
+          week_date: string
+          weight: number | null
+        }
+        Insert: {
+          chest_measurement?: number | null
+          created_at?: string
+          hip_measurement?: number | null
+          id?: string
+          notes?: string | null
+          progress_image_url?: string | null
+          updated_at?: string
+          upper_arm_measurement?: number | null
+          user_id: string
+          week_date: string
+          weight?: number | null
+        }
+        Update: {
+          chest_measurement?: number | null
+          created_at?: string
+          hip_measurement?: number | null
+          id?: string
+          notes?: string | null
+          progress_image_url?: string | null
+          updated_at?: string
+          upper_arm_measurement?: number | null
+          user_id?: string
+          week_date?: string
+          weight?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
