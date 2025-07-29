@@ -11,6 +11,7 @@ import { useWellnessData } from '@/hooks/useWellnessData';
 import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
 import { NutritionSection } from '@/components/dashboard/NutritionSection';
 import { WeeklyProgress } from '@/components/dashboard/WeeklyProgress';
+import { WeeklyCheckIn } from '@/components/accountability/WeeklyCheckIn';
 import { TTCTracker } from '@/components/ttc/TTCTracker';
 import { TTCNutritionSection } from '@/components/ttc/TTCNutritionSection';
 import { TTCCommunitySection } from '@/components/ttc/TTCCommunitySection';
@@ -96,7 +97,7 @@ const Dashboard = () => {
               
               <TabsContent value="today">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-                  {isTTC ? <TTCTracker /> : <WeeklyProgress />}
+                  {isTTC ? <TTCTracker /> : <WeeklyCheckIn />}
                   <MoodCheckIn />
                 </div>
                 <div className="space-y-4">

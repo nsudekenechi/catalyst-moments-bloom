@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogTitle, DialogHeader } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { X, Send, Heart } from "lucide-react";
+import { X, Send, Heart, Video, Phone, Mic, MicOff } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -574,21 +574,33 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10">
-                <AvatarImage src="/placeholder.svg" alt="Wellness Coach" />
-                <AvatarFallback className="bg-catalyst-copper text-white">WC</AvatarFallback>
+                <AvatarImage src="/lovable-uploads/46dafd82-4029-4af8-b259-7df82cdfa99c.png" alt="Maja Kay" />
+                <AvatarFallback className="bg-catalyst-copper text-white">MK</AvatarFallback>
               </Avatar>
               <div>
-                <DialogTitle className="text-lg">Wellness Coach</DialogTitle>
-                <p className="text-xs text-muted-foreground">Your postpartum support partner</p>
+                <DialogTitle className="text-lg">Maja Kay</DialogTitle>
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                  Online • Wellness Coach
+                </p>
               </div>
             </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={onClose}
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Video className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Phone className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={onClose}
+                className="h-8 w-8"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </DialogHeader>
         
