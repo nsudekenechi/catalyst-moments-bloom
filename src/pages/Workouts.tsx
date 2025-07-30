@@ -10,6 +10,7 @@ import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton
 import GlowAndGoPrenatalCard from '@/components/workouts/GlowAndGoPrenatalCard';
 import PostpartumRecoveryCard from '@/components/workouts/PostpartumRecoveryCard';
 import EnergyStrengthCard from '@/components/workouts/EnergyStrengthCard';
+import BirthBallGuideCard from '@/components/workouts/BirthBallGuideCard';
 import { TTCWorkoutCard } from '@/components/ttc/TTCWorkoutCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter, ContentItem } from '@/hooks/useContentFilter';
@@ -393,6 +394,7 @@ const Workouts = () => {
             <h2 className="text-2xl font-bold mb-6">Featured Programs</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {isPregnant && <GlowAndGoPrenatalCard />}
+              {isPregnant && <BirthBallGuideCard />}
               {isPostpartum && <PostpartumRecoveryCard />}
               {(isPostpartum || isToddler) && <EnergyStrengthCard />}
               {!isPregnant && !isPostpartum && !isToddler && (
