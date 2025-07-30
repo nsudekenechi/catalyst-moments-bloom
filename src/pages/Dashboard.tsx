@@ -23,6 +23,8 @@ import { PregnancyWellnessDigest } from '@/components/pregnancy/PregnancyWellnes
 import { PostpartumPrepGuide } from '@/components/pregnancy/PostpartumPrepGuide';
 import { PregnancyCommunity } from '@/components/pregnancy/PregnancyCommunity';
 import { useAuth } from '@/contexts/AuthContext';
+import { useContentFilter } from '@/hooks/useContentFilter';
+import JourneySelector from '@/components/onboarding/JourneySelector';
 
 interface StatsCardProps {
   title: string;
@@ -35,11 +37,15 @@ interface StatsCardProps {
 const Dashboard = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [isCheckInOpen, setIsCheckInOpen] = useState(false);
+  const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
   const { user, profile } = useAuth();
+  const { stageInfo, hasJourney } = useContentFilter();
   
-  const isTTC = profile?.motherhood_stage === 'ttc';
-  const isPregnant = profile?.motherhood_stage === 'pregnant';
+  const isTTC = stageInfo?.journey === 'ttc';
+  const isPregnant = stageInfo?.journey === 'pregnant';
+  const isPostpartum = stageInfo?.journey === 'postpartum';
+  const isToddler = stageInfo?.journey === 'toddler';
   
   // Auto-refresh data every 30 seconds for real-time updates
   useEffect(() => {
@@ -50,26 +56,44 @@ const Dashboard = () => {
   return (
     <PageLayout>
       <div className="container px-4 mx-auto">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-          <div>
-            <h1 className="text-3xl font-bold mb-1">Welcome back, {profile?.display_name || user?.email?.split('@')[0] || 'Ashley'}!</h1>
-            <p className="text-muted-foreground">
-              {isTTC ? 'Your TTC journey tracker and support center' : 
-               isPregnant ? 'Your pregnancy companion and wellness guide' :
-               'Here\'s your wellness overview for today'}
-            </p>
+        {!hasJourney ? (
+          <div className="min-h-[60vh] flex items-center justify-center">
+            <JourneySelector 
+              onComplete={() => setIsJourneySelectorOpen(false)}
+              isOnboarding={true}
+            />
           </div>
-          <div className="mt-4 md:mt-0 flex items-center space-x-2">
-            <span className="text-sm text-muted-foreground">Motherhood stage:</span>
-            <Button variant="outline" size="sm" className="gap-2">
-              <Baby className="h-4 w-4" /> 
-              {isTTC ? 'Trying to Conceive' : 
-               profile?.motherhood_stage === 'pregnant' ? 'Pregnant' :
-               profile?.motherhood_stage === 'postpartum' ? 'Postpartum' :
-               profile?.motherhood_stage === 'toddler' ? 'Toddler Mom' : 'Postpartum (8 weeks)'}
-            </Button>
-          </div>
-        </div>
+        ) : (
+          <>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+              <div>
+                <h1 className="text-3xl font-bold mb-1">Welcome back, {profile?.display_name || user?.email?.split('@')[0] || 'Ashley'}!</h1>
+                <p className="text-muted-foreground">
+                  {isTTC ? 'Your TTC journey tracker and support center' : 
+                   isPregnant ? 'Your pregnancy companion and wellness guide' :
+                   isPostpartum ? 'Your postpartum recovery and wellness hub' :
+                   isToddler ? 'Your busy mom wellness center' :
+                   'Here\'s your wellness overview for today'}
+                </p>
+              </div>
+              <div className="mt-4 md:mt-0 flex items-center space-x-2">
+                <span className="text-sm text-muted-foreground">Current stage:</span>
+                <Dialog open={isJourneySelectorOpen} onOpenChange={setIsJourneySelectorOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Baby className="h-4 w-4" /> 
+                      {stageInfo?.phase || 'Update Journey'}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <JourneySelector 
+                      onComplete={() => setIsJourneySelectorOpen(false)}
+                      isOnboarding={false}
+                    />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatsCard
@@ -247,7 +271,9 @@ const Dashboard = () => {
               </Card>
             ) : null}
           </div>
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </PageLayout>
   );
