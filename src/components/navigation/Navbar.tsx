@@ -17,7 +17,6 @@ const Navbar = () => {
     { name: 'Recipes', href: '/recipes' },
     { name: 'Wellness', href: '/wellness' },
     { name: 'Community', href: '/community' },
-    { name: 'Plan Creator', href: '/questionnaire', isNew: true },
   ];
 
   const closeMenu = () => setIsMenuOpen(false);
@@ -40,7 +39,6 @@ const Navbar = () => {
                 className="text-muted-foreground hover:text-foreground transition-colors font-medium flex items-center gap-2"
               >
                 {link.name}
-                {link.isNew && <Badge variant="secondary" className="text-xs bg-primary/20">NEW</Badge>}
               </Link>
             ))}
           </nav>

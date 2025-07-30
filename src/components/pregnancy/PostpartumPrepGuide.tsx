@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Baby, Heart, Brain, Utensils, Home, CheckCircle, BookOpen, Clock } from 'lucide-react';
+import { Baby, Heart, Brain, Utensils, Home, CheckCircle, BookOpen, Clock, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { PostpartumContentModal } from './PostpartumContentModal';
 
 interface PrepItem {
   id: string;
@@ -19,13 +20,15 @@ interface PrepItem {
 
 export const PostpartumPrepGuide = () => {
   const { toast } = useToast();
+  const [selectedTopic, setSelectedTopic] = useState<PrepItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [prepItems, setPrepItems] = useState<PrepItem[]>([
     // Week 28-32 items
     {
       id: '1',
       category: 'recovery',
-      title: 'Research Postpartum Recovery',
-      description: 'Learn about physical healing, bleeding, and body changes',
+      title: 'Physical Healing Guide',
+      description: 'Complete course: bleeding, stitches, perineal care, red flags',
       completed: false,
       importance: 'high',
       week: 30
@@ -33,8 +36,8 @@ export const PostpartumPrepGuide = () => {
     {
       id: '2',
       category: 'mental',
-      title: 'Understand Baby Blues vs PPD',
-      description: 'Know the signs and when to seek help',
+      title: 'Baby Blues vs PPD Masterclass',
+      description: 'Learn signs, build support plan, access resources',
       completed: false,
       importance: 'high',
       week: 30
@@ -42,8 +45,8 @@ export const PostpartumPrepGuide = () => {
     {
       id: '3',
       category: 'nutrition',
-      title: 'Plan Postpartum Meals',
-      description: 'Prep freezer meals or arrange meal train',
+      title: 'Postpartum Nutrition & Meal Prep',
+      description: 'Recovery nutrition guide + freezer meal system',
       completed: false,
       importance: 'medium',
       week: 32
@@ -52,8 +55,8 @@ export const PostpartumPrepGuide = () => {
     {
       id: '4',
       category: 'baby',
-      title: 'Newborn Care Basics',
-      description: 'Diaper changing, swaddling, feeding cues',
+      title: 'Breastfeeding Success Toolkit',
+      description: 'Video guide: latching, pumping, troubleshooting',
       completed: false,
       importance: 'high',
       week: 34
@@ -61,8 +64,8 @@ export const PostpartumPrepGuide = () => {
     {
       id: '5',
       category: 'home',
-      title: 'Set Up Recovery Station',
-      description: 'Comfortable chair, supplies, water bottle',
+      title: 'Recovery Essentials Checklist',
+      description: 'Must-have products + station setup guide',
       completed: false,
       importance: 'medium',
       week: 35
@@ -70,8 +73,8 @@ export const PostpartumPrepGuide = () => {
     {
       id: '6',
       category: 'recovery',
-      title: 'Gentle Movement Plan',
-      description: 'Learn about safe postpartum exercises',
+      title: 'Gentle Movement & Exercise Plan',
+      description: 'Safe postpartum workouts + pelvic floor care',
       completed: false,
       importance: 'medium',
       week: 35
@@ -80,8 +83,8 @@ export const PostpartumPrepGuide = () => {
     {
       id: '7',
       category: 'mental',
-      title: 'Build Support Network',
-      description: 'Identify people to call for help',
+      title: 'Support Network Builder',
+      description: 'Create your village + communication templates',
       completed: false,
       importance: 'high',
       week: 37
@@ -89,8 +92,8 @@ export const PostpartumPrepGuide = () => {
     {
       id: '8',
       category: 'baby',
-      title: 'Breastfeeding Resources',
-      description: 'Find lactation consultant and support groups',
+      title: 'Newborn Sleep & Soothing',
+      description: 'Sleep patterns, swaddling, calming techniques',
       completed: false,
       importance: 'high',
       week: 38
@@ -102,16 +105,21 @@ export const PostpartumPrepGuide = () => {
   const completedCount = availableItems.filter(item => item.completed).length;
   const progressPercentage = availableItems.length > 0 ? (completedCount / availableItems.length) * 100 : 0;
 
-  const toggleItem = (itemId: string) => {
+  const openTopicContent = (item: PrepItem) => {
+    setSelectedTopic(item);
+    setIsModalOpen(true);
+  };
+
+  const handleTopicComplete = (topicId: string) => {
     setPrepItems(prev => prev.map(item => 
-      item.id === itemId ? { ...item, completed: !item.completed } : item
+      item.id === topicId ? { ...item, completed: true } : item
     ));
     
-    const item = prepItems.find(i => i.id === itemId);
-    if (item && !item.completed) {
+    const item = prepItems.find(i => i.id === topicId);
+    if (item) {
       toast({
-        title: "Great progress!",
-        description: `${item.title} marked as complete`,
+        title: "Module completed! 🎉",
+        description: `${item.title} - You're building amazing prep skills!`,
       });
     }
   };
@@ -193,9 +201,9 @@ export const PostpartumPrepGuide = () => {
                 className={`p-3 border rounded-lg transition-all cursor-pointer ${
                   item.completed 
                     ? 'bg-green-50 border-green-200' 
-                    : 'bg-white hover:bg-gray-50'
+                    : 'bg-white hover:bg-purple-50 hover:border-purple-200'
                 }`}
-                onClick={() => toggleItem(item.id)}
+                onClick={() => openTopicContent(item)}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -226,10 +234,24 @@ export const PostpartumPrepGuide = () => {
                   
                   <Button
                     size="sm"
-                    variant={item.completed ? "secondary" : "outline"}
-                    className="ml-3 text-xs h-8"
+                    variant={item.completed ? "secondary" : "default"}
+                    className={`ml-3 text-xs h-8 ${!item.completed ? 'bg-purple-600 hover:bg-purple-700' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openTopicContent(item);
+                    }}
                   >
-                    {item.completed ? "Done!" : "Mark Complete"}
+                    {item.completed ? (
+                      <div className="flex items-center gap-1">
+                        <CheckCircle className="h-3 w-3" />
+                        Review
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1">
+                        <Play className="h-3 w-3" />
+                        Start
+                      </div>
+                    )}
                   </Button>
                 </div>
               </div>
@@ -261,7 +283,7 @@ export const PostpartumPrepGuide = () => {
                         className={`p-2 border rounded text-sm cursor-pointer ${
                           item.completed ? 'bg-green-50 text-gray-500' : 'hover:bg-gray-50'
                         }`}
-                        onClick={() => toggleItem(item.id)}
+                        onClick={() => openTopicContent(item)}
                       >
                         <div className="flex items-center justify-between">
                           <span className={item.completed ? 'line-through' : ''}>{item.title}</span>
@@ -307,6 +329,13 @@ export const PostpartumPrepGuide = () => {
             Do what feels right for you and your family. You've got this, mama!
           </p>
         </div>
+
+        <PostpartumContentModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          topic={selectedTopic}
+          onComplete={handleTopicComplete}
+        />
       </CardContent>
     </Card>
   );
