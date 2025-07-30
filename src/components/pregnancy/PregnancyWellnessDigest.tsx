@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Activity, Apple, Droplets, Brain, Heart, CheckCircle, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { useContentFilter } from '@/hooks/useContentFilter';
 
 interface DailyTip {
   id: string;
@@ -19,58 +21,184 @@ interface DailyTip {
 
 export const PregnancyWellnessDigest = () => {
   const { toast } = useToast();
-  const [tips, setTips] = useState<DailyTip[]>([
-    {
-      id: '1',
-      category: 'workout',
-      title: 'Gentle Prenatal Yoga',
-      description: 'Try cat-cow stretches to ease back tension (5 minutes)',
-      completed: false,
-      icon: <Activity className="h-4 w-4" />,
-      action: 'Start 5-min session',
-      benefit: 'Relieves back pain & improves flexibility'
-    },
-    {
-      id: '2',
-      category: 'nutrition',
-      title: 'Iron-Rich Snack',
-      description: 'Have spinach and hummus or a handful of almonds',
-      completed: false,
-      icon: <Apple className="h-4 w-4" />,
-      action: 'Plan your snack',
-      benefit: 'Prevents anemia & boosts energy'
-    },
-    {
-      id: '3',
-      category: 'hydration',
-      title: 'Hydration Goal',
-      description: 'Aim for 8-10 glasses of water today',
-      completed: false,
-      icon: <Droplets className="h-4 w-4" />,
-      action: 'Track your intake',
-      benefit: 'Supports blood volume & reduces swelling'
-    },
-    {
-      id: '4',
-      category: 'mindfulness',
-      title: 'Baby Connection Time',
-      description: 'Spend 5 minutes talking or singing to your baby',
-      completed: true,
-      icon: <Heart className="h-4 w-4" />,
-      action: 'Talk to baby',
-      benefit: 'Strengthens bond & reduces stress'
-    },
-    {
-      id: '5',
-      category: 'sleep',
-      title: 'Sleep Prep',
-      description: 'Set up your pregnancy pillow for tonight',
-      completed: false,
-      icon: <Brain className="h-4 w-4" />,
-      action: 'Arrange pillows',
-      benefit: 'Improves sleep quality & comfort'
+  const { profile } = useAuth();
+  const { stageInfo } = useContentFilter();
+
+  // Determine trimester from user's profile
+  const getCurrentTrimester = () => {
+    if (!profile?.motherhood_stage) return 2;
+    if (profile.motherhood_stage.includes('trimester_1')) return 1;
+    if (profile.motherhood_stage.includes('trimester_2')) return 2;
+    if (profile.motherhood_stage.includes('trimester_3')) return 3;
+    return 2;
+  };
+
+  const currentTrimester = getCurrentTrimester();
+
+  const getTrimesterTips = () => {
+    if (currentTrimester === 1) {
+      return [
+        {
+          id: '1',
+          category: 'nutrition' as const,
+          title: 'Folic Acid Focus',
+          description: 'Take your prenatal vitamin with breakfast',
+          completed: false,
+          icon: <Apple className="h-4 w-4" />,
+          action: 'Take vitamin',
+          benefit: 'Prevents neural tube defects'
+        },
+        {
+          id: '2',
+          category: 'workout' as const,
+          title: 'Gentle Walking',
+          description: 'Take a 10-minute walk in fresh air',
+          completed: false,
+          icon: <Activity className="h-4 w-4" />,
+          action: 'Start walk',
+          benefit: 'Boosts energy & reduces nausea'
+        },
+        {
+          id: '3',
+          category: 'hydration' as const,
+          title: 'Small Frequent Sips',
+          description: 'Sip water throughout the day to avoid nausea',
+          completed: false,
+          icon: <Droplets className="h-4 w-4" />,
+          action: 'Set reminders',
+          benefit: 'Prevents dehydration & nausea'
+        },
+        {
+          id: '4',
+          category: 'sleep' as const,
+          title: 'Early Bedtime',
+          description: 'Go to bed 30 minutes earlier tonight',
+          completed: true,
+          icon: <Brain className="h-4 w-4" />,
+          action: 'Set alarm',
+          benefit: 'Supports early pregnancy needs'
+        },
+        {
+          id: '5',
+          category: 'mindfulness' as const,
+          title: 'Morning Meditation',
+          description: 'Try 5 minutes of deep breathing',
+          completed: false,
+          icon: <Heart className="h-4 w-4" />,
+          action: 'Start session',
+          benefit: 'Reduces anxiety & morning sickness'
+        }
+      ];
+    } else if (currentTrimester === 2) {
+      return [
+        {
+          id: '1',
+          category: 'workout' as const,
+          title: 'Prenatal Yoga Flow',
+          description: 'Try cat-cow stretches to ease back tension (10 minutes)',
+          completed: false,
+          icon: <Activity className="h-4 w-4" />,
+          action: 'Start session',
+          benefit: 'Relieves back pain & improves flexibility'
+        },
+        {
+          id: '2',
+          category: 'nutrition' as const,
+          title: 'Iron-Rich Lunch',
+          description: 'Include spinach, beans, or lean meat in your meal',
+          completed: false,
+          icon: <Apple className="h-4 w-4" />,
+          action: 'Plan meal',
+          benefit: 'Prevents anemia & supports baby growth'
+        },
+        {
+          id: '3',
+          category: 'hydration' as const,
+          title: 'Hydration Goal',
+          description: 'Aim for 8-10 glasses of water today',
+          completed: false,
+          icon: <Droplets className="h-4 w-4" />,
+          action: 'Track intake',
+          benefit: 'Supports increased blood volume'
+        },
+        {
+          id: '4',
+          category: 'mindfulness' as const,
+          title: 'Baby Connection Time',
+          description: 'Spend 5 minutes talking to your growing baby',
+          completed: true,
+          icon: <Heart className="h-4 w-4" />,
+          action: 'Talk to baby',
+          benefit: 'Strengthens bond & baby can hear you'
+        },
+        {
+          id: '5',
+          category: 'sleep' as const,
+          title: 'Side Sleep Setup',
+          description: 'Practice sleeping on your side with a pillow',
+          completed: false,
+          icon: <Brain className="h-4 w-4" />,
+          action: 'Arrange pillows',
+          benefit: 'Better blood flow to baby'
+        }
+      ];
+    } else {
+      return [
+        {
+          id: '1',
+          category: 'workout' as const,
+          title: 'Gentle Pelvic Tilts',
+          description: 'Do 10 pelvic tilts to ease back pressure',
+          completed: false,
+          icon: <Activity className="h-4 w-4" />,
+          action: 'Start exercises',
+          benefit: 'Relieves back pain & prepares for labor'
+        },
+        {
+          id: '2',
+          category: 'nutrition' as const,
+          title: 'Small Frequent Meals',
+          description: 'Eat 5-6 small meals to prevent heartburn',
+          completed: false,
+          icon: <Apple className="h-4 w-4" />,
+          action: 'Plan meals',
+          benefit: 'Reduces heartburn & maintains energy'
+        },
+        {
+          id: '3',
+          category: 'hydration' as const,
+          title: 'Slow & Steady',
+          description: 'Sip water slowly to avoid frequent bathroom trips',
+          completed: false,
+          icon: <Droplets className="h-4 w-4" />,
+          action: 'Pace drinking',
+          benefit: 'Stays hydrated without discomfort'
+        },
+        {
+          id: '4',
+          category: 'mindfulness' as const,
+          title: 'Birth Breathing',
+          description: 'Practice deep breathing for 5 minutes',
+          completed: true,
+          icon: <Heart className="h-4 w-4" />,
+          action: 'Practice breathing',
+          benefit: 'Prepares for labor & reduces anxiety'
+        },
+        {
+          id: '5',
+          category: 'sleep' as const,
+          title: 'Pregnancy Pillow Fort',
+          description: 'Set up pillows for maximum comfort tonight',
+          completed: false,
+          icon: <Brain className="h-4 w-4" />,
+          action: 'Arrange pillows',
+          benefit: 'Better sleep despite baby\'s position'
+        }
+      ];
     }
-  ]);
+  };
+
+  const [tips, setTips] = useState<DailyTip[]>(getTrimesterTips());
 
   const completeTip = (tipId: string) => {
     setTips(prev => prev.map(tip => 
@@ -111,7 +239,12 @@ export const PregnancyWellnessDigest = () => {
           </Badge>
         </CardTitle>
         <CardDescription>
-          Your personalized daily wellness plan for Week 21
+          {currentTrimester === 1 
+            ? 'Essential daily habits for early pregnancy' 
+            : currentTrimester === 2 
+              ? 'Wellness tips for your golden trimester'
+              : 'Comfort and preparation for the final stretch'
+          }
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

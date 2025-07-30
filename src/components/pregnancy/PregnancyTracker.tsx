@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Baby, Calendar, Heart, Scale, Zap, Moon, BookOpen, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { useContentFilter } from '@/hooks/useContentFilter';
 
 interface PregnancyData {
   week: number;
@@ -21,14 +22,36 @@ interface PregnancyData {
 export const PregnancyTracker = () => {
   const { toast } = useToast();
   const { profile } = useAuth();
+  const { stageInfo } = useContentFilter();
+  
+  // Determine trimester from user's profile
+  const getCurrentTrimester = () => {
+    if (!profile?.motherhood_stage) return 2;
+    if (profile.motherhood_stage.includes('trimester_1')) return 1;
+    if (profile.motherhood_stage.includes('trimester_2')) return 2;
+    if (profile.motherhood_stage.includes('trimester_3')) return 3;
+    return 2;
+  };
+
+  const getCurrentWeek = () => {
+    const trimester = getCurrentTrimester();
+    if (trimester === 1) return Math.floor(Math.random() * 12) + 1; // 1-12 weeks
+    if (trimester === 2) return Math.floor(Math.random() * 14) + 13; // 13-26 weeks
+    return Math.floor(Math.random() * 14) + 27; // 27-40 weeks
+  };
+
   const [pregnancyData, setPregnancyData] = useState<PregnancyData>({
-    week: 21,
-    trimester: 2,
+    week: getCurrentWeek(),
+    trimester: getCurrentTrimester(),
     dueDate: '2024-08-15',
-    symptoms: ['Lower back pain', 'Round ligament pain', 'Sciatica', 'Heartburn', 'Frequent urination'],
+    symptoms: getCurrentTrimester() === 1 
+      ? ['Morning sickness', 'Fatigue', 'Breast tenderness', 'Frequent urination', 'Food aversions']
+      : getCurrentTrimester() === 2 
+        ? ['Lower back pain', 'Round ligament pain', 'Sciatica', 'Heartburn', 'Increased energy']
+        : ['Shortness of breath', 'Swelling', 'Hip pain', 'Braxton Hicks', 'Frequent urination', 'Fatigue'],
     mood: 7,
-    energy: 6,
-    sleep: 6,
+    energy: getCurrentTrimester() === 2 ? 8 : 5,
+    sleep: getCurrentTrimester() === 3 ? 4 : 6,
     weight: 145
   });
 
@@ -37,31 +60,71 @@ export const PregnancyTracker = () => {
     const trimester = pregnancyData.trimester;
     
     if (trimester === 1) {
-      return `Week ${week}: Your baby is developing rapidly! Focus on gentle movement and proper nutrition.`;
+      if (week <= 4) return `Week ${week}: Your little one is just beginning! Focus on folic acid and gentle care.`;
+      if (week <= 8) return `Week ${week}: Major organs are forming. Rest when you need to and eat well.`;
+      return `Week ${week}: You're almost through the first trimester! Symptoms may start easing soon.`;
     } else if (trimester === 2) {
-      return `Week ${week}: Welcome to the sweet spot! This is often when energy returns and you feel amazing.`;
+      if (week <= 16) return `Week ${week}: Welcome to the golden period! Energy is returning and you might feel those first flutters.`;
+      if (week <= 20) return `Week ${week}: Halfway there! Your anatomy scan might reveal your baby's gender.`;
+      return `Week ${week}: Your baby is getting stronger and you're feeling more movement every day.`;
     } else {
-      return `Week ${week}: You're in the home stretch! Prepare for baby's arrival while taking care of yourself.`;
+      if (week <= 32) return `Week ${week}: Third trimester has begun! Your baby is developing rapidly and gaining weight.`;
+      if (week <= 36) return `Week ${week}: Almost full term! Start preparing your hospital bag and birth plan.`;
+      return `Week ${week}: Any day now! Your baby is considered full term and ready to meet you.`;
     }
   };
 
   const getPersonalizedTip = () => {
-    const { symptoms, mood, energy, sleep } = pregnancyData;
+    const { symptoms, mood, energy, sleep, trimester } = pregnancyData;
     
-    if (symptoms.includes('Sciatica')) {
-      return "Sciatica pain is common in pregnancy. Try gentle stretches, warm compresses, and consider prenatal massage. Rest when you can!";
+    // First trimester specific tips
+    if (trimester === 1) {
+      if (symptoms.includes('Morning sickness')) {
+        return "Morning sickness is tough! Try eating small, frequent meals and keep crackers by your bed. Ginger tea can help too.";
+      }
+      if (symptoms.includes('Fatigue')) {
+        return "First trimester fatigue is your body working overtime! Listen to it and rest as much as you can.";
+      }
+      if (symptoms.includes('Food aversions')) {
+        return "Food aversions are so common right now. Focus on what you can keep down and don't stress about perfect nutrition yet.";
+      }
+      return "First trimester is all about survival mode. Be gentle with yourself - growing a baby is hard work!";
     }
-    if (symptoms.includes('Lower back pain') || symptoms.includes('Round ligament pain')) {
-      return "Back pain is so common right now. Try prenatal yoga, a warm bath, or ask your partner for a gentle massage.";
+    
+    // Second trimester specific tips
+    if (trimester === 2) {
+      if (symptoms.includes('Sciatica')) {
+        return "Sciatica pain is common as baby grows. Try gentle stretches, warm compresses, and consider prenatal massage. Rest when you can!";
+      }
+      if (symptoms.includes('Lower back pain') || symptoms.includes('Round ligament pain')) {
+        return "Back pain is so common right now. Try prenatal yoga, a warm bath, or ask your partner for a gentle massage.";
+      }
+      if (symptoms.includes('Heartburn')) {
+        return "Heartburn bothering you? Try eating smaller meals, avoid spicy foods, and sleep with your head elevated.";
+      }
+      return "Second trimester energy boost! This is a great time to prepare the nursery and enjoy feeling good.";
     }
-    if (symptoms.includes('Heartburn')) {
-      return "Heartburn bothering you? Try eating smaller meals, avoid spicy foods, and sleep with your head elevated.";
+    
+    // Third trimester specific tips
+    if (trimester === 3) {
+      if (symptoms.includes('Shortness of breath')) {
+        return "Shortness of breath is normal as baby takes up more space. Sit up straight and take breaks when climbing stairs.";
+      }
+      if (symptoms.includes('Swelling')) {
+        return "Swelling in feet and hands is common. Elevate your feet, drink plenty of water, and call your doctor if it's sudden.";
+      }
+      if (symptoms.includes('Braxton Hicks')) {
+        return "Braxton Hicks contractions are practice runs! Stay hydrated and change positions. Time them if they get regular.";
+      }
+      if (sleep < 5) {
+        return "Third trimester sleep is challenging! Try a pregnancy pillow, frequent position changes, and rest during the day.";
+      }
+      return "You're in the home stretch! Start preparing your hospital bag and practicing breathing techniques.";
     }
+    
+    // General tips based on mood/energy
     if (energy < 5) {
-      return "Second trimester fatigue is real! Try protein-rich snacks, short walks, and don't hesitate to rest when needed.";
-    }
-    if (sleep < 6) {
-      return "Sleep getting tough? A pregnancy pillow can be a game-changer. Also try a relaxing bedtime routine.";
+      return "Low energy is totally normal. Try protein-rich snacks, short walks, and don't hesitate to rest when needed.";
     }
     if (mood < 6) {
       return "It's totally okay to have tough days. Consider journaling, calling a friend, or doing something small that brings you joy.";
@@ -174,7 +237,12 @@ export const PregnancyTracker = () => {
             <div className="space-y-2">
               <h4 className="font-medium text-sm">Quick Log</h4>
               <div className="grid grid-cols-2 gap-2">
-                {['Sciatica', 'Hip pain', 'Heartburn', 'Swelling', 'Baby kicks', 'Braxton Hicks', 'Shortness of breath', 'Restless legs', 'Constipation', 'Mood swings'].map((symptom) => (
+                {(pregnancyData.trimester === 1 
+                  ? ['Morning sickness', 'Fatigue', 'Breast tenderness', 'Food aversions', 'Headaches', 'Dizziness', 'Mood swings', 'Constipation']
+                  : pregnancyData.trimester === 2 
+                    ? ['Sciatica', 'Hip pain', 'Heartburn', 'Baby kicks', 'Round ligament pain', 'Increased appetite', 'Skin changes', 'Leg cramps']
+                    : ['Shortness of breath', 'Swelling', 'Braxton Hicks', 'Restless legs', 'Pelvic pressure', 'Frequent urination', 'Insomnia', 'Nesting urge']
+                ).map((symptom) => (
                   <Button
                     key={symptom}
                     variant="outline"
@@ -194,21 +262,36 @@ export const PregnancyTracker = () => {
               <div className="p-4 bg-blue-50 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">Week {pregnancyData.week} Development</h4>
                 <p className="text-sm text-gray-700">
-                  Your baby is about the size of a carrot! They're developing their senses and you might feel more movement.
+                  {pregnancyData.trimester === 1 
+                    ? "Your baby's major organs are forming! Neural tube development is crucial right now."
+                    : pregnancyData.trimester === 2 
+                      ? "Your baby is about the size of a carrot! They're developing their senses and you might feel more movement."
+                      : "Your baby is gaining weight and their lungs are maturing. They're getting ready to meet you!"
+                  }
                 </p>
               </div>
               
               <div className="p-4 bg-green-50 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">Your Body This Week</h4>
                 <p className="text-sm text-gray-700">
-                  Your belly is really showing now! Back pain is common as your center of gravity shifts. Stay active but listen to your body.
+                  {pregnancyData.trimester === 1 
+                    ? "Your body is adjusting to pregnancy hormones. Fatigue and nausea are common as your body works hard."
+                    : pregnancyData.trimester === 2 
+                      ? "Your belly is really showing now! Back pain is common as your center of gravity shifts. Stay active but listen to your body."
+                      : "Your body is preparing for birth. Your ribcage may expand and you might feel more pressure as baby drops lower."
+                  }
                 </p>
               </div>
 
               <div className="p-4 bg-purple-50 rounded-lg">
                 <h4 className="font-medium text-sm mb-2">Wellness Focus</h4>
                 <p className="text-sm text-gray-700">
-                  Focus on calcium-rich foods, gentle exercise, and preparing your birth plan. You're doing great!
+                  {pregnancyData.trimester === 1 
+                    ? "Focus on folic acid, staying hydrated, and gentle movement. Listen to your body and rest when needed."
+                    : pregnancyData.trimester === 2 
+                      ? "Focus on calcium-rich foods, gentle exercise, and enjoying this energy boost. Great time for prenatal classes!"
+                      : "Focus on preparing for birth, practicing breathing techniques, and getting plenty of rest. Pack your hospital bag!"
+                  }
                 </p>
               </div>
             </div>
