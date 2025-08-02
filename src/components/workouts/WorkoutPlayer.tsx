@@ -3,84 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Play, Pause, SkipForward, Check, Clock, Target, ArrowLeft } from "lucide-react";
+import { Check, Target, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-interface Exercise {
-  id: string;
-  name: string;
-  duration: number; // in seconds
-  reps?: string;
-  description: string;
-  instructions: string[];
-  videoUrl?: string;
-  completed: boolean;
-}
-
-interface WorkoutPlayerProps {
-  week: number;
-  day: number;
-  onComplete: () => void;
-  onBack: () => void;
-}
-
-// Sample workout data for the 30-day challenge
-const getWorkoutData = (week: number, day: number): Exercise[] => {
-  console.log('Getting workout data for week:', week, 'day:', day);
-  
-  // Construct Supabase storage URL for videos
-  const getVideoUrl = (week: number, day: number) => {
-    const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const dayName = dayNames[day - 1]; // Convert day number to abbreviated day name
-    
-    if (!dayName) {
-      console.warn('Invalid day number:', day);
-      return null;
-    }
-    
-    const url = `https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/30%20days%20glow%20up/week%20${week}/Week%20${week}%20-%20${dayName}.mp4`;
-    console.log('Constructed video URL:', url);
-    return url;
-  };
-  
-  // Generate workout data for all weeks and days
-  const generateWorkoutForWeekDay = (week: number, day: number): Exercise[] => {
-    const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    const dayName = dayNames[day - 1];
-    
-    const weekTitles = {
-      1: 'Foundation',
-      2: 'Strength',
-      3: 'Energy',
-      4: 'Glow'
-    };
-    
-    const weekTitle = weekTitles[week as keyof typeof weekTitles] || 'Workout';
-    
-    return [
-      {
-        id: "main-workout",
-        name: `${dayName} ${weekTitle}`,
-        duration: 1200, // 20 minutes
-        description: `Week ${week} Day ${day} - ${dayName} workout`,
-        videoUrl: getVideoUrl(week, day),
-        instructions: [
-          `Follow the Week ${week} ${dayName} workout video`,
-          "Focus on proper form and technique",
-          "Listen to your body and modify as needed",
-          "Take breaks when necessary"
-        ],
-        completed: false
-      }
-    ];
-  };
-
-  // Use the generate function for all weeks and days
-  const result = generateWorkoutForWeekDay(week, day);
-  
-  console.log('Returning workout data:', result);
-  return result;
-};
+import { WorkoutPlayerProps, Exercise } from './types';
+import { getWorkoutData } from './WorkoutData';
+import VideoPlayer from './VideoPlayer';
+import ExerciseTimer from './ExerciseTimer';
+import ExerciseList from './ExerciseList';
 
 export default function WorkoutPlayer({ week, day, onComplete, onBack }: WorkoutPlayerProps) {
   const { toast } = useToast();
@@ -121,12 +50,6 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
     return () => clearInterval(interval);
   }, [isPlaying, timeRemaining]);
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
   const markExerciseComplete = () => {
     setExercises(prev => prev.map((ex, index) => 
       index === currentExerciseIndex ? { ...ex, completed: true } : ex
@@ -156,6 +79,12 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
       setTimeRemaining(exercises[currentExerciseIndex + 1]?.duration || 0);
       setIsPlaying(false);
     }
+  };
+
+  const handleExerciseSelect = (index: number) => {
+    setCurrentExerciseIndex(index);
+    setTimeRemaining(exercises[index]?.duration || 0);
+    setIsPlaying(false);
   };
 
   const completeWorkout = () => {
@@ -241,78 +170,22 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
           <p className="text-muted-foreground">{currentExercise.description}</p>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Video Player - Should show immediately */}
-          {(() => {
-            console.log('Video URL check:', currentExercise.videoUrl);
-            console.log('Should show video:', !!currentExercise.videoUrl);
-            return currentExercise.videoUrl ? (
-              <div className="w-full mb-6">
-                <h4 className="font-medium mb-2">Exercise Video:</h4>
-                <div className="aspect-video bg-black rounded-lg overflow-hidden">
-                  <iframe
-                    src={currentExercise.videoUrl}
-                    title={currentExercise.name}
-                    className="w-full h-full"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="w-full mb-6">
-                <h4 className="font-medium mb-2">Exercise Video:</h4>
-                <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
-                  <p className="text-gray-500">No video available for this exercise</p>
-                </div>
-              </div>
-            );
-          })()}
+          {/* Video Player */}
+          <VideoPlayer 
+            videoUrl={currentExercise.videoUrl} 
+            title={currentExercise.name} 
+          />
 
           {/* Timer */}
-          <div className="text-center">
-            <div className="text-6xl font-bold text-primary mb-2">
-              {formatTime(timeRemaining)}
-            </div>
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              <span>
-                {formatTime(currentExercise.duration)} total
-                {currentExercise.reps && ` • ${currentExercise.reps}`}
-              </span>
-            </div>
-          </div>
-
-          {/* Controls */}
-          <div className="flex justify-center gap-4">
-            <Button
-              onClick={startPauseExercise}
-              size="lg"
-              className="px-8"
-              disabled={currentExercise.completed || timeRemaining === 0}
-            >
-              {isPlaying ? (
-                <>
-                  <Pause className="h-5 w-5 mr-2" />
-                  Pause
-                </>
-              ) : (
-                <>
-                  <Play className="h-5 w-5 mr-2" />
-                  Start
-                </>
-              )}
-            </Button>
-            
-            <Button
-              variant="outline"
-              onClick={skipToNext}
-              disabled={currentExerciseIndex === exercises.length - 1}
-            >
-              <SkipForward className="h-4 w-4 mr-2" />
-              Next
-            </Button>
-          </div>
+          <ExerciseTimer
+            duration={currentExercise.duration}
+            timeRemaining={timeRemaining}
+            isPlaying={isPlaying}
+            isCompleted={currentExercise.completed}
+            onStartPause={startPauseExercise}
+            onSkip={skipToNext}
+            canSkip={currentExerciseIndex < exercises.length - 1}
+          />
 
           {/* Instructions */}
           <div className="space-y-3">
@@ -344,58 +217,11 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
       </Card>
 
       {/* Exercise List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Today's Workout</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {exercises.map((exercise, index) => (
-              <div
-                key={exercise.id}
-                className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
-                  index === currentExerciseIndex
-                    ? 'border-primary bg-primary/5'
-                    : exercise.completed
-                    ? 'border-green-200 bg-green-50'
-                    : 'border-border'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium ${
-                    exercise.completed
-                      ? 'bg-green-600 text-white'
-                      : index === currentExerciseIndex
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted text-muted-foreground'
-                  }`}>
-                    {exercise.completed ? <Check className="h-4 w-4" /> : index + 1}
-                  </div>
-                  <div>
-                    <h4 className="font-medium">{exercise.name}</h4>
-                    <p className="text-sm text-muted-foreground">
-                      {formatTime(exercise.duration)}
-                      {exercise.reps && ` • ${exercise.reps}`}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setCurrentExerciseIndex(index);
-                    setTimeRemaining(exercise.duration);
-                    setIsPlaying(false);
-                  }}
-                  disabled={exercise.completed}
-                >
-                  {index === currentExerciseIndex ? 'Current' : 'Start'}
-                </Button>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <ExerciseList
+        exercises={exercises}
+        currentExerciseIndex={currentExerciseIndex}
+        onExerciseSelect={handleExerciseSelect}
+      />
 
       {/* Complete Workout */}
       {allExercisesComplete && (
