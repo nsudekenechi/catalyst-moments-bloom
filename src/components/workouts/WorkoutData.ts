@@ -14,7 +14,10 @@ const getVideoUrl = (week: number, day: number): string | null => {
     return null;
   }
   
-  const url = `https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/30%20days%20glow%20up/week%20${week}/Week%20${week}%20-%20${dayName}.mp4`;
+  // Week 1 uses "Week X", Week 2 uses "Week X", Week 3+ uses "week X" (lowercase)
+  const weekPrefix = week <= 2 ? 'Week' : 'week';
+  
+  const url = `https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/30%20days%20glow%20up/week%20${week}/${weekPrefix}%20${week}%20-%20${dayName}.mp4`;
   console.log('Constructed video URL:', url);
   return url;
 };
