@@ -30,7 +30,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
   
   // Construct Supabase storage URL for videos
   const getVideoUrl = (week: number, day: number) => {
-    const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const dayName = dayNames[day - 1]; // Convert day number to day name
     
     if (!dayName) {
