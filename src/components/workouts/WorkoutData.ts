@@ -2,8 +2,8 @@ import { Exercise } from './types';
 
 // Construct Supabase storage URL for videos
 const getVideoUrl = (week: number, day: number): string | null => {
-  const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const dayName = dayNames[day - 1]; // Convert day number to abbreviated day name
+  const dayNames = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']; // lowercase to match file names
+  const dayName = dayNames[day - 1]; // Convert day number to lowercase abbreviated day name
   
   if (!dayName) {
     console.warn('Invalid day number:', day);
