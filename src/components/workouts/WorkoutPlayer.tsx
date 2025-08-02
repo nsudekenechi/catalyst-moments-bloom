@@ -35,7 +35,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         name: "Gentle Warm-up",
         duration: 300, // 5 minutes
         description: "Start your journey with gentle movements",
-        videoUrl: "https://www.youtube.com/embed/VlMl6oLVf80", // Your original course video
+        videoUrl: "https://www.youtube.com/embed/VlMl6oLVf80?enablejsapi=1&origin=https://32c7e3fa-0e70-40c5-b4d7-d4217b9cd22e.lovableproject.com&rel=0", // Your original course video with embed parameters
         instructions: [
           "Begin with deep breathing exercises",
           "Gentle neck and shoulder rolls", 
