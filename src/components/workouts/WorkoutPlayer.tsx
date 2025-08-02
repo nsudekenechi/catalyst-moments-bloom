@@ -43,143 +43,40 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
     return url;
   };
   
-  const workouts: Record<string, Exercise[]> = {
-    // Week 1 - Foundation Week
-    "1-1": [
-      {
-        id: "warm-up",
-        name: "Gentle Warm-up",
-        duration: 300, // 5 minutes
-        description: "Start your journey with gentle movements",
-        videoUrl: getVideoUrl(week, day),
-        instructions: [
-          "Begin with deep breathing exercises",
-          "Gentle neck and shoulder rolls", 
-          "Light arm circles",
-          "Pelvic tilts"
-        ],
-        completed: false
-      },
+  // Generate workout data for all weeks and days
+  const generateWorkoutForWeekDay = (week: number, day: number): Exercise[] => {
+    const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const dayName = dayNames[day - 1];
+    
+    const weekTitles = {
+      1: 'Foundation',
+      2: 'Strength',
+      3: 'Energy',
+      4: 'Glow'
+    };
+    
+    const weekTitle = weekTitles[week as keyof typeof weekTitles] || 'Workout';
+    
+    return [
       {
         id: "main-workout",
-        name: "Foundation Workout",
-        duration: 900, // 15 minutes
-        description: "Building your fitness foundation",
-        videoUrl: getVideoUrl(week, day),
-        instructions: [
-          "Follow along with the video",
-          "Focus on proper form",
-          "Listen to your body",
-          "Take breaks as needed"
-        ],
-        completed: false
-      },
-      {
-        id: "cool-down",
-        name: "Cool Down & Stretch",
-        duration: 300, // 5 minutes
-        description: "End with calming stretches",
-        videoUrl: getVideoUrl(week, day),
-        instructions: [
-          "Gentle stretching sequence",
-          "Deep breathing exercises",
-          "Relaxation and recovery"
-        ],
-        completed: false
-      }
-    ],
-    "1-2": [
-      {
-        id: "warm-up",
-        name: "Tuesday Warm-up",
-        duration: 300,
-        description: "Prepare your body for movement",
-        videoUrl: getVideoUrl(week, day),
-        instructions: [
-          "Dynamic warm-up movements",
-          "Joint mobility exercises",
-          "Activation drills"
-        ],
-        completed: false
-      },
-      {
-        id: "main-workout",
-        name: "Foundation Building",
-        duration: 900,
-        description: "Continue building your foundation",
-        videoUrl: getVideoUrl(week, day),
-        instructions: [
-          "Follow the Tuesday workout video",
-          "Maintain proper form",
-          "Progress at your own pace"
-        ],
-        completed: false
-      }
-    ],
-    "1-3": [
-      {
-        id: "main-workout",
-        name: "Wednesday Foundation",
+        name: `${dayName} ${weekTitle}`,
         duration: 1200, // 20 minutes
-        description: "Mid-week strength building",
+        description: `Week ${week} Day ${day} - ${dayName} workout`,
         videoUrl: getVideoUrl(week, day),
         instructions: [
-          "Follow the Wednesday workout video",
-          "Focus on strength movements",
-          "Take rest breaks as needed"
+          `Follow the Week ${week} ${dayName} workout video`,
+          "Focus on proper form and technique",
+          "Listen to your body and modify as needed",
+          "Take breaks when necessary"
         ],
         completed: false
       }
-    ],
-    "1-4": [
-      {
-        id: "main-workout",
-        name: "Thursday Flow",
-        duration: 1200,
-        description: "Active recovery and movement",
-        videoUrl: getVideoUrl(week, day),
-        instructions: [
-          "Follow the Thursday workout video",
-          "Focus on flow and movement",
-          "Listen to your body"
-        ],
-        completed: false
-      }
-    ],
-    "1-5": [
-      {
-        id: "main-workout",
-        name: "Friday Finish Strong",
-        duration: 1500, // 25 minutes
-        description: "End the week with energy",
-        videoUrl: getVideoUrl(week, day),
-        instructions: [
-          "Follow the Friday workout video",
-          "Give your best effort",
-          "Celebrate the week's progress"
-        ],
-        completed: false
-      }
-    ]
+    ];
   };
 
-  const key = `${week}-${day}`;
-  const result = workouts[key] || [
-    {
-      id: "placeholder",
-      name: `Week ${week} Day ${day} Workout`,
-      duration: 1200, // 20 minutes
-      description: "Your personalized workout for today",
-      videoUrl: getVideoUrl(week, day),
-      instructions: [
-        "Follow along with today's exercises",
-        "Listen to your body",
-        "Take breaks as needed",
-        "Focus on proper form"
-      ],
-      completed: false
-    }
-  ];
+  // Use the generate function for all weeks and days
+  const result = generateWorkoutForWeekDay(week, day);
   
   console.log('Returning workout data:', result);
   return result;
