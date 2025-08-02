@@ -28,6 +28,11 @@ interface WorkoutPlayerProps {
 const getWorkoutData = (week: number, day: number): Exercise[] => {
   console.log('Getting workout data for week:', week, 'day:', day);
   
+  // Construct Supabase storage URL for videos
+  const getVideoUrl = (week: number, day: number) => {
+    return `https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/30 days glow up/week ${week}/day${day}.mp4`;
+  };
+  
   const workouts: Record<string, Exercise[]> = {
         "1-1": [
       {
@@ -35,7 +40,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         name: "Gentle Warm-up",
         duration: 300, // 5 minutes
         description: "Start your journey with gentle movements",
-        videoUrl: "https://www.youtube.com/embed/VlMl6oLVf80?enablejsapi=1&origin=https://32c7e3fa-0e70-40c5-b4d7-d4217b9cd22e.lovableproject.com&rel=0", // Your original course video with embed parameters
+        videoUrl: getVideoUrl(week, day),
         instructions: [
           "Begin with deep breathing exercises",
           "Gentle neck and shoulder rolls", 
@@ -50,6 +55,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         duration: 600, // 10 minutes
         reps: "3 sets of 10",
         description: "Gentle core awakening exercises",
+        videoUrl: getVideoUrl(week, day),
         instructions: [
           "Lie on your back with knees bent",
           "Place hands on lower ribs",
@@ -63,6 +69,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         name: "Relaxation & Stretching", 
         duration: 300, // 5 minutes
         description: "End with calming stretches",
+        videoUrl: getVideoUrl(week, day),
         instructions: [
           "Child's pose for 1 minute",
           "Gentle spinal twists",
@@ -78,6 +85,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         name: "Movement Preparation",
         duration: 360, // 6 minutes
         description: "Prepare your body for gentle movement",
+        videoUrl: getVideoUrl(week, day),
         instructions: [
           "Cat-cow stretches",
           "Modified sun salutations",
@@ -92,6 +100,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         duration: 480, // 8 minutes
         reps: "2 sets of 8",
         description: "Basic strength building exercises",
+        videoUrl: getVideoUrl(week, day),
         instructions: [
           "Wall push-ups",
           "Supported squats using chair",
@@ -105,6 +114,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
         name: "Mindfulness Moment",
         duration: 240, // 4 minutes
         description: "Connect with your body and goals",
+        videoUrl: getVideoUrl(week, day),
         instructions: [
           "Seated meditation",
           "Body scan relaxation",
@@ -123,6 +133,7 @@ const getWorkoutData = (week: number, day: number): Exercise[] => {
       name: `Week ${week} Day ${day} Workout`,
       duration: 1200, // 20 minutes
       description: "Your personalized workout for today",
+      videoUrl: getVideoUrl(week, day),
       instructions: [
         "Follow along with today's exercises",
         "Listen to your body",
