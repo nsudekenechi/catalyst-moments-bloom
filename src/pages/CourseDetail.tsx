@@ -116,16 +116,9 @@ export default function CourseDetail() {
       return;
     }
 
-    // Debug logging
-    console.log('Starting day:', weekNumber, dayNumber);
-    console.log('User:', user);
-    console.log('Course:', course);
-
     // Launch workout player immediately
     setActiveWorkout({ week: weekNumber, day: dayNumber });
     setIsWorkoutActive(true);
-    
-    console.log('Set workout active:', { week: weekNumber, day: dayNumber });
 
     try {
       if (!userProgress) {
@@ -267,10 +260,6 @@ export default function CourseDetail() {
   return (
     <PageLayout>
       <div className="container mx-auto py-8 space-y-8">
-        {/* Debug info */}
-        <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
-          Debug: isWorkoutActive={isWorkoutActive ? 'true' : 'false'}, activeWorkout={JSON.stringify(activeWorkout)}
-        </div>
         
         {/* Show Workout Player when active */}
         {isWorkoutActive && activeWorkout ? (
@@ -279,7 +268,6 @@ export default function CourseDetail() {
             day={activeWorkout.day}
             onComplete={completeWorkout}
             onBack={() => {
-              console.log('Back button clicked');
               setIsWorkoutActive(false);
               setActiveWorkout(null);
             }}

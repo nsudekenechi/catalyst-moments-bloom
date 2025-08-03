@@ -1,8 +1,6 @@
 import { VideoPlayerProps } from './types';
 
 export default function VideoPlayer({ videoUrl, title }: VideoPlayerProps) {
-  console.log('VideoPlayer - URL:', videoUrl, 'Title:', title);
-  
   if (!videoUrl) {
     return (
       <div className="w-full mb-6">

@@ -21,14 +21,11 @@ const getVideoUrl = (week: number, day: number): string | null => {
   const folderName = week === 4 ? `week${week}` : `week%20${week}`;
   
   const url = `https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/30%20days%20glow%20up/${folderName}/${weekPrefix}%20${week}%20-%20${dayName}.mp4`;
-  console.log('Constructed video URL:', url);
   return url;
 };
 
 // Generate workout data for any week and day combination
 export const getWorkoutData = (week: number, day: number): Exercise[] => {
-  console.log('Getting workout data for week:', week, 'day:', day);
-  
   const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const dayName = dayNames[day - 1];
   
@@ -126,6 +123,5 @@ export const getWorkoutData = (week: number, day: number): Exercise[] => {
     }
   }
   
-  console.log('Returning workout data:', workoutData);
   return workoutData;
 };

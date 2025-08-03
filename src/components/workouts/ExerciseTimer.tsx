@@ -17,17 +17,31 @@ export default function ExerciseTimer({
   onSkip, 
   canSkip 
 }: ExerciseTimerProps) {
+  const progressPercentage = ((duration - timeRemaining) / duration) * 100;
+  
   return (
-    <div className="text-center space-y-4">
+    <div className="text-center space-y-6">
       {/* Timer Display */}
-      <div className="text-6xl font-bold text-primary mb-2">
-        {formatTime(timeRemaining)}
-      </div>
-      
-      {/* Duration Info */}
-      <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-        <Clock className="h-4 w-4" />
-        <span>{formatTime(duration)} total</span>
+      <div className="space-y-4">
+        <div className="text-6xl font-bold text-primary">
+          {formatTime(timeRemaining)}
+        </div>
+        
+        {/* Progress Bar */}
+        <div className="w-full max-w-xs mx-auto">
+          <div className="h-2 bg-muted rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-primary transition-all duration-1000 ease-out"
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+        </div>
+        
+        {/* Duration Info */}
+        <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+          <Clock className="h-4 w-4" />
+          <span>{formatTime(duration)} total</span>
+        </div>
       </div>
 
       {/* Controls */}

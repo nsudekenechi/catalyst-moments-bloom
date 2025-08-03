@@ -102,7 +102,7 @@
   }
   
   .hero-gradient {
-    @apply bg-gradient-to-br from-catalyst-copper/10 via-white to-catalyst-peach/30;
+    @apply bg-gradient-to-br from-primary/10 via-background to-secondary/20;
   }
   
   .card-hover {

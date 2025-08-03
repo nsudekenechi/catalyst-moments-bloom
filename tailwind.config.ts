@@ -53,16 +53,16 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Custom colors
+				// Brand colors (HSL format for consistency)
 				catalyst: {
-					copper: '#C17F45', 
-					brown: '#5D2906',
-					peach: '#FDE1D3',
-					beige: '#F9F0E6',
-					cream: '#FFF8F0',
-					tan: '#E5D3B3',
-					sage: '#D4DBCA',
-					gold: '#D4A76A',
+					copper: '25 50% 45%', 
+					brown: '25 75% 20%',
+					peach: '25 65% 85%',
+					beige: '35 40% 92%',
+					cream: '40 100% 96%',
+					tan: '40 35% 78%',
+					sage: '90 20% 82%',
+					gold: '35 45% 62%',
 				}
 			},
 			borderRadius: {
