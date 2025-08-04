@@ -21,16 +21,16 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
               Made for Every Stage of Motherhood
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
-              Your Wellness <span className="text-primary">Journey</span> Through Motherhood
+              Your Wellness <span className="text-catalyst-copper">Journey</span> Through Motherhood
             </h1>
             <p className="text-lg mb-8 text-muted-foreground max-w-lg leading-relaxed">
               Catalyst Mom empowers you with personalized fitness, nutrition, self-care, and community support — designed for every stage of motherhood.
             </p>
             <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-6">
-              <Button asChild size="lg" className="font-medium rounded-full px-8">
+              <Button asChild size="lg" className="font-medium rounded-full px-8 bg-catalyst-copper hover:bg-catalyst-copper/90">
                 <Link to="/dashboard">Get Started</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full">
+              <Button asChild variant="outline" size="lg" className="rounded-full border-catalyst-copper/20 text-catalyst-copper hover:bg-catalyst-copper/5">
                 <Link to="/about" className="flex items-center">
                   Learn More <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -40,8 +40,8 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
           </div>
           <div className="md:w-1/2 flex justify-center">
             <div className="relative">
-              <div className="absolute -top-4 -left-4 w-64 h-64 bg-primary/10 rounded-full animate-pulse-soft"></div>
-              <div className="absolute bottom-8 -right-8 w-40 h-40 bg-primary/10 rounded-full animate-float"></div>
+              <div className="absolute -top-4 -left-4 w-64 h-64 bg-catalyst-copper/10 rounded-full animate-pulse-soft"></div>
+              <div className="absolute bottom-8 -right-8 w-40 h-40 bg-catalyst-copper/10 rounded-full animate-float"></div>
               <div className="relative z-10 rounded-2xl shadow-soft overflow-hidden max-w-sm md:max-w-md mx-auto">
                 <AspectRatio ratio={4/5} className="bg-muted">
                   <img 
@@ -57,7 +57,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
                 <div className="absolute bottom-4 left-4 flex items-center space-x-2">
                   <Button 
                     size="icon" 
-                    className="rounded-full bg-background/90 hover:bg-background text-primary"
+                    className="rounded-full bg-white/90 hover:bg-white text-catalyst-copper"
                     onClick={() => onWatchVideo("https://www.youtube.com/embed/j7f75AzL9Hg", "Mom Fitness Journey")}
                   >
                     <Play className="h-5 w-5 ml-0.5" />

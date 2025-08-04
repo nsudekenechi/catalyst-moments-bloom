@@ -19,8 +19,13 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [totalWorkoutTime, setTotalWorkoutTime] = useState(0);
 
+  // Debug logging
+  console.log('WorkoutPlayer props:', { week, day });
+  console.log('WorkoutPlayer state:', { exercises, currentExerciseIndex, isPlaying, timeRemaining });
+
   useEffect(() => {
     const workoutData = getWorkoutData(week, day);
+    console.log('Setting workout data:', workoutData);
     setExercises(workoutData);
     setTimeRemaining(workoutData[0]?.duration || 0);
     setTotalWorkoutTime(workoutData.reduce((total, ex) => total + ex.duration, 0));
@@ -94,6 +99,10 @@ export default function WorkoutPlayer({ week, day, onComplete, onBack }: Workout
   const completedExercises = exercises.filter(ex => ex.completed).length;
   const workoutProgress = (completedExercises / exercises.length) * 100;
   const allExercisesComplete = completedExercises === exercises.length;
+
+  console.log('Current exercise:', currentExercise);
+  console.log('Current exercise videoUrl:', currentExercise?.videoUrl);
+  console.log('Exercises array:', exercises);
 
   if (!currentExercise || exercises.length === 0) {
     return (
