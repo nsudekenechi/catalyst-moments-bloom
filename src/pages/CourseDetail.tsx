@@ -382,10 +382,21 @@ export default function CourseDetail() {
                       <div>
                         <h4 className="font-medium mb-3">What's Included</h4>
                         <ul className="space-y-2 text-sm text-muted-foreground">
-                          <li>• 28 days of guided workouts</li>
-                          <li>• Weekly progress tracking</li>
-                          <li>• Expert tips and advice</li>
-                          <li>• Community support</li>
+                          {course.title === "30 Days Glow Up Challenge" ? (
+                            <>
+                              <li>• Week 1: Foundation & gentle movement</li>
+                              <li>• Week 2: Strength training & core recovery</li>
+                              <li>• Week 3: Energy boosting & metabolism</li>
+                              <li>• Week 4: Full body glow up transformation</li>
+                            </>
+                          ) : (
+                            <>
+                              <li>• 28 days of guided workouts</li>
+                              <li>• Weekly progress tracking</li>
+                              <li>• Expert tips and advice</li>
+                              <li>• Community support</li>
+                            </>
+                          )}
                         </ul>
                       </div>
                     </div>

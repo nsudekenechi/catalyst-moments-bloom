@@ -173,7 +173,7 @@ export default function PostpartumGlowUpChallenge() {
               30 Days Glow Up Challenge
             </CardTitle>
             <CardDescription>
-              A comprehensive 4-week program designed specifically for postpartum recovery and confidence building
+              A structured 4-week program to safely rebuild strength after birth. Gentle, effective exercises designed specifically for your recovery journey.
             </CardDescription>
           </div>
         </div>

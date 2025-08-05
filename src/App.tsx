@@ -14,7 +14,8 @@ import RecipeDetail from "./pages/RecipeDetail";
 import Wellness from "./pages/Wellness";
 import Community from "./pages/Community";
 import NotFound from "./pages/NotFound";
-import { AuthProvider } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import CheckoutModal from "./components/subscription/CheckoutModal";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Profile from "./pages/Profile";
@@ -35,99 +36,113 @@ import CourseDetail from "./pages/CourseDetail";
 // Create a client
 const queryClient = new QueryClient();
 
+function AppContent() {
+  const { showCheckoutModal, setShowCheckoutModal } = useAuth();
+  
+  return (
+    <>
+      <BrowserRouter>
+        <ScrollToTop />
+        <Toaster />
+        <Sonner />
+        <Routes>
+          <Route path="/" element={<Index />} />
+          
+          {/* Public Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/food-calories" element={<FoodCalorieChecker />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/experts" element={<Experts />} />
+          <Route path="/research" element={<Research />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          
+          {/* Protected Routes */}
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } />
+          <Route path="/workouts" element={
+            <PrivateRoute>
+              <Workouts />
+            </PrivateRoute>
+          } />
+          <Route path="/workouts/:slug" element={
+            <PrivateRoute>
+              <WorkoutDetail />
+            </PrivateRoute>
+          } />
+          <Route path="/recipes" element={
+            <PrivateRoute>
+              <Recipes />
+            </PrivateRoute>
+          } />
+          <Route path="/recipes/:slug" element={
+            <PrivateRoute>
+              <RecipeDetail />
+            </PrivateRoute>
+          } />
+          <Route path="/wellness" element={
+            <PrivateRoute>
+              <Wellness />
+            </PrivateRoute>
+          } />
+          <Route path="/community" element={
+            <PrivateRoute>
+              <Community />
+            </PrivateRoute>
+          } />
+          <Route path="/profile" element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          } />
+          <Route path="/questionnaire" element={
+            <PrivateRoute>
+              <Questionnaire />
+            </PrivateRoute>
+          } />
+          <Route path="/meal-plan" element={
+            <PrivateRoute>
+              <MealPlan />
+            </PrivateRoute>
+          } />
+          <Route path="/workout-plan" element={
+            <PrivateRoute>
+              <WorkoutPlan />
+            </PrivateRoute>
+          } />
+          <Route path="/courses" element={
+            <PrivateRoute>
+              <Courses />
+            </PrivateRoute>
+          } />
+          <Route path="/course/:id" element={
+            <PrivateRoute>
+              <CourseDetail />
+            </PrivateRoute>
+          } />
+          
+          {/* Catch-all route */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+      <CheckoutModal 
+        isOpen={showCheckoutModal} 
+        onClose={() => setShowCheckoutModal(false)} 
+      />
+    </>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <BrowserRouter>
-          <ScrollToTop />
-          <Toaster />
-          <Sonner />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            
-            {/* Public Routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/food-calories" element={<FoodCalorieChecker />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/experts" element={<Experts />} />
-            <Route path="/research" element={<Research />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/terms" element={<TermsOfService />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            
-            {/* Protected Routes */}
-            <Route path="/dashboard" element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            } />
-            <Route path="/workouts" element={
-              <PrivateRoute>
-                <Workouts />
-              </PrivateRoute>
-            } />
-            <Route path="/workouts/:slug" element={
-              <PrivateRoute>
-                <WorkoutDetail />
-              </PrivateRoute>
-            } />
-            <Route path="/recipes" element={
-              <PrivateRoute>
-                <Recipes />
-              </PrivateRoute>
-            } />
-            <Route path="/recipes/:slug" element={
-              <PrivateRoute>
-                <RecipeDetail />
-              </PrivateRoute>
-            } />
-            <Route path="/wellness" element={
-              <PrivateRoute>
-                <Wellness />
-              </PrivateRoute>
-            } />
-            <Route path="/community" element={
-              <PrivateRoute>
-                <Community />
-              </PrivateRoute>
-            } />
-            <Route path="/profile" element={
-              <PrivateRoute>
-                <Profile />
-              </PrivateRoute>
-            } />
-            <Route path="/questionnaire" element={
-              <PrivateRoute>
-                <Questionnaire />
-              </PrivateRoute>
-            } />
-            <Route path="/meal-plan" element={
-              <PrivateRoute>
-                <MealPlan />
-              </PrivateRoute>
-            } />
-            <Route path="/workout-plan" element={
-              <PrivateRoute>
-                <WorkoutPlan />
-              </PrivateRoute>
-            } />
-            <Route path="/courses" element={
-              <PrivateRoute>
-                <Courses />
-              </PrivateRoute>
-            } />
-            <Route path="/course/:id" element={
-              <PrivateRoute>
-                <CourseDetail />
-              </PrivateRoute>
-            } />
-            
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <AppContent />
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>

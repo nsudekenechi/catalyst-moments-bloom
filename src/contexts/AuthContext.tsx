@@ -24,6 +24,8 @@ interface AuthContextType {
   subscribed: boolean;
   subscriptionTier: string | null;
   subscriptionEnd: string | null;
+  showCheckoutModal: boolean;
+  setShowCheckoutModal: (show: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string, stage: MotherhoodStage) => Promise<void>;
   logout: () => Promise<void>;
@@ -41,6 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [subscriptionTier, setSubscriptionTier] = useState<string | null>(null);
   const [subscriptionEnd, setSubscriptionEnd] = useState<string | null>(null);
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
 
   // Fetch user profile from the profiles table
   const fetchProfile = async (userId: string) => {
@@ -74,7 +77,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           // Defer profile fetching to avoid potential deadlocks
           setTimeout(() => {
             fetchProfile(session.user.id);
-            checkSubscription();
+            checkSubscription().then(() => {
+              // Show checkout modal for new users who aren't subscribed
+              if (event === 'SIGNED_IN' && session?.user && !subscribed) {
+                setShowCheckoutModal(true);
+              }
+            });
           }, 0);
         } else {
           setProfile(null);
@@ -240,6 +248,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     subscribed,
     subscriptionTier,
     subscriptionEnd,
+    showCheckoutModal,
+    setShowCheckoutModal,
     login,
     register,
     logout,
