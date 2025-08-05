@@ -9,6 +9,85 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
+// Real-looking diverse avatar URLs for postpartum moms
+const AVATARS = [
+  'https://randomuser.me/api/portraits/women/20.jpg',
+  'https://randomuser.me/api/portraits/women/35.jpg',
+  'https://randomuser.me/api/portraits/women/52.jpg',
+  'https://randomuser.me/api/portraits/women/63.jpg',
+  'https://randomuser.me/api/portraits/women/17.jpg',
+];
+
+interface AnimatedCounterProps {
+  target: number;
+  duration?: number;
+}
+
+const AnimatedCounter = ({ target, duration = 2000 }: AnimatedCounterProps) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let startTime: number | null = null;
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const currentCount = Math.floor(easeOutQuart * target);
+      
+      setCount(currentCount);
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    
+    requestAnimationFrame(animate);
+  }, [target, duration]);
+
+  return <span>{count}</span>;
+};
+
+const UserAvatars = ({ enrolledCount }: { enrolledCount: number }) => {
+  const displayedAvatars = AVATARS.slice(0, 4);
+  const remainingCount = enrolledCount - displayedAvatars.length;
+
+  return (
+    <div className="flex items-center space-x-3">
+      <div className="flex -space-x-2">
+        {displayedAvatars.map((avatar, index) => (
+          <div
+            key={avatar}
+            className="relative group"
+            style={{ 
+              animationDelay: `${index * 200}ms`,
+              animation: 'fade-in 0.6s ease-out both'
+            }}
+          >
+            <img
+              src={avatar}
+              alt={`Enrolled mom ${index + 1}`}
+              className="w-8 h-8 rounded-full border-2 border-background object-cover 
+                       transition-transform duration-300 hover:scale-110 hover:z-10
+                       shadow-sm group-hover:shadow-md"
+            />
+            <div className="absolute inset-0 rounded-full bg-primary/10 opacity-0 
+                          group-hover:opacity-100 transition-opacity duration-300 
+                          animate-pulse" />
+          </div>
+        ))}
+        {remainingCount > 0 && (
+          <div className="w-8 h-8 rounded-full bg-primary/20 border-2 border-background 
+                        flex items-center justify-center text-xs font-medium text-primary
+                        transition-all duration-300 hover:bg-primary/30 hover:scale-110">
+            +{remainingCount > 999 ? '999+' : remainingCount}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 interface UserProgress {
   current_week: number;
   current_day: number;
@@ -21,6 +100,7 @@ export default function PostpartumGlowUpChallenge() {
   const { toast } = useToast();
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [loading, setLoading] = useState(true);
+  const [enrolledCount, setEnrolledCount] = useState(245);
 
   useEffect(() => {
     if (user) {
@@ -29,6 +109,16 @@ export default function PostpartumGlowUpChallenge() {
       setLoading(false);
     }
   }, [user]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Math.random() > 0.8) {
+        setEnrolledCount(prev => prev + Math.floor(Math.random() * 2) + 1);
+      }
+    }, 45000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchUserProgress = async () => {
     if (!user) return;
@@ -199,7 +289,7 @@ export default function PostpartumGlowUpChallenge() {
           </div>
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-muted-foreground" />
-            <span>15-30 min daily</span>
+            <span>15-20 min/day</span>
           </div>
         </div>
 
@@ -218,14 +308,38 @@ export default function PostpartumGlowUpChallenge() {
           </div>
         )}
 
-        <div className="space-y-2">
-          <h4 className="font-medium text-sm">What's Included:</h4>
-          <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• Week 1: Foundation & gentle movement</li>
-            <li>• Week 2: Strength training & core recovery</li>
-            <li>• Week 3: Energy boosting & metabolism</li>
-            <li>• Week 4: Full body glow up transformation</li>
-          </ul>
+        <div className="space-y-3 mb-6">
+          {[
+            'Safe core strengthening exercises',
+            'Gentle pelvic floor restoration', 
+            'Progressive weekly challenges'
+          ].map((benefit, index) => (
+            <div 
+              key={benefit}
+              className="flex items-center text-sm group"
+              style={{ 
+                animationDelay: `${index * 100}ms`,
+                animation: 'fade-in 0.8s ease-out both'
+              }}
+            >
+              <div className="w-2 h-2 bg-primary rounded-full mr-3 
+                            transition-all duration-300 group-hover:scale-125 group-hover:shadow-sm
+                            group-hover:shadow-primary/50" />
+              <span className="transition-colors duration-300 group-hover:text-foreground">
+                {benefit}
+              </span>
+            </div>
+          ))}
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <UserAvatars enrolledCount={enrolledCount} />
+          <div className="text-right">
+            <div className="text-lg font-semibold text-primary">
+              <AnimatedCounter target={enrolledCount} />
+            </div>
+            <span className="text-xs text-muted-foreground">moms enrolled</span>
+          </div>
         </div>
 
         <Button 
