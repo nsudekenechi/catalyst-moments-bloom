@@ -8,8 +8,9 @@ import { Search, Clock, Dumbbell, Filter, Baby, Heart, Activity, Settings } from
 import { Link } from 'react-router-dom';
 import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
 import GlowAndGoPrenatalCard from '@/components/workouts/GlowAndGoPrenatalCard';
-import PostpartumRecoveryCard from '@/components/workouts/PostpartumRecoveryCard';
 import PostpartumGlowUpChallenge from '@/components/workouts/PostpartumGlowUpChallenge';
+import FitFierceAdvancedCard from '@/components/workouts/FitFierceAdvancedCard';
+import CoreRestoreCard from '@/components/workouts/CoreRestoreCard';
 import EnergyStrengthCard from '@/components/workouts/EnergyStrengthCard';
 import BirthBallGuideCard from '@/components/workouts/BirthBallGuideCard';
 import { TTCWorkoutCard } from '@/components/ttc/TTCWorkoutCard';
@@ -397,7 +398,8 @@ const Workouts = () => {
               {isPregnant && <GlowAndGoPrenatalCard />}
               {isPregnant && <BirthBallGuideCard />}
               {isPostpartum && <PostpartumGlowUpChallenge />}
-              {isPostpartum && <PostpartumRecoveryCard />}
+              {isPostpartum && <FitFierceAdvancedCard />}
+              {isPostpartum && <CoreRestoreCard />}
               {(isPostpartum || isToddler) && <EnergyStrengthCard />}
               {!isPregnant && !isPostpartum && !isToddler && (
                 <Card className="border border-dashed flex flex-col items-center justify-center p-6">
