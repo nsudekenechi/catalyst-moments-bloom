@@ -84,10 +84,10 @@ const FitFierceAdvancedCard = () => {
   }, []);
 
   return (
-    <Card className="overflow-hidden bg-gradient-to-br from-orange-50 to-red-50 border-orange-200 
+    <Card className="overflow-hidden bg-gradient-to-br from-pink-50 to-purple-50 border-pink-200 
                      hover:shadow-lg transition-all duration-300 relative group">
       {/* Hero Image with Play Button */}
-      <div className="relative h-48 bg-gradient-to-br from-orange-400 to-red-500 overflow-hidden">
+      <div className="relative h-48 bg-gradient-to-br from-pink-400 to-purple-500 overflow-hidden">
         <img 
           src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=200&fit=crop" 
           alt="Advanced postpartum fitness"
@@ -101,13 +101,13 @@ const FitFierceAdvancedCard = () => {
                      group-hover:opacity-100 transition-all duration-300"
         >
           <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 hover:bg-white transition-colors">
-            <Play className="h-6 w-6 text-orange-600 ml-1" fill="currentColor" />
+            <Play className="h-6 w-6 text-pink-600 ml-1" fill="currentColor" />
           </div>
         </button>
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex gap-2">
-          <Badge variant="secondary" className="bg-white/90 text-orange-700 font-semibold">
+          <Badge variant="secondary" className="bg-white/90 text-pink-700 font-semibold">
             🔥 Advanced
           </Badge>
           <Badge variant="secondary" className="bg-white/90 text-gray-700">
@@ -134,15 +134,15 @@ const FitFierceAdvancedCard = () => {
         {/* Benefits */}
         <div className="space-y-2 mb-6">
           <div className="flex items-center gap-2 text-sm text-gray-700">
-            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+            <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
             <span>Advanced strength training</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-700">
-            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+            <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
             <span>High-intensity conditioning</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-700">
-            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+            <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
             <span>Performance optimization</span>
           </div>
         </div>
@@ -151,7 +151,7 @@ const FitFierceAdvancedCard = () => {
         <div className="flex items-center justify-between mb-6">
           <UserAvatars enrolledCount={enrolledCount} />
           <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600">
+            <div className="text-2xl font-bold text-pink-600">
               <AnimatedCounter target={enrolledCount} />
             </div>
             <div className="text-xs text-gray-500">moms enrolled</div>
@@ -160,7 +160,7 @@ const FitFierceAdvancedCard = () => {
 
         {/* CTA Button */}
         <Button 
-          className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold
+          className="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold
                      transform transition-all duration-200 hover:scale-105"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}

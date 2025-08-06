@@ -54,12 +54,7 @@ serve(async (req) => {
       customer_email: customerId ? undefined : user.email,
       line_items: [
         {
-          price_data: {
-            currency: "usd",
-            product_data: { name: "Premium Subscription" },
-            unit_amount: 4999, // $49.99
-            recurring: { interval: "month" },
-          },
+          price: "price_1Rt3QMCNwyQa1NiQDwHF5QDw",
           quantity: 1,
         },
       ],
