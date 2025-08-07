@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, MessageCircle, Share2, Trophy, Star, Flame } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface CommunityPost {
   id: string;
@@ -184,10 +185,31 @@ export const DynamicCommunityFeed = ({ isTTC = false }: DynamicCommunityFeedProp
 const CommunityPost = ({ post }: { post: CommunityPost }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [localLikes, setLocalLikes] = useState(post.likes);
+  const { subscribed, setShowCheckoutModal } = useAuth();
 
   const handleLike = () => {
+    if (!subscribed) {
+      setShowCheckoutModal(true);
+      return;
+    }
     setIsLiked(!isLiked);
     setLocalLikes(prev => isLiked ? prev - 1 : prev + 1);
+  };
+
+  const handleComment = () => {
+    if (!subscribed) {
+      setShowCheckoutModal(true);
+      return;
+    }
+    // Comment functionality would go here
+  };
+
+  const handleShare = () => {
+    if (!subscribed) {
+      setShowCheckoutModal(true);
+      return;
+    }
+    // Share functionality would go here
   };
 
   return (
@@ -250,11 +272,21 @@ const CommunityPost = ({ post }: { post: CommunityPost }) => {
               <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
               <span className="text-xs">{localLikes}</span>
             </Button>
-            <Button variant="ghost" size="sm" className="flex items-center space-x-1 text-muted-foreground">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleComment}
+              className="flex items-center space-x-1 text-muted-foreground"
+            >
               <MessageCircle className="h-4 w-4" />
               <span className="text-xs">{post.comments}</span>
             </Button>
-            <Button variant="ghost" size="sm" className="flex items-center space-x-1 text-muted-foreground">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleShare}
+              className="flex items-center space-x-1 text-muted-foreground"
+            >
               <Share2 className="h-4 w-4" />
               <span className="text-xs">Share</span>
             </Button>

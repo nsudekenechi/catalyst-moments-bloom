@@ -12,10 +12,11 @@ import { Heart, MessageCircle, Share2, Users, ThumbsUp, Calendar, Search } from 
 import { useAuth } from '@/contexts/AuthContext';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
 import { ProgressTracker } from '@/components/gamification/ProgressTracker';
+import SubscriptionPrompt from '@/components/subscription/SubscriptionPrompt';
 
 const Community = () => {
   const [activeFilter, setActiveFilter] = useState('all');
-  const { user, profile } = useAuth();
+  const { user, profile, subscribed } = useAuth();
   
   const isTTC = profile?.motherhood_stage === 'ttc';
   
@@ -55,15 +56,23 @@ const Community = () => {
           <TabsContent value="feed" className="mt-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-2/3 space-y-6">
-                <Card>
-                  <CardHeader className="p-4 flex flex-row items-center space-x-4">
-                    <Avatar>
-                      <AvatarFallback>CM</AvatarFallback>
-                    </Avatar>
-                    <Input placeholder="Share something with other moms..." />
-                    <Button size="sm">Post</Button>
-                  </CardHeader>
-                </Card>
+{subscribed ? (
+                  <Card>
+                    <CardHeader className="p-4 flex flex-row items-center space-x-4">
+                      <Avatar>
+                        <AvatarFallback>CM</AvatarFallback>
+                      </Avatar>
+                      <Input placeholder="Share something with other moms..." />
+                      <Button size="sm">Post</Button>
+                    </CardHeader>
+                  </Card>
+                ) : (
+                  <SubscriptionPrompt 
+                    title="Join the Conversation"
+                    description="Subscribe to post and interact with our amazing community of moms."
+                    action="Subscribe to Post"
+                  />
+                )}
                 
                 <div className="flex space-x-2 overflow-x-auto pb-2">
                   {(isTTC ? 

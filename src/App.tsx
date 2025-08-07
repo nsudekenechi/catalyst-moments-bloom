@@ -20,6 +20,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/auth/PrivateRoute";
+import SubscriptionGuard from "./components/auth/SubscriptionGuard";
 import FoodCalorieChecker from "./pages/FoodCalorieChecker";
 import Questionnaire from "./pages/Questionnaire";
 import MealPlan from "./pages/MealPlan";
@@ -62,39 +63,47 @@ function AppContent() {
           {/* Protected Routes */}
           <Route path="/dashboard" element={
             <PrivateRoute>
-              <Dashboard />
+              <SubscriptionGuard>
+                <Dashboard />
+              </SubscriptionGuard>
             </PrivateRoute>
           } />
           <Route path="/workouts" element={
             <PrivateRoute>
-              <Workouts />
+              <SubscriptionGuard>
+                <Workouts />
+              </SubscriptionGuard>
             </PrivateRoute>
           } />
           <Route path="/workouts/:slug" element={
             <PrivateRoute>
-              <WorkoutDetail />
+              <SubscriptionGuard>
+                <WorkoutDetail />
+              </SubscriptionGuard>
             </PrivateRoute>
           } />
           <Route path="/recipes" element={
             <PrivateRoute>
-              <Recipes />
+              <SubscriptionGuard>
+                <Recipes />
+              </SubscriptionGuard>
             </PrivateRoute>
           } />
           <Route path="/recipes/:slug" element={
             <PrivateRoute>
-              <RecipeDetail />
+              <SubscriptionGuard>
+                <RecipeDetail />
+              </SubscriptionGuard>
             </PrivateRoute>
           } />
           <Route path="/wellness" element={
             <PrivateRoute>
-              <Wellness />
+              <SubscriptionGuard>
+                <Wellness />
+              </SubscriptionGuard>
             </PrivateRoute>
           } />
-          <Route path="/community" element={
-            <PrivateRoute>
-              <Community />
-            </PrivateRoute>
-          } />
+          <Route path="/community" element={<Community />} />
           <Route path="/profile" element={
             <PrivateRoute>
               <Profile />
@@ -102,22 +111,30 @@ function AppContent() {
           } />
           <Route path="/questionnaire" element={
             <PrivateRoute>
-              <Questionnaire />
+              <SubscriptionGuard>
+                <Questionnaire />
+              </SubscriptionGuard>
             </PrivateRoute>
           } />
           <Route path="/meal-plan" element={
             <PrivateRoute>
-              <MealPlan />
+              <SubscriptionGuard>
+                <MealPlan />
+              </SubscriptionGuard>
             </PrivateRoute>
           } />
           <Route path="/workout-plan" element={
             <PrivateRoute>
-              <WorkoutPlan />
+              <SubscriptionGuard>
+                <WorkoutPlan />
+              </SubscriptionGuard>
             </PrivateRoute>
           } />
           <Route path="/courses" element={
             <PrivateRoute>
-              <Courses />
+              <SubscriptionGuard>
+                <Courses />
+              </SubscriptionGuard>
             </PrivateRoute>
           } />
           <Route path="/course/:id" element={
