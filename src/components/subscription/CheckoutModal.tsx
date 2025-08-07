@@ -48,7 +48,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
               </div>
               <div className="flex items-center">
                 <Check className="h-4 w-4 text-green-500 mr-3" />
-                <span className="text-sm">AI wellness coach access</span>
+                <span className="text-sm">Access to dedicated Wellness Coach</span>
               </div>
               <div className="flex items-center">
                 <Check className="h-4 w-4 text-green-500 mr-3" />
