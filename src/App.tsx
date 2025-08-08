@@ -41,117 +41,116 @@ function AppContent() {
   const { showCheckoutModal, setShowCheckoutModal } = useAuth();
   
   return (
-    <>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Toaster />
-        <Sonner />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          
-          {/* Public Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/food-calories" element={<FoodCalorieChecker />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/experts" element={<Experts />} />
-          <Route path="/research" element={<Research />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          
-          {/* Protected Routes */}
-          <Route path="/dashboard" element={
-            <PrivateRoute>
-              <SubscriptionGuard>
-                <Dashboard />
-              </SubscriptionGuard>
-            </PrivateRoute>
-          } />
-          <Route path="/workouts" element={
-            <PrivateRoute>
-              <SubscriptionGuard>
-                <Workouts />
-              </SubscriptionGuard>
-            </PrivateRoute>
-          } />
-          <Route path="/workouts/:slug" element={
-            <PrivateRoute>
-              <SubscriptionGuard>
-                <WorkoutDetail />
-              </SubscriptionGuard>
-            </PrivateRoute>
-          } />
-          <Route path="/recipes" element={
-            <PrivateRoute>
-              <SubscriptionGuard>
-                <Recipes />
-              </SubscriptionGuard>
-            </PrivateRoute>
-          } />
-          <Route path="/recipes/:slug" element={
-            <PrivateRoute>
-              <SubscriptionGuard>
-                <RecipeDetail />
-              </SubscriptionGuard>
-            </PrivateRoute>
-          } />
-          <Route path="/wellness" element={
-            <PrivateRoute>
-              <SubscriptionGuard>
-                <Wellness />
-              </SubscriptionGuard>
-            </PrivateRoute>
-          } />
-          <Route path="/community" element={<Community />} />
-          <Route path="/profile" element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
-          } />
-          <Route path="/questionnaire" element={
-            <PrivateRoute>
-              <SubscriptionGuard>
-                <Questionnaire />
-              </SubscriptionGuard>
-            </PrivateRoute>
-          } />
-          <Route path="/meal-plan" element={
-            <PrivateRoute>
-              <SubscriptionGuard>
-                <MealPlan />
-              </SubscriptionGuard>
-            </PrivateRoute>
-          } />
-          <Route path="/workout-plan" element={
-            <PrivateRoute>
-              <SubscriptionGuard>
-                <WorkoutPlan />
-              </SubscriptionGuard>
-            </PrivateRoute>
-          } />
-          <Route path="/courses" element={
-            <PrivateRoute>
-              <SubscriptionGuard>
-                <Courses />
-              </SubscriptionGuard>
-            </PrivateRoute>
-          } />
-          <Route path="/course/:id" element={
-            <PrivateRoute>
-              <CourseDetail />
-            </PrivateRoute>
-          } />
-          
-          {/* Catch-all route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+    <BrowserRouter>
+      <ScrollToTop />
+      <Toaster />
+      <Sonner />
+      <Routes>
+        <Route path="/" element={<Index />} />
+        
+        {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/food-calories" element={<FoodCalorieChecker />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/experts" element={<Experts />} />
+        <Route path="/research" element={<Research />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        
+        {/* Protected Routes */}
+        <Route path="/dashboard" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <Dashboard />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/workouts" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <Workouts />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/workouts/:slug" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <WorkoutDetail />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/recipes" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <Recipes />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/recipes/:slug" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <RecipeDetail />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/wellness" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <Wellness />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/community" element={<Community />} />
+        <Route path="/profile" element={
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        } />
+        <Route path="/questionnaire" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <Questionnaire />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/meal-plan" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <MealPlan />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/workout-plan" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <WorkoutPlan />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/courses" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <Courses />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/course/:id" element={
+          <PrivateRoute>
+            <CourseDetail />
+          </PrivateRoute>
+        } />
+        
+        {/* Catch-all route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      
       <CheckoutModal 
         isOpen={showCheckoutModal} 
         onClose={() => setShowCheckoutModal(false)} 
       />
-    </>
+    </BrowserRouter>
   );
 }
 
