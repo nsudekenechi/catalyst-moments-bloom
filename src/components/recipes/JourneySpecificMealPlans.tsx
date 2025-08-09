@@ -35,9 +35,6 @@ const JourneySpecificMealPlans = ({ mealPlans, overrideJourney, overrideStage }:
   
   const filteredMealPlans = overrideJourney ? filterByOverride(mealPlans) : (filterContent(mealPlans) as MealPlan[]);
 
-  if (!overrideJourney && !stageInfo) {
-    return null;
-  }
 
   const effectiveJourney = overrideJourney ?? stageInfo?.journey;
 
@@ -64,9 +61,11 @@ const JourneySpecificMealPlans = ({ mealPlans, overrideJourney, overrideStage }:
     <div>
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">{getJourneyTitle()}</h2>
-        <Badge variant="outline">
-          {badgeLabel}
-        </Badge>
+{badgeLabel && (
+          <Badge variant="outline">
+            {badgeLabel}
+          </Badge>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

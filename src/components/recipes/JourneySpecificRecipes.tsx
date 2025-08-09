@@ -36,9 +36,6 @@ const JourneySpecificRecipes = ({ recipes, overrideJourney, overrideStage }: Jou
   
   const filteredRecipes = overrideJourney ? filterByOverride(recipes) : (filterContent(recipes) as Recipe[]);
 
-  if (!overrideJourney && !stageInfo) {
-    return null;
-  }
 
   const effectiveJourney = overrideJourney ?? stageInfo?.journey;
 
@@ -81,9 +78,11 @@ const JourneySpecificRecipes = ({ recipes, overrideJourney, overrideStage }: Jou
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-2">{getJourneyTitle()}</h2>
         <p className="text-muted-foreground">{getJourneyDescription()}</p>
-        <Badge variant="outline" className="mt-2">
-          {badgeLabel}
-        </Badge>
+{badgeLabel && (
+          <Badge variant="outline" className="mt-2">
+            {badgeLabel}
+          </Badge>
+        )}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
