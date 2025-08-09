@@ -4,6 +4,8 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import defaultCover from '@/assets/30-days-glow-up-cover.jpg';
 
 interface MealPlan extends ContentItem {
   duration: string;
@@ -99,11 +101,11 @@ export const MealPlanCard = ({ plan }: { plan: MealPlan }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
         <AspectRatio ratio={16/9}>
           <img 
-            src={plan.image} 
+            src={plan.image || defaultCover} 
             alt={plan.title} 
             className="w-full h-full object-cover"
             onError={(e) => {
-              e.currentTarget.src = "/placeholder.svg";
+              e.currentTarget.src = defaultCover;
             }}
           />
         </AspectRatio>
@@ -126,7 +128,9 @@ export const MealPlanCard = ({ plan }: { plan: MealPlan }) => {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">View Plan</Button>
+        <Button asChild className="w-full">
+          <Link to={`/meal-plan/${plan.title.toLowerCase().replace(/\s+/g, '-')}`}>View Plan</Link>
+        </Button>
       </CardFooter>
     </Card>
   );

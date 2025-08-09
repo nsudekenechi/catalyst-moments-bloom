@@ -24,6 +24,7 @@ import SubscriptionGuard from "./components/auth/SubscriptionGuard";
 import FoodCalorieChecker from "./pages/FoodCalorieChecker";
 import Questionnaire from "./pages/Questionnaire";
 import MealPlan from "./pages/MealPlan";
+import MealPlanDetail from "./pages/MealPlanDetail";
 import WorkoutPlan from "./pages/WorkoutPlan";
 import Blog from "./pages/Blog";
 import Experts from "./pages/Experts";
@@ -119,6 +120,13 @@ function AppContent() {
           <PrivateRoute>
             <SubscriptionGuard>
               <MealPlan />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/meal-plan/:slug" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <MealPlanDetail />
             </SubscriptionGuard>
           </PrivateRoute>
         } />
