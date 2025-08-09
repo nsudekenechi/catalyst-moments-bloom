@@ -92,7 +92,7 @@ const JourneySpecificMealPlans = ({ mealPlans, overrideJourney, overrideStage }:
   );
 };
 
-const MealPlanCard = ({ plan }: { plan: MealPlan }) => {
+export const MealPlanCard = ({ plan }: { plan: MealPlan }) => {
   return (
     <Card className="overflow-hidden">
       <div className="relative">
