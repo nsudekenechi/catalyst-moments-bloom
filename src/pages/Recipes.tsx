@@ -52,47 +52,31 @@ const Recipes = () => {
           </TabsContent>
           
           <TabsContent value="breakfast">
-            <div className="text-center py-8 border rounded-lg bg-muted/30">
-              <ChefHat className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-              <h3 className="font-medium mb-1">Breakfast Recipes</h3>
-              <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                Start your day with nourishing, energy-boosting breakfast options.
-              </p>
-              <Button>Browse Breakfast Recipes</Button>
-            </div>
+            <JourneySpecificRecipes 
+              recipes={recipes.filter(r => r.category === 'Breakfast')} 
+              overrideJourney={stageInfo?.journey as any}
+            />
           </TabsContent>
           
           <TabsContent value="lunch">
-            <div className="text-center py-8 border rounded-lg bg-muted/30">
-              <ChefHat className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-              <h3 className="font-medium mb-1">Lunch Recipes</h3>
-              <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                Quick, nutritious midday meals for busy moms.
-              </p>
-              <Button>Browse Lunch Recipes</Button>
-            </div>
+            <JourneySpecificRecipes 
+              recipes={recipes.filter(r => r.category === 'Lunch')} 
+              overrideJourney={stageInfo?.journey as any}
+            />
           </TabsContent>
           
           <TabsContent value="dinner">
-            <div className="text-center py-8 border rounded-lg bg-muted/30">
-              <ChefHat className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-              <h3 className="font-medium mb-1">Dinner Recipes</h3>
-              <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                Family-friendly evening meals packed with nutrition.
-              </p>
-              <Button>Browse Dinner Recipes</Button>
-            </div>
+            <JourneySpecificRecipes 
+              recipes={recipes.filter(r => r.category === 'Dinner')} 
+              overrideJourney={stageInfo?.journey as any}
+            />
           </TabsContent>
           
           <TabsContent value="snacks">
-            <div className="text-center py-8 border rounded-lg bg-muted/30">
-              <ChefHat className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-              <h3 className="font-medium mb-1">Snack Recipes</h3>
-              <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                Healthy, easy snacks for sustained energy throughout the day.
-              </p>
-              <Button>Browse Snack Recipes</Button>
-            </div>
+            <JourneySpecificRecipes 
+              recipes={recipes.filter(r => r.category === 'Snacks')} 
+              overrideJourney={stageInfo?.journey as any}
+            />
           </TabsContent>
           
           <TabsContent value="favorites">

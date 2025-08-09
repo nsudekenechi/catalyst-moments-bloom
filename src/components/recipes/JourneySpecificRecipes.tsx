@@ -34,7 +34,11 @@ const JourneySpecificRecipes = ({ recipes, overrideJourney, overrideStage }: Jou
     });
   };
   
-  const filteredRecipes = overrideJourney ? filterByOverride(recipes) : (filterContent(recipes) as Recipe[]);
+  const primary = overrideJourney ? filterByOverride(recipes) : (filterContent(recipes) as Recipe[]);
+  const fallback = (!overrideJourney && stageInfo?.journey && primary.length === 0)
+    ? recipes.filter(item => item.journey.includes(stageInfo.journey!) || item.journey.includes('all'))
+    : [];
+  const filteredRecipes = primary.length > 0 ? primary : fallback;
 
 
   const effectiveJourney = overrideJourney ?? stageInfo?.journey;

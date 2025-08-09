@@ -33,7 +33,11 @@ const JourneySpecificMealPlans = ({ mealPlans, overrideJourney, overrideStage }:
     });
   };
   
-  const filteredMealPlans = overrideJourney ? filterByOverride(mealPlans) : (filterContent(mealPlans) as MealPlan[]);
+  const primary = overrideJourney ? filterByOverride(mealPlans) : (filterContent(mealPlans) as MealPlan[]);
+  const fallback = (!overrideJourney && stageInfo?.journey && primary.length === 0)
+    ? mealPlans.filter(item => item.journey.includes(stageInfo.journey!) || item.journey.includes('all'))
+    : [];
+  const filteredMealPlans = primary.length > 0 ? primary : fallback;
 
 
   const effectiveJourney = overrideJourney ?? stageInfo?.journey;
