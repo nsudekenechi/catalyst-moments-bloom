@@ -42,7 +42,33 @@ export const recipes: Recipe[] = [
     servings: 2,
     difficulty: 'Medium'
   },
-  
+  ,
+  {
+    id: 'ttc-zinc-trail-mix',
+    title: 'Zinc-Rich Pumpkin Seed Trail Mix',
+    description: 'Crunchy mix with pumpkin seeds, walnuts, and dark chocolate to support fertility.',
+    prepTime: '10 min',
+    image: 'https://images.unsplash.com/photo-1517677208171-0bc6725a3e60',
+    category: 'Snacks',
+    tags: ['Zinc', 'Healthy Fats', 'No Cook'],
+    journey: ['ttc'],
+    stage: ['ttc-1-3','ttc-4-6','ttc-6-12','ttc-12+'],
+    servings: 6,
+    difficulty: 'Easy'
+  },
+  {
+    id: 'ttc-mediterranean-chickpea-salad',
+    title: 'Mediterranean Chickpea Salad',
+    description: 'Fiber-rich salad with olive oil and herbs for hormone harmony.',
+    prepTime: '15 min',
+    image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994',
+    category: 'Lunch',
+    tags: ['Fiber', 'Hormone Balance', 'Mediterranean'],
+    journey: ['ttc'],
+    stage: ['ttc-1-3','ttc-4-6','ttc-6-12','ttc-12+'],
+    servings: 2,
+    difficulty: 'Easy'
+  },
   // Pregnancy Recipes
   {
     id: 'pregnancy-ginger-tea',
@@ -207,6 +233,20 @@ export const mealPlans: MealPlan[] = [
     tags: ['Fertility', 'Hormone Balance', 'Nutrient Dense'],
     journey: ['ttc'],
     stage: ['ttc-1-3', 'ttc-4-6', 'ttc-6-12', 'ttc-12+']
+  },
+  ,
+  {
+    id: 'ttc-hormone-harmony-plan',
+    title: 'Hormone Harmony Meal Plan',
+    description: 'Balanced 3-week plan focusing on fiber, omega-3s, and micronutrients to support cycles.',
+    duration: '3 Week Plan',
+    recipeCount: 21,
+    avgPrepTime: '15-30 min/meal',
+    image: 'https://images.unsplash.com/photo-1543339318-b43dc53e19b3',
+    category: 'Fertility',
+    tags: ['Hormone Balance','Omega-3','Folate'],
+    journey: ['ttc'],
+    stage: ['ttc-1-3','ttc-4-6','ttc-6-12','ttc-12+']
   },
   
   // Pregnancy Meal Plans

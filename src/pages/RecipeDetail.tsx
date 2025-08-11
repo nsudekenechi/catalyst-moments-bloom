@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock, ChefHat, Heart, BookOpen, Bookmark, Printer, Share2, CheckCircle, Utensils } from "lucide-react";
+import { Clock, ChefHat, Heart, BookOpen, Bookmark, BookmarkCheck, Printer, Share2, CheckCircle, Utensils } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { recipes as allRecipes } from "@/data/recipeData";
+import defaultCover from "@/assets/30-days-glow-up-cover.jpg";
+import { useToast } from "@/components/ui/use-toast";
 
 const toSlug = (s: string) => s.toLowerCase().replace(/\s+/g, "-");
 
@@ -138,6 +140,64 @@ const RecipeDetail = () => {
     }
   }, [extended]);
 
+  const { toast } = useToast();
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    const id = recipe?.id;
+    if (!id) return;
+    try {
+      const raw = localStorage.getItem("saved_recipes_v1");
+      const list: string[] = raw ? JSON.parse(raw) : [];
+      setSaved(list.includes(id));
+    } catch {}
+  }, [recipe?.id]);
+
+  const toggleSave = useCallback(() => {
+    const id = recipe?.id;
+    if (!id) return;
+    try {
+      const raw = localStorage.getItem("saved_recipes_v1");
+      const list: string[] = raw ? JSON.parse(raw) : [];
+      let next: string[];
+      let action: "saved" | "removed" = "saved";
+      if (list.includes(id)) {
+        next = list.filter((x) => x !== id);
+        action = "removed";
+        setSaved(false);
+      } else {
+        next = [...list, id];
+        setSaved(true);
+      }
+      localStorage.setItem("saved_recipes_v1", JSON.stringify(next));
+      toast({
+        title: action === "saved" ? "Recipe saved" : "Removed from saved",
+        description: action === "saved" ? "Find it later in Favorites." : "You can always save it again.",
+      });
+    } catch {
+      toast({ title: "Error", description: "Could not update saved recipes." });
+    }
+  }, [recipe?.id, toast]);
+
+  const onPrint = useCallback(() => {
+    window.print();
+  }, []);
+
+  const onShare = useCallback(async () => {
+    const url = window.location.href;
+    const title = extended?.title ?? document.title;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, text: title, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        toast({ title: "Link copied", description: "Share the recipe with anyone." });
+      }
+    } catch {
+      // user canceled or sharing failed
+    }
+  }, [extended?.title, toast]);
+
   if (!extended) {
     return (
       <PageLayout>
@@ -212,15 +272,19 @@ const RecipeDetail = () => {
               </div>
 
               <div className="flex space-x-3">
-                <Button>
-                  <Bookmark className="mr-2 h-4 w-4" />
-                  Save Recipe
+                <Button onClick={toggleSave} variant={saved ? "secondary" : "default"}>
+                  {saved ? (
+                    <BookmarkCheck className="mr-2 h-4 w-4" />
+                  ) : (
+                    <Bookmark className="mr-2 h-4 w-4" />
+                  )}
+                  {saved ? "Saved" : "Save Recipe"}
                 </Button>
-                <Button variant="outline">
+                <Button variant="outline" onClick={onPrint}>
                   <Printer className="mr-2 h-4 w-4" />
                   Print
                 </Button>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" aria-label="Share" onClick={onShare}>
                   <Share2 className="h-4 w-4" />
                 </Button>
               </div>
@@ -234,7 +298,7 @@ const RecipeDetail = () => {
                     alt={r.title}
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = "/placeholder.svg";
+                      (e.currentTarget as HTMLImageElement).src = (defaultCover as string);
                     }}
                   />
                 </AspectRatio>
@@ -363,7 +427,12 @@ const RecipeDetail = () => {
                     .map((rr) => (
                       <div className="flex gap-3" key={rr.id}>
                         <div className="flex-shrink-0 w-20 h-20 rounded-md overflow-hidden">
-                          <img src={rr.image} alt={rr.title} className="w-full h-full object-cover" />
+                          <img 
+                            src={rr.image} 
+                            alt={rr.title} 
+                            className="w-full h-full object-cover" 
+                            onError={(e) => { (e.currentTarget as HTMLImageElement).src = (defaultCover as string); }}
+                          />
                         </div>
                         <div>
                           <h4 className="font-medium text-sm">{rr.title}</h4>
@@ -380,9 +449,9 @@ const RecipeDetail = () => {
                 <Separator className="my-6" />
 
                 <div className="text-center">
-                  <Button className="w-full">
-                    <Heart className="mr-2 h-4 w-4" />
-                    Save to Favorites
+                  <Button className="w-full" onClick={toggleSave} variant={saved ? "secondary" : "default"}>
+                    {saved ? <BookmarkCheck className="mr-2 h-4 w-4" /> : <Heart className="mr-2 h-4 w-4" />}
+                    {saved ? "Saved to Favorites" : "Save to Favorites"}
                   </Button>
                 </div>
               </CardContent>
