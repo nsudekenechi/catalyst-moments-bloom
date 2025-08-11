@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
+import defaultCover from '@/assets/30-days-glow-up-cover.jpg';
 interface Recipe extends ContentItem {
   prepTime: string;
   image: string;
@@ -112,11 +112,11 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
       <div className="relative">
         <AspectRatio ratio={16/9}>
           <img 
-            src={recipe.image} 
+            src={recipe.image || (defaultCover as string)} 
             alt={recipe.title}
             className="w-full h-full object-cover"
             onError={(e) => {
-              e.currentTarget.src = "/placeholder.svg";
+              (e.currentTarget as HTMLImageElement).src = defaultCover as string;
             }}
           />
         </AspectRatio>

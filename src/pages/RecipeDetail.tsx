@@ -189,12 +189,30 @@ const RecipeDetail = () => {
     try {
       if (navigator.share) {
         await navigator.share({ title, text: title, url });
-      } else {
-        await navigator.clipboard.writeText(url);
-        toast({ title: "Link copied", description: "Share the recipe with anyone." });
+        toast({ title: "Shared", description: "Thanks for spreading the word!" });
+        return;
       }
     } catch {
-      // user canceled or sharing failed
+      // if native share fails, continue to clipboard
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      toast({ title: "Link copied", description: "Share the recipe with anyone." });
+    } catch {
+      try {
+        const el = document.createElement("textarea");
+        el.value = url;
+        el.setAttribute("readonly", "");
+        el.style.position = "absolute";
+        el.style.left = "-9999px";
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+        toast({ title: "Link copied", description: "Share the recipe with anyone." });
+      } catch {
+        toast({ title: "Unable to share", description: "Please copy the URL from your browser." });
+      }
     }
   }, [extended?.title, toast]);
 
