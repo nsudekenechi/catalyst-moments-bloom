@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, MessageCircle, Share2, Trophy, Star, Flame } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-
+import { useToast } from '@/components/ui/use-toast';
 interface CommunityPost {
   id: string;
   avatar: string;

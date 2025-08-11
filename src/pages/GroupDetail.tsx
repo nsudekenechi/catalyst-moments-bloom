@@ -1,0 +1,140 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import PageLayout from '@/components/layout/PageLayout';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
+import { Users, ArrowLeft, Bell, ShieldCheck } from 'lucide-react';
+import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
+import { groups } from '@/components/community/groups';
+import { useToast } from '@/components/ui/use-toast';
+
+const GroupDetail = () => {
+  const { slug } = useParams();
+  const { toast } = useToast();
+  const group = useMemo(() => groups.find(g => g.slug === slug), [slug]);
+  const [joined, setJoined] = useState(false);
+
+  useEffect(() => {
+    if (group) {
+      document.title = `${group.name} | Community Group`;
+    }
+  }, [group]);
+
+  if (!group) {
+    return (
+      <PageLayout>
+        <div className="container px-4 mx-auto">
+          <div className="py-12 text-center">
+            <p className="text-lg font-medium mb-2">Group not found</p>
+            <Link to="/community" className="text-primary underline">Back to Community</Link>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  const isTTCGroup = group.journey === 'ttc';
+
+  const handleJoin = () => {
+    setJoined((prev) => !prev);
+    toast({
+      title: joined ? 'Left group' : 'Joined group',
+      description: joined
+        ? `You will no longer receive updates from ${group.name}.`
+        : `Welcome! You're now a member of ${group.name}.`
+    });
+  };
+
+  return (
+    <PageLayout>
+      <div className="container px-4 mx-auto">
+        {/* Hero Header */}
+        <div className="rounded-xl overflow-hidden border mb-6">
+          <div className="relative h-40 sm:h-56 md:h-64">
+            <img
+              src={group.coverImage}
+              alt={`${group.name} cover`}
+              className="w-full h-full object-cover"
+              onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1503264116251-35a269479413'; }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+            <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-12 w-12 ring-2 ring-background shadow">
+                  <AvatarFallback>{group.badge || group.name.substring(0,2).toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <h1 className="text-2xl font-bold leading-tight">{group.name}</h1>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Users className="h-4 w-4" />
+                    <span>{group.memberCount.toLocaleString()} members</span>
+                    <Badge variant="secondary" className="text-xs capitalize">{group.journey}</Badge>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" asChild size="sm">
+                  <Link to="/community?tab=groups"><ArrowLeft className="h-4 w-4 mr-1" /> Back</Link>
+                </Button>
+                <Button onClick={handleJoin} size="sm">{joined ? 'Leave Group' : 'Join Group'}</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 space-y-6">
+            {/* Feed */}
+            <Card>
+              <CardContent className="p-6">
+                <h2 className="text-xl font-semibold mb-4">Group Feed</h2>
+                <DynamicCommunityFeed isTTC={isTTCGroup} />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="font-semibold mb-2">About this group</h3>
+                <p className="text-sm text-muted-foreground mb-4">{group.description}</p>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                  <Bell className="h-4 w-4" />
+                  <span>Auto-moderated with friendly prompts</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <ShieldCheck className="h-4 w-4" />
+                  <span>Be kind. Share support. No medical advice.</span>
+                </div>
+                <Separator className="my-4" />
+                <Button onClick={handleJoin} className="w-full" variant={joined ? 'secondary' : 'default'}>
+                  {joined ? 'Joined' : 'Join Group'}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="font-semibold mb-3">Members online now</h3>
+                <div className="flex -space-x-2 mb-2">
+                  {Array.from({ length: 7 }).map((_, i) => (
+                    <Avatar key={i} className="h-8 w-8 ring-2 ring-background">
+                      <AvatarFallback>{['A','S','J','M','K','L','E'][i]}</AvatarFallback>
+                    </Avatar>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground">Active discussions happening—jump in and say hi!</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </PageLayout>
+  );
+};
+
+export default GroupDetail;

@@ -13,6 +13,7 @@ import Recipes from "./pages/Recipes";
 import RecipeDetail from "./pages/RecipeDetail";
 import Wellness from "./pages/Wellness";
 import Community from "./pages/Community";
+import GroupDetail from "./pages/GroupDetail";
 import NotFound from "./pages/NotFound";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import CheckoutModal from "./components/subscription/CheckoutModal";
@@ -104,6 +105,7 @@ function AppContent() {
           </PrivateRoute>
         } />
         <Route path="/community" element={<Community />} />
+        <Route path="/community/groups/:slug" element={<GroupDetail />} />
         <Route path="/profile" element={
           <PrivateRoute>
             <Profile />

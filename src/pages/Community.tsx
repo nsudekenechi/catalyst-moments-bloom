@@ -13,12 +13,16 @@ import { useAuth } from '@/contexts/AuthContext';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
 import { ProgressTracker } from '@/components/gamification/ProgressTracker';
 import SubscriptionPrompt from '@/components/subscription/SubscriptionPrompt';
-
+import { Link, useLocation } from 'react-router-dom';
+import { getGroupsForStage } from '@/components/community/groups';
 const Community = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const { user, profile, subscribed } = useAuth();
   
   const isTTC = profile?.motherhood_stage === 'ttc';
+  const stageGroups = getGroupsForStage(profile?.motherhood_stage);
+  const location = useLocation();
+  const initialTab = new URLSearchParams(location.search).get('tab') || 'feed';
   
   return (
     <PageLayout>
@@ -242,13 +246,34 @@ const Community = () => {
           </TabsContent>
           
           <TabsContent value="groups">
-            <div className="text-center py-10 border rounded-lg bg-muted/30">
-              <Users className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
-              <h3 className="text-xl font-medium mb-2">Discover Mom Groups</h3>
-              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                Connect with moms at similar stages or with similar interests. Share advice, support, and friendship.
-              </p>
-              <Button>Explore Groups</Button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {stageGroups.map((g) => (
+                <Card key={g.slug} className="overflow-hidden transition hover:shadow-md">
+                  <div className="h-32 w-full overflow-hidden">
+                    <img
+                      src={g.coverImage}
+                      alt={`${g.name} cover`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => { (e.currentTarget as HTMLImageElement).src = 'https://images.unsplash.com/photo-1503264116251-35a269479413'; }}
+                    />
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold leading-tight">{g.name}</h3>
+                      <Badge variant="secondary" className="text-xs capitalize">{g.badge || g.journey}</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{g.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">
+                        <Users className="h-3 w-3 inline mr-1" /> {g.memberCount.toLocaleString()} members
+                      </span>
+                      <Button asChild size="sm" variant="outline">
+                        <Link to={`/community/groups/${g.slug}`}>View Group</Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </TabsContent>
           
