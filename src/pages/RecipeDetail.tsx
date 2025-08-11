@@ -41,7 +41,7 @@ const buildFallbackInstructions = (title: string) => [
 const RecipeDetail = () => {
   const { slug } = useParams();
 
-  const recipe = useMemo(() => allRecipes.find((r) => toSlug(r.title) === slug), [slug]);
+  const recipe = useMemo(() => allRecipes.find((r) => r && toSlug(r.title) === slug), [slug]);
 
   // Build extended content (fallbacks if not provided in data)
   const extended = useMemo(() => {

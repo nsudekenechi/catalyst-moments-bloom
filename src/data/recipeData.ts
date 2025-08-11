@@ -42,7 +42,6 @@ export const recipes: Recipe[] = [
     servings: 2,
     difficulty: 'Medium'
   },
-  ,
   {
     id: 'ttc-zinc-trail-mix',
     title: 'Zinc-Rich Pumpkin Seed Trail Mix',
@@ -234,7 +233,6 @@ export const mealPlans: MealPlan[] = [
     journey: ['ttc'],
     stage: ['ttc-1-3', 'ttc-4-6', 'ttc-6-12', 'ttc-12+']
   },
-  ,
   {
     id: 'ttc-hormone-harmony-plan',
     title: 'Hormone Harmony Meal Plan',
