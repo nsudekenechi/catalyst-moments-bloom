@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Baby, Clock, Play } from 'lucide-react';
 import VideoModal from '@/components/ui/video-modal';
+import { useNavigate } from 'react-router-dom';
 
 const GLOW_VIDEO_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/glow%20and%20go/Intro.mp4";
 
@@ -92,6 +93,7 @@ const GlowAndGoPrenatalCard = () => {
   const [enrolledCount, setEnrolledCount] = useState(247);
   const [isHovered, setIsHovered] = useState(false);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Simulate gradual enrollment increase
   useEffect(() => {
@@ -209,6 +211,7 @@ const GlowAndGoPrenatalCard = () => {
           className="w-full bg-primary hover:bg-primary/90 transition-all duration-300
                    hover:shadow-lg hover:shadow-primary/20 hover:scale-[1.02]
                    group relative overflow-hidden"
+          onClick={() => navigate('/programs/glow-and-go')}
         >
           <span className="relative z-10">Start Prenatal Program</span>
           <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0

@@ -35,6 +35,7 @@ import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
+import GlowAndGo from "./pages/GlowAndGo";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -149,6 +150,13 @@ function AppContent() {
         <Route path="/course/:id" element={
           <PrivateRoute>
             <CourseDetail />
+          </PrivateRoute>
+        } />
+        <Route path="/programs/glow-and-go" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <GlowAndGo />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         
