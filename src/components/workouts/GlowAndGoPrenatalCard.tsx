@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { Baby, Clock, Play } from 'lucide-react';
 import VideoModal from '@/components/ui/video-modal';
 import { useNavigate } from 'react-router-dom';
+import { GLOW_AND_GO_VIDEOS } from '@/data/glowAndGoVideos';
 
 const GLOW_VIDEO_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/glow%20and%20go/Intro.mp4";
 
@@ -93,7 +95,21 @@ const GlowAndGoPrenatalCard = () => {
   const [enrolledCount, setEnrolledCount] = useState(247);
   const [isHovered, setIsHovered] = useState(false);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [watched, setWatched] = useState<Record<string, boolean>>({});
   const navigate = useNavigate();
+
+  // Calculate progress
+  const totalVideos = GLOW_AND_GO_VIDEOS.length;
+  const watchedCount = GLOW_AND_GO_VIDEOS.filter(v => watched[v.id]).length;
+  const progressPercent = totalVideos ? Math.round((watchedCount / totalVideos) * 100) : 0;
+
+  // Load watched progress
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("glowAndGoWatched");
+      if (saved) setWatched(JSON.parse(saved));
+    } catch {}
+  }, []);
 
   // Simulate gradual enrollment increase
   useEffect(() => {
@@ -193,6 +209,15 @@ const GlowAndGoPrenatalCard = () => {
               </span>
             </div>
           ))}
+        </div>
+        
+        {/* Progress Bar Section */}
+        <div className="mb-6 p-3 bg-primary/5 rounded-lg border border-primary/10">
+          <div className="mb-2 flex justify-between text-sm">
+            <span className="font-medium text-primary">Your Progress</span>
+            <span className="text-muted-foreground">{watchedCount}/{totalVideos} videos • {progressPercent}%</span>
+          </div>
+          <Progress value={progressPercent} className="h-2" />
         </div>
         
         <div className="flex items-center justify-between">
