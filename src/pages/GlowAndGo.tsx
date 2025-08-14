@@ -175,14 +175,28 @@ const GlowAndGo = () => {
                   )}
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <div className="aspect-video bg-black/80 rounded-lg mb-3 flex items-center justify-center">
+                  <div className="relative aspect-video rounded-lg mb-3 overflow-hidden group">
+                    {v.coverImage ? (
+                      <img 
+                        src={v.coverImage} 
+                        alt={v.title}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-black/80 flex items-center justify-center">
+                        <div className="text-white/60">No preview available</div>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
                     <Button
                       size="icon"
-                      className="rounded-full"
+                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                               rounded-full bg-white/90 hover:bg-white text-primary hover:text-primary
+                               shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-110"
                       onClick={() => handlePlay(v.id, v.url, v.title)}
                       aria-label={`Play ${v.title}`}
                     >
-                      <Play className="h-5 w-5" />
+                      <Play className="h-5 w-5 ml-0.5" fill="currentColor" />
                     </Button>
                   </div>
                   <div className="mb-3">
