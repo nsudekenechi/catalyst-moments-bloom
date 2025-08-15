@@ -27,6 +27,8 @@ import Questionnaire from "./pages/Questionnaire";
 import MealPlan from "./pages/MealPlan";
 import MealPlanDetail from "./pages/MealPlanDetail";
 import WorkoutPlan from "./pages/WorkoutPlan";
+import SavedWorkoutPlans from "./pages/SavedWorkoutPlans";
+import WorkoutPlanDetail from "./pages/WorkoutPlanDetail";
 import Blog from "./pages/Blog";
 import Experts from "./pages/Experts";
 import Research from "./pages/Research";
@@ -137,6 +139,20 @@ function AppContent() {
           <PrivateRoute>
             <SubscriptionGuard>
               <WorkoutPlan />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/saved-workout-plans" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <SavedWorkoutPlans />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/saved-workout-plans/:planId" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <WorkoutPlanDetail />
             </SubscriptionGuard>
           </PrivateRoute>
         } />

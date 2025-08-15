@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight, Dumbbell, Target, Clock, Calendar } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useWorkoutPlans } from '@/hooks/useWorkoutPlans';
 
 interface WorkoutPlanState {
   motherhoodStage: string;
@@ -35,6 +37,8 @@ interface Question {
 const WorkoutPlanCreator = () => {
   const { profile } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { savePlan } = useWorkoutPlans();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<WorkoutPlanState>({
     motherhoodStage: profile?.motherhood_stage || '',
@@ -330,10 +334,31 @@ const WorkoutPlanCreator = () => {
 
               <div className="text-center space-y-4">
                 <Button size="lg" onClick={() => {
-                  toast({
-                    title: "Workout Plan Created!",
-                    description: "Your personalized workout plan has been saved to your dashboard.",
+                  const plan = generateWorkoutPlan();
+                  const savedPlanId = savePlan({
+                    title: plan.title,
+                    description: plan.description,
+                    timePerSession: plan.timePerSession,
+                    frequency: plan.frequency,
+                    intensity: plan.intensity,
+                    stage: plan.stage,
+                    preferences: answers.preferences,
+                    additionalNotes: answers.additionalNotes
                   });
+                  
+                  if (savedPlanId) {
+                    toast({
+                      title: "Workout Plan Saved!",
+                      description: "Your personalized workout plan has been saved successfully.",
+                    });
+                    navigate(`/saved-workout-plans/${savedPlanId}`);
+                  } else {
+                    toast({
+                      title: "Error",
+                      description: "There was an issue saving your workout plan. Please try again.",
+                      variant: "destructive"
+                    });
+                  }
                 }}>
                   Access My Workout Plan
                 </Button>
