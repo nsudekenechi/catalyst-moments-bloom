@@ -8,7 +8,7 @@ import { Play, Clock, ShieldCheck, Heart, Dumbbell, Sparkles, Leaf } from "lucid
 import { GLOW_AND_GO_VIDEOS } from "@/data/glowAndGoVideos";
 import FeatureCard from "@/components/home/FeatureCard";
 import { Progress } from "@/components/ui/progress";
-import glowMainCover from "@/assets/glow-and-go-main-cover.png";
+import glowMainCover from "@/assets/glow-and-go-professional-cover.jpg";
 
 const GlowAndGo = () => {
   const [open, setOpen] = useState(false);

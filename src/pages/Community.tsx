@@ -50,7 +50,7 @@ const Community = () => {
           </div>
         </div>
         
-        <Tabs defaultValue="feed" className="mb-8">
+        <Tabs defaultValue={initialTab} className="mb-8">
           <TabsList>
             <TabsTrigger value="feed">Feed</TabsTrigger>
             <TabsTrigger value="groups">Groups</TabsTrigger>
