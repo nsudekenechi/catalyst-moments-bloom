@@ -3,7 +3,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import VideoModal from "@/components/ui/video-modal";
+import { useVideoPlayer } from "@/contexts/VideoPlayerContext";
 import { Play, Clock, ShieldCheck, Heart, Dumbbell, Sparkles, Leaf } from "lucide-react";
 import { GLOW_AND_GO_VIDEOS } from "@/data/glowAndGoVideos";
 import FeatureCard from "@/components/home/FeatureCard";
@@ -11,9 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import glowMainCover from "@/assets/glow-and-go-professional-cover.jpg";
 
 const GlowAndGo = () => {
-  const [open, setOpen] = useState(false);
-  const [currentUrl, setCurrentUrl] = useState<string>(GLOW_AND_GO_VIDEOS[0]?.url || "");
-  const [currentTitle, setCurrentTitle] = useState<string>(GLOW_AND_GO_VIDEOS[0]?.title || "");
+  const { openVideo } = useVideoPlayer();
   const [watched, setWatched] = useState<Record<string, boolean>>({});
   const totalVideos = GLOW_AND_GO_VIDEOS.length;
   const watchedCount = GLOW_AND_GO_VIDEOS.filter(v => watched[v.id]).length;
@@ -78,9 +76,7 @@ const GlowAndGo = () => {
       } catch {}
       return next;
     });
-    setCurrentUrl(url);
-    setCurrentTitle(title);
-    setOpen(true);
+    openVideo(url, title);
   };
 
   return (
@@ -225,12 +221,6 @@ const GlowAndGo = () => {
           </div>
         </section>
 
-        <VideoModal
-          isOpen={open}
-          onClose={() => setOpen(false)}
-          videoUrl={currentUrl}
-          title={currentTitle}
-        />
       </main>
     </PageLayout>
   );

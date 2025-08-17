@@ -8,7 +8,7 @@ import glowUpCover from "@/assets/30-days-glow-up-professional-cover.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import InlineVideoPlayer from '@/components/ui/inline-video-player';
+import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
 
 // Real-looking diverse avatar URLs for postpartum moms
 const AVATARS = [
@@ -99,11 +99,10 @@ interface UserProgress {
 export default function PostpartumGlowUpChallenge() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { openVideo } = useVideoPlayer();
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [loading, setLoading] = useState(true);
   const [enrolledCount, setEnrolledCount] = useState(245);
-  const [showInlinePlayer, setShowInlinePlayer] = useState(false);
-  const [isPlayerMinimized, setIsPlayerMinimized] = useState(false);
   const [hasStartedProgram, setHasStartedProgram] = useState(false);
 
   useEffect(() => {
@@ -192,7 +191,7 @@ export default function PostpartumGlowUpChallenge() {
       });
 
       setHasStartedProgram(true);
-      setShowInlinePlayer(true);
+      openVideo("https://www.youtube.com/embed/dQw4w9WgXcQ", "30 Days Glow Up Challenge - Day 1");
       fetchUserProgress();
     } catch (error) {
       console.error('Error enrolling in challenge:', error);
@@ -206,7 +205,7 @@ export default function PostpartumGlowUpChallenge() {
 
   const handleStartProgram = () => {
     if (isEnrolled) {
-      setShowInlinePlayer(true);
+      openVideo("https://www.youtube.com/embed/dQw4w9WgXcQ", "30 Days Glow Up Challenge - Continue");
       setHasStartedProgram(true);
     } else {
       enrollInChallenge();
@@ -381,14 +380,6 @@ export default function PostpartumGlowUpChallenge() {
         </Button>
       </CardContent>
       
-      <InlineVideoPlayer
-        isOpen={showInlinePlayer}
-        onClose={() => setShowInlinePlayer(false)}
-        videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ"
-        title="30 Days Glow Up Challenge - Day 1"
-        isMinimized={isPlayerMinimized}
-        onToggleMinimize={() => setIsPlayerMinimized(!isPlayerMinimized)}
-      />
     </Card>
   );
 }

@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/common/ScrollToTop";
+import GlobalVideoPlayer from "./components/video/GlobalVideoPlayer";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Workouts from "./pages/Workouts";
@@ -184,6 +185,7 @@ function AppContent() {
         isOpen={showCheckoutModal} 
         onClose={() => setShowCheckoutModal(false)} 
       />
+      <GlobalVideoPlayer />
     </BrowserRouter>
   );
 }

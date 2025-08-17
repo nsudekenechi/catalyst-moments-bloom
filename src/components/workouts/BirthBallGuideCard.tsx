@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Play, Star, Users } from 'lucide-react';
-import InlineVideoPlayer from '@/components/ui/inline-video-player';
+import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
 import professionalCover from '@/assets/birth-ball-guide-professional-cover.jpg';
 
 const BIRTHBALL_GUIDE_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Ultimate%20birth%20ball%20guide/The%20Ultimate%20Birth%20Ball%20Guide%20Safe%20&%20Effective%20Exercises%20for%20Every%20Trimester.pdf";
@@ -77,9 +77,8 @@ const UserAvatars = ({ enrolledCount }: UserAvatarsProps) => {
 const BirthBallGuideCard = () => {
   const [enrolledCount, setEnrolledCount] = useState(1247);
   const [isHovered, setIsHovered] = useState(false);
-  const [showInlinePlayer, setShowInlinePlayer] = useState(false);
-  const [isPlayerMinimized, setIsPlayerMinimized] = useState(false);
   const [hasStartedProgram, setHasStartedProgram] = useState(false);
+  const { openVideo } = useVideoPlayer();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -123,7 +122,7 @@ const BirthBallGuideCard = () => {
               className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${
                 isHovered ? 'opacity-100' : 'opacity-0'
               }`}
-              onClick={() => setShowInlinePlayer(true)}
+              onClick={() => openVideo("https://www.youtube.com/embed/dQw4w9WgXcQ", "Ultimate Birth Ball Guide")}
             >
               <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors cursor-pointer">
                 <Play className="w-6 h-6 text-purple-600 ml-1" fill="currentColor" />
@@ -194,7 +193,7 @@ const BirthBallGuideCard = () => {
               size="lg" 
               onClick={() => {
                 setHasStartedProgram(true);
-                setShowInlinePlayer(true);
+                openVideo("https://www.youtube.com/embed/dQw4w9WgXcQ", "Ultimate Birth Ball Guide");
               }}
             >
               {hasStartedProgram ? 'Continue Ball Workouts' : 'Start Ball Workouts'}
@@ -207,15 +206,6 @@ const BirthBallGuideCard = () => {
           </div>
         </div>
       </Card>
-
-      <InlineVideoPlayer
-        isOpen={showInlinePlayer}
-        onClose={() => setShowInlinePlayer(false)}
-        videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ"
-        title="Ultimate Birth Ball Guide"
-        isMinimized={isPlayerMinimized}
-        onToggleMinimize={() => setIsPlayerMinimized(!isPlayerMinimized)}
-      />
     </>
   );
 };

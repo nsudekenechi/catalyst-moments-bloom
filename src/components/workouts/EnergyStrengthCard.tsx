@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dumbbell, Clock, Play } from 'lucide-react';
-import InlineVideoPlayer from '@/components/ui/inline-video-player';
+import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
 
 // Real-looking diverse avatar URLs for active moms
 const AVATARS = [
@@ -85,11 +85,10 @@ const UserAvatars = ({ enrolledCount }: { enrolledCount: number }) => {
 };
 
 const EnergyStrengthCard = () => {
-  const [enrolledCount, setEnrolledCount] = useState(189);
+  const [enrolledCount, setEnrolledCount] = useState(342);
   const [isHovered, setIsHovered] = useState(false);
-  const [showInlinePlayer, setShowInlinePlayer] = useState(false);
-  const [isPlayerMinimized, setIsPlayerMinimized] = useState(false);
   const [hasStartedProgram, setHasStartedProgram] = useState(false);
+  const { openVideo } = useVideoPlayer();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -130,7 +129,7 @@ const EnergyStrengthCard = () => {
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 
                        bg-white/90 text-accent-foreground hover:bg-white rounded-full w-16 h-16 flex items-center justify-center
                        backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:shadow-lg"
-            onClick={() => setShowInlinePlayer(true)}
+            onClick={() => openVideo("https://www.youtube.com/embed/dQw4w9WgXcQ", "Energy & Strength Program")}
           >
             <Play className="h-8 w-8 ml-1" fill="currentColor" />
           </Button>
@@ -203,7 +202,7 @@ const EnergyStrengthCard = () => {
                    group relative overflow-hidden"
           onClick={() => {
             setHasStartedProgram(true);
-            setShowInlinePlayer(true);
+            openVideo("https://www.youtube.com/embed/dQw4w9WgXcQ", "Energy & Strength Program");
           }}
         >
           <span className="relative z-10">{hasStartedProgram ? 'Continue Program' : 'Start Program'}</span>
@@ -211,16 +210,6 @@ const EnergyStrengthCard = () => {
                         translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
         </Button>
       </CardFooter>
-
-      {/* Inline Video Player */}
-      <InlineVideoPlayer
-        isOpen={showInlinePlayer}
-        onClose={() => setShowInlinePlayer(false)}
-        videoUrl="https://www.youtube.com/embed/UItWltVZZmE"
-        title="Energy & Strength for Moms"
-        isMinimized={isPlayerMinimized}
-        onToggleMinimize={() => setIsPlayerMinimized(!isPlayerMinimized)}
-      />
     </Card>
   );
 };

@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Play, Clock, ChevronRight } from 'lucide-react';
-import InlineVideoPlayer from '@/components/ui/inline-video-player';
+import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
 
 const AVATARS = [
   "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face",
@@ -71,9 +71,8 @@ const UserAvatars = ({ enrolledCount }: { enrolledCount: number }) => {
 const FitFierceAdvancedCard = () => {
   const [enrolledCount, setEnrolledCount] = useState(127);
   const [isHovered, setIsHovered] = useState(false);
-  const [showInlinePlayer, setShowInlinePlayer] = useState(false);
-  const [isPlayerMinimized, setIsPlayerMinimized] = useState(false);
   const [hasStartedProgram, setHasStartedProgram] = useState(false);
+  const { openVideo } = useVideoPlayer();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -99,7 +98,7 @@ const FitFierceAdvancedCard = () => {
         {/* Play Button */}
         {hasStartedProgram && (
           <button 
-            onClick={() => setShowInlinePlayer(true)}
+            onClick={() => openVideo("https://www.youtube.com/embed/ScNNfyq3d_w", "Fit & Fierce: Advanced Postpartum Rebuild")}
             className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 
                        group-hover:opacity-100 transition-all duration-300"
           >
@@ -170,7 +169,7 @@ const FitFierceAdvancedCard = () => {
           onMouseLeave={() => setIsHovered(false)}
           onClick={() => {
             setHasStartedProgram(true);
-            setShowInlinePlayer(true);
+            openVideo("https://www.youtube.com/embed/ScNNfyq3d_w", "Fit & Fierce: Advanced Postpartum Rebuild");
           }}
         >
           {hasStartedProgram ? 'Continue Program' : 'Start Program'}
@@ -179,15 +178,6 @@ const FitFierceAdvancedCard = () => {
           }`} />
         </Button>
       </div>
-
-      <InlineVideoPlayer
-        isOpen={showInlinePlayer}
-        onClose={() => setShowInlinePlayer(false)}
-        videoUrl="https://www.youtube.com/embed/ScNNfyq3d_w"
-        title="Fit & Fierce: Advanced Postpartum Rebuild"
-        isMinimized={isPlayerMinimized}
-        onToggleMinimize={() => setIsPlayerMinimized(!isPlayerMinimized)}
-      />
     </Card>
   );
 };

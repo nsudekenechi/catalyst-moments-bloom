@@ -4,10 +4,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Baby, Clock, Play } from 'lucide-react';
-import VideoModal from '@/components/ui/video-modal';
 import { useNavigate } from 'react-router-dom';
 import { GLOW_AND_GO_VIDEOS } from '@/data/glowAndGoVideos';
 import professionalCover from '@/assets/glow-and-go-professional-cover.jpg';
+import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
 
 const GLOW_VIDEO_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/glow%20and%20go/Intro.mp4";
 
@@ -95,9 +95,9 @@ const GlowAndGoPrenatalCard = () => {
   // Simulate dynamic enrollment count (could be fetched from backend)
   const [enrolledCount, setEnrolledCount] = useState(247);
   const [isHovered, setIsHovered] = useState(false);
-  const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [watched, setWatched] = useState<Record<string, boolean>>({});
   const navigate = useNavigate();
+  const { openVideo } = useVideoPlayer();
 
   // Calculate progress
   const totalVideos = GLOW_AND_GO_VIDEOS.length;
@@ -157,7 +157,7 @@ const GlowAndGoPrenatalCard = () => {
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 
                      bg-white/90 text-primary hover:bg-white rounded-full w-16 h-16 flex items-center justify-center
                      backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:shadow-lg"
-          onClick={() => setVideoModalOpen(true)}
+          onClick={() => openVideo(GLOW_VIDEO_URL, "Glow & Go Prenatal Program")}
         >
           <Play className="h-8 w-8 ml-1" fill="currentColor" />
         </Button>
@@ -244,14 +244,6 @@ const GlowAndGoPrenatalCard = () => {
                         translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
         </Button>
       </CardFooter>
-
-      {/* Video Modal */}
-      <VideoModal 
-        isOpen={videoModalOpen}
-        onClose={() => setVideoModalOpen(false)}
-        videoUrl={GLOW_VIDEO_URL}
-        title="Glow & Go Prenatal Program"
-      />
     </Card>
   );
 };
