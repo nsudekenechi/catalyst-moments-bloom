@@ -39,6 +39,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import GlowAndGo from "./pages/GlowAndGo";
+import Affiliate from "./pages/Affiliate";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -174,6 +175,11 @@ function AppContent() {
             <SubscriptionGuard>
               <GlowAndGo />
             </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/affiliate" element={
+          <PrivateRoute>
+            <Affiliate />
           </PrivateRoute>
         } />
         
