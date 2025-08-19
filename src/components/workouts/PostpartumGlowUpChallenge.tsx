@@ -104,6 +104,7 @@ export default function PostpartumGlowUpChallenge() {
   const [loading, setLoading] = useState(true);
   const [enrolledCount, setEnrolledCount] = useState(245);
   const [hasStartedProgram, setHasStartedProgram] = useState(false);
+  const [courseId, setCourseId] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -135,6 +136,7 @@ export default function PostpartumGlowUpChallenge() {
         .single();
 
       if (courseError) throw courseError;
+      setCourseId(courses.id);
 
       // Then get user progress
       const { data, error } = await supabase
@@ -190,8 +192,11 @@ export default function PostpartumGlowUpChallenge() {
         description: "You've successfully joined the 30 Days Glow Up Challenge",
       });
 
-      setHasStartedProgram(true);
-      openVideo("https://www.youtube.com/embed/dQw4w9WgXcQ", "30 Days Glow Up Challenge - Day 1");
+      // Navigate to course detail page
+      setTimeout(() => {
+        window.location.href = `/course/${courses.id}`;
+      }, 1000);
+      
       fetchUserProgress();
     } catch (error) {
       console.error('Error enrolling in challenge:', error);
@@ -204,9 +209,9 @@ export default function PostpartumGlowUpChallenge() {
   };
 
   const handleStartProgram = () => {
-    if (isEnrolled) {
-      openVideo("https://www.youtube.com/embed/dQw4w9WgXcQ", "30 Days Glow Up Challenge - Continue");
-      setHasStartedProgram(true);
+    if (isEnrolled && courseId) {
+      // Navigate to course detail page to continue
+      window.location.href = `/course/${courseId}`;
     } else {
       enrollInChallenge();
     }
