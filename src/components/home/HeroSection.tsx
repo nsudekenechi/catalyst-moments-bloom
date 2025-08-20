@@ -53,7 +53,7 @@ const HeroSection = ({ onWatchVideo }: HeroSectionProps) => {
                     }}
                   />
                 </AspectRatio>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                
                 <div className="absolute bottom-4 left-4 flex items-center space-x-2">
                   <Button 
                     size="icon" 

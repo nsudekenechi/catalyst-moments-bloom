@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import AffiliateButton from '@/components/affiliate/AffiliateButton';
 
 const NewsletterSubscription = () => {
   const [email, setEmail] = useState('');
@@ -164,6 +165,11 @@ const Footer = () => {
             <h3 className="font-semibold text-primary mb-4">Subscribe</h3>
             <p className="text-sm text-muted-foreground mb-4">Join our newsletter for tips, events, and updates.</p>
             <NewsletterSubscription />
+            
+            <div className="mt-6 pt-4 border-t border-border/40">
+              <p className="text-sm text-muted-foreground mb-3">Want to earn while helping other moms?</p>
+              <AffiliateButton variant="outline" size="sm" className="w-full border-primary/20 text-primary hover:bg-primary/5" />
+            </div>
           </div>
         </div>
         

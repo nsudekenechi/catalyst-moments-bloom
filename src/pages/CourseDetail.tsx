@@ -267,10 +267,6 @@ export default function CourseDetail() {
   return (
     <PageLayout>
       <div className="container mx-auto py-8 space-y-8">
-        {/* Debug info */}
-        <div className="text-xs text-muted-foreground bg-muted p-2 rounded">
-          Debug: isWorkoutActive={isWorkoutActive ? 'true' : 'false'}, activeWorkout={JSON.stringify(activeWorkout)}
-        </div>
         
         {/* Show Workout Player when active */}
         {isWorkoutActive && activeWorkout ? (
