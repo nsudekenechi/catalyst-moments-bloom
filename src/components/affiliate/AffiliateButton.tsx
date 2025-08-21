@@ -4,6 +4,7 @@ import { DollarSign } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
+import AffiliateInfoModal from './AffiliateInfoModal';
 import AffiliateSignupModal from './AffiliateSignupModal';
 
 interface AffiliateButtonProps {
@@ -13,6 +14,7 @@ interface AffiliateButtonProps {
 }
 
 const AffiliateButton = ({ variant = "outline", size = "default", className = "" }: AffiliateButtonProps) => {
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [affiliateStatus, setAffiliateStatus] = useState<'none' | 'pending' | 'approved' | 'rejected'>('none');
   const [isLoading, setIsLoading] = useState(true);
@@ -61,7 +63,7 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
     }
 
     if (affiliateStatus === 'none' || affiliateStatus === 'rejected') {
-      setIsSignupOpen(true);
+      setIsInfoOpen(true);
     }
   };
 
@@ -94,6 +96,15 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
         <DollarSign className="h-4 w-4" />
         {getButtonText()}
       </Button>
+      
+      <AffiliateInfoModal 
+        isOpen={isInfoOpen} 
+        onClose={() => setIsInfoOpen(false)}
+        onApply={() => {
+          setIsInfoOpen(false);
+          setIsSignupOpen(true);
+        }}
+      />
       
       <AffiliateSignupModal 
         isOpen={isSignupOpen} 
