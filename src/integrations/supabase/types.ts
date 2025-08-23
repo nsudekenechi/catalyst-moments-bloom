@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_log: {
+        Row: {
+          action: string
+          admin_user_id: string
+          created_at: string
+          details: string | null
+          id: string
+          target_user_id: string | null
+        }
+        Insert: {
+          action: string
+          admin_user_id: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          target_user_id?: string | null
+        }
+        Update: {
+          action?: string
+          admin_user_id?: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          target_user_id?: string | null
+        }
+        Relationships: []
+      }
+      admin_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       affiliate_applications: {
         Row: {
           audience_size: string | null
@@ -633,6 +684,14 @@ export type Database = {
         }
         Returns: undefined
       }
+      admin_adjust_user_points: {
+        Args: {
+          points_adjustment: number
+          reason: string
+          target_user_id: string
+        }
+        Returns: undefined
+      }
       create_affiliate_application: {
         Args: {
           audience_size_param: string
@@ -650,6 +709,45 @@ export type Database = {
           status: string
         }[]
       }
+      get_all_affiliate_applications: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          audience_size: string
+          created_at: string
+          email: string
+          experience: string
+          full_name: string
+          id: string
+          motivation: string
+          social_media_handles: string
+          status: string
+          updated_at: string
+          user_id: string
+        }[]
+      }
+      get_all_users_with_points: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          created_at: string
+          display_name: string
+          email: string
+          level: number
+          total_points: number
+          user_id: string
+        }[]
+      }
+      is_admin: {
+        Args: { user_id_param: string }
+        Returns: boolean
+      }
+      log_admin_action: {
+        Args: {
+          action_details?: string
+          action_name: string
+          target_user_id?: string
+        }
+        Returns: undefined
+      }
       redeem_points_for_discount: {
         Args: {
           p_description?: string
@@ -661,6 +759,10 @@ export type Database = {
           remaining_points: number
           success: boolean
         }[]
+      }
+      update_affiliate_status: {
+        Args: { application_id: string; new_status: string }
+        Returns: undefined
       }
       user_has_active_subscription: {
         Args: Record<PropertyKey, never>

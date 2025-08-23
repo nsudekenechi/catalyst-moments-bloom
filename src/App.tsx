@@ -40,6 +40,7 @@ import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
 import GlowAndGo from "./pages/GlowAndGo";
 import Affiliate from "./pages/Affiliate";
+import Admin from "./pages/Admin";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -180,6 +181,11 @@ function AppContent() {
         <Route path="/affiliate" element={
           <PrivateRoute>
             <Affiliate />
+          </PrivateRoute>
+        } />
+        <Route path="/admin" element={
+          <PrivateRoute>
+            <Admin />
           </PrivateRoute>
         } />
         
