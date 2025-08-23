@@ -2,6 +2,7 @@ import PageLayout from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import {
   BarChart,
   Calendar as CalendarIcon,
@@ -11,6 +12,7 @@ import {
   Timer,
   Utensils,
   PenLine,
+  Sparkles,
 } from 'lucide-react';
 import { Calendar } from "@/components/ui/calendar";
 import { Link } from 'react-router-dom';
@@ -19,12 +21,15 @@ import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton
 import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
 import { SleepTracker } from '@/components/wellness/SleepTracker';
 import { SelfCareTracker } from '@/components/wellness/SelfCareTracker';
+import { PersonalizedRecommendations } from '@/components/wellness/PersonalizedRecommendations';
 import { useWellnessData } from '@/hooks/useWellnessData';
+import { useContentFilter } from '@/hooks/useContentFilter';
 
 const Wellness = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [activeTab, setActiveTab] = useState("insights");
   const { wellnessEntries, wellnessScore, loading } = useWellnessData();
+  const { currentJourney, currentStage } = useContentFilter();
   
   // Get latest wellness data for display
   const latestEntry = wellnessEntries[0];
@@ -87,13 +92,19 @@ const Wellness = () => {
           <div className="lg:col-span-2">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
               <TabsList>
-                <TabsTrigger value="insights">Insights</TabsTrigger>
+                <TabsTrigger value="insights" className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4" />
+                  AI Insights
+                </TabsTrigger>
                 <TabsTrigger value="mood">Mood</TabsTrigger>
                 <TabsTrigger value="sleep">Sleep</TabsTrigger>
                 <TabsTrigger value="selfcare">Self-Care</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="insights" className="mt-6">
+              <TabsContent value="insights" className="mt-6 space-y-6">
+                {/* AI-Powered Personalized Recommendations */}
+                <PersonalizedRecommendations />
+                
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center">
@@ -115,22 +126,88 @@ const Wellness = () => {
                   </CardFooter>
                 </Card>
                 
-                <div className="mt-6 space-y-6">
-                  <h2 className="text-xl font-bold mb-4">Recommended for You</h2>
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold">Journey-Specific Resources</h2>
+                    <Badge variant="outline" className="flex items-center gap-1">
+                      <Sparkles className="h-3 w-3" />
+                      {currentJourney || 'General'} - {currentStage || 'All Stages'}
+                    </Badge>
+                  </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <WellnessResourceCard
-                      title="Sleep Strategies for New Moms"
-                      description="Evidence-based tips to maximize sleep quality when dealing with nighttime feedings"
-                      category="Sleep"
-                      time="5 min read"
-                      icon={<MoonStar className="h-5 w-5" />}
-                      color="bg-blue-100"
-                      onClick={() => window.open('/wellness/sleep-strategies', '_blank')}
-                    />
+                    {currentJourney === 'pregnant' && (
+                      <>
+                        <WellnessResourceCard
+                          title="Prenatal Wellness Essentials"
+                          description="Comprehensive guide for maintaining health during pregnancy"
+                          category="Pregnancy"
+                          time="8 min read"
+                          icon={<Heart className="h-5 w-5" />}
+                          color="bg-pink-100"
+                          onClick={() => window.open('/wellness/prenatal-essentials', '_blank')}
+                        />
+                        <WellnessResourceCard
+                          title="Managing Pregnancy Stress"
+                          description="Techniques for emotional wellbeing during pregnancy"
+                          category="Mental Health"
+                          time="6 min read"
+                          icon={<SmilePlus className="h-5 w-5" />}
+                          color="bg-purple-100"
+                          onClick={() => window.open('/wellness/pregnancy-stress', '_blank')}
+                        />
+                      </>
+                    )}
+                    
+                    {currentJourney === 'postpartum' && (
+                      <>
+                        <WellnessResourceCard
+                          title="Sleep Strategies for New Moms"
+                          description="Evidence-based tips to maximize sleep quality when dealing with nighttime feedings"
+                          category="Sleep"
+                          time="5 min read"
+                          icon={<MoonStar className="h-5 w-5" />}
+                          color="bg-blue-100"
+                          onClick={() => window.open('/wellness/sleep-strategies', '_blank')}
+                        />
+                        <WellnessResourceCard
+                          title="Postpartum Recovery Guide"
+                          description="Supporting your body and mind in the fourth trimester"
+                          category="Recovery"
+                          time="10 min read"
+                          icon={<Heart className="h-5 w-5" />}
+                          color="bg-green-100"
+                          onClick={() => window.open('/wellness/postpartum-recovery', '_blank')}
+                        />
+                      </>
+                    )}
+                    
+                    {currentJourney === 'ttc' && (
+                      <>
+                        <WellnessResourceCard
+                          title="Fertility and Wellness"
+                          description="How lifestyle choices impact conception and reproductive health"
+                          category="Fertility"
+                          time="7 min read"
+                          icon={<Heart className="h-5 w-5" />}
+                          color="bg-rose-100"
+                          onClick={() => window.open('/wellness/fertility-wellness', '_blank')}
+                        />
+                        <WellnessResourceCard
+                          title="Stress Management for TTC"
+                          description="Managing the emotional journey of trying to conceive"
+                          category="Mental Health"
+                          time="5 min read"
+                          icon={<SmilePlus className="h-5 w-5" />}
+                          color="bg-purple-100"
+                          onClick={() => window.open('/wellness/ttc-stress', '_blank')}
+                        />
+                      </>
+                    )}
+                    
                     <WellnessResourceCard
                       title="5-Minute Mindfulness Practices"
-                      description="Quick mindfulness exercises you can do while holding your baby"
+                      description="Quick mindfulness exercises you can do anywhere, anytime"
                       category="Mental Wellbeing"
                       time="Audio: 5 min"
                       icon={<Heart className="h-5 w-5" />}
@@ -138,17 +215,8 @@ const Wellness = () => {
                       onClick={() => window.open('/wellness/mindfulness', '_blank')}
                     />
                     <WellnessResourceCard
-                      title="Postpartum Mood Tracker"
-                      description="Learn to identify patterns in your emotional wellbeing during the postpartum period"
-                      category="Mood"
-                      time="Interactive Tool"
-                      icon={<SmilePlus className="h-5 w-5" />}
-                      color="bg-yellow-100"
-                      onClick={() => setActiveTab('mood')}
-                    />
-                    <WellnessResourceCard
                       title="Hydration & Energy Guide"
-                      description="How proper hydration affects your energy levels, milk production and recovery"
+                      description="How proper hydration affects your energy levels and overall health"
                       category="Nutrition"
                       time="8 min read"
                       icon={<Utensils className="h-5 w-5" />}
