@@ -20,10 +20,37 @@ interface ProgressTrackerProps {
 }
 
 export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
-  const [totalPoints, setTotalPoints] = useState(125);
-  const [streak, setStreak] = useState(5);
-  const [level, setLevel] = useState(2);
-  const [nextLevelPoints, setNextLevelPoints] = useState(200);
+  const [totalPoints, setTotalPoints] = useState(() => {
+    const saved = localStorage.getItem('userPoints');
+    return saved ? parseInt(saved) : 0;
+  });
+  const [streak, setStreak] = useState(() => {
+    const saved = localStorage.getItem('userStreak');
+    return saved ? parseInt(saved) : 0;
+  });
+  const [level, setLevel] = useState(() => {
+    const points = localStorage.getItem('userPoints');
+    const pointsNum = points ? parseInt(points) : 0;
+    return Math.floor(pointsNum / 100) + 1;
+  });
+  const [nextLevelPoints, setNextLevelPoints] = useState(() => {
+    const points = localStorage.getItem('userPoints');
+    const pointsNum = points ? parseInt(points) : 0;
+    const currentLevel = Math.floor(pointsNum / 100) + 1;
+    return currentLevel * 100;
+  });
+
+  // Update localStorage when points change
+  useEffect(() => {
+    localStorage.setItem('userPoints', totalPoints.toString());
+    localStorage.setItem('userStreak', streak.toString());
+    
+    const newLevel = Math.floor(totalPoints / 100) + 1;
+    if (newLevel !== level) {
+      setLevel(newLevel);
+      setNextLevelPoints(newLevel * 100);
+    }
+  }, [totalPoints, streak, level]);
 
   const achievements: Achievement[] = [
     {

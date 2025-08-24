@@ -42,6 +42,7 @@ import GlowAndGo from "./pages/GlowAndGo";
 import Affiliate from "./pages/Affiliate";
 import Admin from "./pages/Admin";
 import SelfCareGuide from "./pages/wellness/SelfCareGuide";
+import WellnessResources from "./pages/wellness/WellnessResources";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -193,6 +194,13 @@ function AppContent() {
           <PrivateRoute>
             <SubscriptionGuard>
               <SelfCareGuide />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/wellness/resources" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <WellnessResources />
             </SubscriptionGuard>
           </PrivateRoute>
         } />

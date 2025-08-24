@@ -90,33 +90,47 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     let personalizedGreeting = `Hi ${displayName}! I'm ${coach.name}, your wellness coach.`;
     
     if (latestEntry) {
-      personalizedGreeting += ` I see you just completed your weekly check-in. Based on what you logged, how are you feeling today?`;
+      if (latestEntry.mood_score < 5) {
+        personalizedGreeting += ` I noticed from your recent check-in that your mood has been low. I'm here to help - what's been on your mind lately?`;
+      } else if (latestEntry.energy_level < 5) {
+        personalizedGreeting += ` I see from your check-in that your energy levels have been lower. Let's talk about some ways we can help boost that!`;
+      } else {
+        personalizedGreeting += ` I see you completed your wellness check-in - you're doing great! How are you feeling right now?`;
+      }
     } else {
-      personalizedGreeting += ` Let's start by checking in - how are you feeling today?`;
+      personalizedGreeting += ` I'd love to get to know you better. How are you feeling today, and what brings you here?`;
     }
     
-    // Add stage-specific context
+    // Add stage-specific context with questions
     if (stage === 'pregnant') {
-      personalizedGreeting += " I'm here to support you and your growing baby throughout this journey.";
+      personalizedGreeting += ` How has your pregnancy journey been treating you lately?`;
     } else if (stage === 'postpartum') {
-      personalizedGreeting += " I'm here to support your recovery and adjustment to motherhood.";
+      personalizedGreeting += ` How are you adjusting to life with your little one?`;
     } else if (stage === 'ttc') {
-      personalizedGreeting += " I'm here to support you on your TTC journey with wellness guidance.";
+      personalizedGreeting += ` How are you feeling about your TTC journey today?`;
+    } else {
+      personalizedGreeting += ` What aspect of your wellness would you like to focus on today?`;
     }
 
     addCoachMessage(personalizedGreeting);
   };
 
   const addCoachMessage = (content: string) => {
-    setMessages(prev => [
-      ...prev, 
-      {
-        id: Date.now().toString(),
-        content,
-        sender: 'coach',
-        timestamp: new Date()
-      }
-    ]);
+    setIsLoading(true);
+    
+    // Simulate typing delay for human-like interaction
+    setTimeout(() => {
+      setMessages(prev => [
+        ...prev, 
+        {
+          id: Date.now().toString(),
+          content,
+          sender: 'coach',
+          timestamp: new Date()
+        }
+      ]);
+      setIsLoading(false);
+    }, 1000 + Math.random() * 1500); // Random delay between 1-2.5 seconds
   };
 
   const addUserMessage = (content: string) => {
@@ -137,17 +151,20 @@ const WellnessCoachModal = ({ isOpen, onClose }: WellnessCoachModalProps) => {
     const userMsg = inputMessage.trim();
     addUserMessage(userMsg);
     setInputMessage('');
-    setIsLoading(true);
     
-    // Simulate intelligent response based on user's stage and recent check-in data
+    // Generate smart response with human-like delay
     setTimeout(() => {
       generateSmartResponse(userMsg);
-      setIsLoading(false);
-    }, 1500);
+    }, 500);
   };
 
   const generateSmartResponse = (userMessage: string) => {
-    const response = generateWellnessResponse(userMessage, profile?.motherhood_stage as any || null, profile);
+    const displayName = profile?.display_name || user?.email?.split('@')[0] || 'there';
+    const response = generateWellnessResponse(userMessage, profile?.motherhood_stage as any || null, { 
+      ...profile, 
+      displayName,
+      wellnessEntries 
+    });
     addCoachMessage(response);
   };
 
