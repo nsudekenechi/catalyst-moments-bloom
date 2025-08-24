@@ -41,6 +41,7 @@ import CourseDetail from "./pages/CourseDetail";
 import GlowAndGo from "./pages/GlowAndGo";
 import Affiliate from "./pages/Affiliate";
 import Admin from "./pages/Admin";
+import SelfCareGuide from "./pages/wellness/SelfCareGuide";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -186,6 +187,13 @@ function AppContent() {
         <Route path="/admin" element={
           <PrivateRoute>
             <Admin />
+          </PrivateRoute>
+        } />
+        <Route path="/wellness/self-care" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <SelfCareGuide />
+            </SubscriptionGuard>
           </PrivateRoute>
         } />
         

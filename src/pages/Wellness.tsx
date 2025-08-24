@@ -22,6 +22,7 @@ import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
 import { SleepTracker } from '@/components/wellness/SleepTracker';
 import { SelfCareTracker } from '@/components/wellness/SelfCareTracker';
 import { PersonalizedRecommendations } from '@/components/wellness/PersonalizedRecommendations';
+import { QuickSelfCareIdeas } from '@/components/wellness/QuickSelfCareIdeas';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { useContentFilter } from '@/hooks/useContentFilter';
 
@@ -301,52 +302,7 @@ const Wellness = () => {
               </CardContent>
             </Card>
             
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Timer className="mr-2 h-5 w-5" />
-                  Quick Self-Care Ideas
-                </CardTitle>
-                <CardDescription>
-                  5-minute activities to boost your wellbeing
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="rounded-full bg-blue-100 h-8 w-8 flex items-center justify-center flex-shrink-0">
-                    <span className="text-sm font-medium">1</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Deep Breathing</p>
-                    <p className="text-xs text-muted-foreground">5 deep breaths, focusing on exhaling longer than inhaling</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="rounded-full bg-green-100 h-8 w-8 flex items-center justify-center flex-shrink-0">
-                    <span className="text-sm font-medium">2</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Shoulder Release</p>
-                    <p className="text-xs text-muted-foreground">Roll shoulders back 5 times, then forward 5 times</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="rounded-full bg-yellow-100 h-8 w-8 flex items-center justify-center flex-shrink-0">
-                    <span className="text-sm font-medium">3</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Gratitude Moment</p>
-                    <p className="text-xs text-muted-foreground">Write down one thing you're grateful for today</p>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-between items-center">
-                <Button variant="outline" size="sm" className="flex-1 mr-2" asChild>
-                  <Link to="/wellness/self-care">View More Ideas</Link>
-                </Button>
-                <WellnessCoachButton variant="secondary" size="sm" showLabel={false} />
-              </CardFooter>
-            </Card>
+            <QuickSelfCareIdeas />
           </div>
         </div>
       </div>

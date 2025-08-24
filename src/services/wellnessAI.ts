@@ -169,6 +169,59 @@ class WellnessAIService {
 
     return insights;
   }
+
+  async generateSelfCareIdeas(profile: any): Promise<any[]> {
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-wellness-recommendations', {
+        body: { 
+          action: 'selfcare',
+          profile 
+        }
+      });
+
+      if (error) throw error;
+
+      return data.ideas || this.getFallbackSelfCareIdeas(profile);
+    } catch (error) {
+      console.error('Error generating self-care ideas:', error);
+      return this.getFallbackSelfCareIdeas(profile);
+    }
+  }
+
+  private getFallbackSelfCareIdeas(profile: any): any[] {
+    return [
+      {
+        id: '1',
+        title: 'Deep Breathing',
+        description: '5 deep breaths focusing on longer exhales',
+        duration: '2 min',
+        category: 'breathing',
+        instructions: ['Sit comfortably', 'Inhale for 4 counts', 'Exhale for 6 counts', 'Repeat 5 times'],
+        benefits: 'Reduces stress and promotes relaxation',
+        icon: '🫁'
+      },
+      {
+        id: '2',
+        title: 'Shoulder Release',
+        description: 'Gentle shoulder rolls to release tension',
+        duration: '3 min',
+        category: 'movement',
+        instructions: ['Roll shoulders back 5 times', 'Roll shoulders forward 5 times', 'Gentle neck stretches'],
+        benefits: 'Relieves physical tension and improves posture',
+        icon: '🤸‍♀️'
+      },
+      {
+        id: '3',
+        title: 'Gratitude Moment',
+        description: 'Write down one thing you\'re grateful for',
+        duration: '2 min',
+        category: 'mindfulness',
+        instructions: ['Find a quiet moment', 'Think of something positive', 'Write it down or say it aloud'],
+        benefits: 'Boosts mood and shifts perspective',
+        icon: '🧘‍♀️'
+      }
+    ];
+  }
 }
 
 export const wellnessAI = new WellnessAIService();

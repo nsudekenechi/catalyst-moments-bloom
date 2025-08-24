@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, profile } = await req.json();
+    const { prompt, profile, action } = await req.json();
 
     if (!openAIApiKey) {
       console.error('OpenAI API key not found');
@@ -24,17 +24,45 @@ serve(async (req) => {
       });
     }
 
-    const systemPrompt = `You are a specialized wellness AI coach for mothers and women on their motherhood journey. 
-    Generate personalized, actionable wellness recommendations based on the user's current state and journey stage.
-    
-    Focus on:
-    - Journey-specific advice (TTC, pregnancy, postpartum, parenting)
-    - Current wellness metrics (mood, energy, stress, sleep)
-    - Actionable steps they can take immediately
-    - Evidence-based recommendations
-    
-    Return a JSON object with a "recommendations" array containing exactly 5 recommendations.
-    Each recommendation should have: type, title, description, action, priority, reasoning, timeframe, category, icon.`;
+    let systemPrompt = '';
+    let userPrompt = '';
+
+    if (action === 'insights') {
+      systemPrompt = `You are a wellness AI coach. Generate 2-3 personalized wellness insights based on the user's profile.`;
+      userPrompt = `Based on this wellness profile: ${JSON.stringify(profile)}
+      
+Generate 2-3 personalized wellness insights. Each insight should be specific, actionable, and encouraging. Focus on patterns, improvements, or gentle guidance.
+
+Return as JSON: {"insights": ["insight 1", "insight 2", "insight 3"]}`;
+    } else if (action === 'selfcare') {
+      systemPrompt = `You are a wellness AI coach. Generate personalized self-care ideas for quick wellness boosts.`;
+      userPrompt = `Based on this wellness profile: ${JSON.stringify(profile)}
+      
+Generate 3-4 personalized self-care ideas for quick wellness boosts. Each should include:
+- Specific title and description
+- Duration (2-10 minutes)
+- Category (breathing, movement, mindfulness, relaxation, energy)
+- Simple step-by-step instructions
+- Clear benefits
+- Relevant emoji icon
+
+Consider their current mood, energy, stress levels, and journey stage. Focus on activities that can be done anywhere, anytime.
+
+Return as JSON: {"ideas": [array of idea objects with fields: id, title, description, duration, category, instructions, benefits, icon]}`;
+    } else {
+      systemPrompt = `You are a specialized wellness AI coach for mothers and women on their motherhood journey. 
+      Generate personalized, actionable wellness recommendations based on the user's current state and journey stage.
+      
+      Focus on:
+      - Journey-specific advice (TTC, pregnancy, postpartum, parenting)
+      - Current wellness metrics (mood, energy, stress, sleep)
+      - Actionable steps they can take immediately
+      - Evidence-based recommendations
+      
+      Return a JSON object with a "recommendations" array containing exactly 5 recommendations.
+      Each recommendation should have: type, title, description, action, priority, reasoning, timeframe, category, icon.`;
+      userPrompt = prompt;
+    }
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -46,7 +74,7 @@ serve(async (req) => {
         model: 'gpt-4o-mini',
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt }
+          { role: 'user', content: userPrompt }
         ],
         max_tokens: 1500,
         temperature: 0.7,
