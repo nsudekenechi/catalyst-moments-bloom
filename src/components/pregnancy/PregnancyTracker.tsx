@@ -7,6 +7,8 @@ import { Baby, Calendar, Heart, Scale, Zap, Moon, BookOpen, MessageCircle } from
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentFilter } from '@/hooks/useContentFilter';
+import { BabyKickCounter } from './BabyKickCounter';
+import { ContractionTracker } from './ContractionTracker';
 
 interface PregnancyData {
   week: number;
@@ -163,9 +165,11 @@ export const PregnancyTracker = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <Tabs defaultValue="today" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="today">Today</TabsTrigger>
             <TabsTrigger value="symptoms">Symptoms</TabsTrigger>
+            {pregnancyData.trimester >= 2 && <TabsTrigger value="kicks">Kicks</TabsTrigger>}
+            {pregnancyData.trimester === 3 && <TabsTrigger value="contractions">Contractions</TabsTrigger>}
             <TabsTrigger value="insights">Insights</TabsTrigger>
           </TabsList>
 
@@ -256,6 +260,20 @@ export const PregnancyTracker = () => {
               </div>
             </div>
           </TabsContent>
+
+          {/* Baby Kick Counter - 2nd & 3rd Trimester */}
+          {pregnancyData.trimester >= 2 && (
+            <TabsContent value="kicks" className="space-y-4">
+              <BabyKickCounter />
+            </TabsContent>
+          )}
+
+          {/* Contraction Tracker - 3rd Trimester Only */}
+          {pregnancyData.trimester === 3 && (
+            <TabsContent value="contractions" className="space-y-4">
+              <ContractionTracker />
+            </TabsContent>
+          )}
 
           <TabsContent value="insights" className="space-y-4">
             <div className="space-y-3">
