@@ -3,8 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Heart, Timer, RotateCcw, TrendingUp } from 'lucide-react';
+import { Heart, Timer, RotateCcw, TrendingUp, AlertTriangle, Calendar, BarChart3 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 interface KickSession {
   id: string;
@@ -15,6 +17,13 @@ interface KickSession {
   duration: number; // in minutes
 }
 
+interface DailyData {
+  date: string;
+  totalKicks: number;
+  sessions: number;
+  avgDuration: number;
+}
+
 export const BabyKickCounter = () => {
   const { toast } = useToast();
   const [isTracking, setIsTracking] = useState(false);
@@ -22,6 +31,22 @@ export const BabyKickCounter = () => {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [duration, setDuration] = useState(0);
   const [sessions, setSessions] = useState<KickSession[]>([]);
+  const [showCharts, setShowCharts] = useState(false);
+
+  // Load saved sessions from localStorage
+  useEffect(() => {
+    const savedSessions = localStorage.getItem('kickCounterSessions');
+    if (savedSessions) {
+      setSessions(JSON.parse(savedSessions));
+    }
+  }, []);
+
+  // Save sessions to localStorage whenever sessions change
+  useEffect(() => {
+    if (sessions.length > 0) {
+      localStorage.setItem('kickCounterSessions', JSON.stringify(sessions));
+    }
+  }, [sessions]);
 
   // Timer for tracking duration
   useEffect(() => {
@@ -119,6 +144,53 @@ export const BabyKickCounter = () => {
     return "bg-blue-500";
   };
 
+  // Prepare chart data
+  const getDailyData = (): DailyData[] => {
+    const dailyMap = new Map<string, { kicks: number; sessions: number; totalDuration: number }>();
+    
+    sessions.forEach(session => {
+      const date = new Date(session.date).toLocaleDateString();
+      const existing = dailyMap.get(date) || { kicks: 0, sessions: 0, totalDuration: 0 };
+      dailyMap.set(date, {
+        kicks: existing.kicks + session.kickCount,
+        sessions: existing.sessions + 1,
+        totalDuration: existing.totalDuration + session.duration
+      });
+    });
+
+    return Array.from(dailyMap.entries())
+      .map(([date, data]) => ({
+        date: date.split('/').slice(0, 2).join('/'), // MM/DD format
+        totalKicks: data.kicks,
+        sessions: data.sessions,
+        avgDuration: Math.round(data.totalDuration / data.sessions)
+      }))
+      .slice(-7); // Last 7 days
+  };
+
+  const checkMovementPattern = () => {
+    const recentSessions = sessions.slice(0, 3);
+    const lowMovementSessions = recentSessions.filter(s => s.kickCount < 10);
+    
+    if (lowMovementSessions.length >= 2) {
+      return 'concern';
+    } else if (recentSessions.length > 0 && recentSessions.every(s => s.kickCount >= 10)) {
+      return 'excellent';
+    }
+    return 'normal';
+  };
+
+  const chartConfig = {
+    totalKicks: {
+      label: "Total Kicks",
+      color: "hsl(var(--primary))",
+    },
+    sessions: {
+      label: "Sessions",
+      color: "hsl(var(--secondary))",
+    },
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -198,9 +270,105 @@ export const BabyKickCounter = () => {
           )}
         </div>
 
+        {/* Charts Toggle */}
+        {sessions.length > 3 && (
+          <div className="flex justify-center pt-4 border-t">
+            <Button
+              onClick={() => setShowCharts(!showCharts)}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <BarChart3 className="h-4 w-4" />
+              {showCharts ? 'Hide Charts' : 'View Trends'}
+            </Button>
+          </div>
+        )}
+
+        {/* Movement Pattern Alert */}
+        {sessions.length > 2 && (
+          <div className={`p-3 rounded-lg text-sm ${
+            checkMovementPattern() === 'concern' 
+              ? 'bg-red-50 border border-red-200' 
+              : checkMovementPattern() === 'excellent'
+              ? 'bg-green-50 border border-green-200'
+              : 'bg-blue-50 border border-blue-200'
+          }`}>
+            <div className="flex items-center mb-1">
+              {checkMovementPattern() === 'concern' && (
+                <AlertTriangle className="h-4 w-4 text-red-600 mr-2" />
+              )}
+              <p className="font-medium">
+                {checkMovementPattern() === 'concern' && 'Movement Pattern Notice'}
+                {checkMovementPattern() === 'excellent' && 'Excellent Movement Pattern!'}
+                {checkMovementPattern() === 'normal' && 'Normal Movement Pattern'}
+              </p>
+            </div>
+            <div className="text-xs">
+              {checkMovementPattern() === 'concern' && (
+                <span className="text-red-700">
+                  Your recent sessions show fewer movements than usual. Consider contacting your healthcare provider if this pattern continues.
+                </span>
+              )}
+              {checkMovementPattern() === 'excellent' && (
+                <span className="text-green-700">
+                  Your baby is showing consistent, healthy movement patterns. Keep up the great monitoring!
+                </span>
+              )}
+              {checkMovementPattern() === 'normal' && (
+                <span className="text-blue-700">
+                  Your baby's movement pattern appears normal. Continue regular monitoring as recommended.
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Charts Section */}
+        {showCharts && sessions.length > 3 && (
+          <div className="space-y-4 pt-4 border-t">
+            <div>
+              <h4 className="text-sm font-medium mb-3 flex items-center">
+                <Calendar className="h-4 w-4 mr-2" />
+                Daily Movement Trends (Last 7 Days)
+              </h4>
+              <ChartContainer config={chartConfig} className="h-[200px]">
+                <LineChart data={getDailyData()}>
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Line 
+                    type="monotone" 
+                    dataKey="totalKicks" 
+                    stroke="hsl(var(--primary))" 
+                    strokeWidth={2}
+                    dot={{ fill: 'hsl(var(--primary))' }}
+                  />
+                </LineChart>
+              </ChartContainer>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-medium mb-3">Sessions Per Day</h4>
+              <ChartContainer config={chartConfig} className="h-[150px]">
+                <BarChart data={getDailyData()}>
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Bar 
+                    dataKey="sessions" 
+                    fill="hsl(var(--secondary))" 
+                    radius={[2, 2, 0, 0]}
+                  />
+                </BarChart>
+              </ChartContainer>
+            </div>
+          </div>
+        )}
+
         {/* Quick Stats */}
         {sessions.length > 0 && (
-          <div className="grid grid-cols-2 gap-3 pt-4 border-t">
+          <div className="grid grid-cols-3 gap-3 pt-4 border-t">
             <div className="text-center p-3 bg-muted/30 rounded-lg">
               <div className="flex items-center justify-center mb-1">
                 <TrendingUp className="h-4 w-4 text-green-600 mr-1" />
@@ -211,6 +379,12 @@ export const BabyKickCounter = () => {
             <div className="text-center p-3 bg-muted/30 rounded-lg">
               <div className="font-medium">{sessions.length}</div>
               <p className="text-xs text-muted-foreground">Sessions</p>
+            </div>
+            <div className="text-center p-3 bg-muted/30 rounded-lg">
+              <div className="font-medium">
+                {sessions.reduce((sum, s) => sum + s.kickCount, 0)}
+              </div>
+              <p className="text-xs text-muted-foreground">Total kicks</p>
             </div>
           </div>
         )}
