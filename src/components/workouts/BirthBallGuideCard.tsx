@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Play, Star, Users } from 'lucide-react';
 import { useVideoPlayer } from '@/contexts/VideoPlayerContext';
-import professionalCover from '@/assets/birth-ball-guide-professional-cover.jpg';
+import professionalCover from '@/assets/ultimate-birth-ball-guide-cover.jpg';
 
 const BIRTHBALL_GUIDE_URL = "https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Ultimate%20birth%20ball%20guide/The%20Ultimate%20Birth%20Ball%20Guide%20Safe%20&%20Effective%20Exercises%20for%20Every%20Trimester.pdf";
 
