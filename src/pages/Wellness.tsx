@@ -370,7 +370,9 @@ const WellnessResourceCard = ({ title, description, category, time, icon, color,
           <Timer className="h-3 w-3 mr-1" />
           {time}
         </span>
-        <Button variant="link" size="sm" className="p-0">View Resource</Button>
+        <Button variant="link" size="sm" className="p-0" asChild>
+          <Link to="/wellness/resources">View Resource</Link>
+        </Button>
       </div>
     </CardContent>
   </Card>

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import defaultCover from '@/assets/30-days-glow-up-cover.jpg';
+import defaultCover from '@/assets/recipe-card-cover.jpg';
 interface Recipe extends ContentItem {
   prepTime: string;
   image: string;
