@@ -39,7 +39,20 @@ export const useWellnessData = () => {
       const storedWellness = localStorage.getItem(`wellness_${user.id}`);
       const storedWorkouts = localStorage.getItem(`workouts_${user.id}`);
       
-      const wellness = storedWellness ? JSON.parse(storedWellness) : [];
+      const wellness = storedWellness ? JSON.parse(storedWellness) : [
+        // Default sample data to show functionality  
+        {
+          id: '1',
+          mood_score: 7,
+          energy_level: 6,
+          sleep_hours: 7.5,
+          stress_level: 4,
+          self_care_completed: true,
+          hydration_glasses: 6,
+          created_at: new Date().toISOString(),
+          notes: 'Feeling good today after morning meditation'
+        }
+      ];
       const workouts = storedWorkouts ? JSON.parse(storedWorkouts) : [
         // Default sample data to show functionality
         {
