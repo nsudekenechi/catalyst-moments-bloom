@@ -408,6 +408,39 @@ export type Database = {
         }
         Relationships: []
       }
+      premium_users: {
+        Row: {
+          created_at: string
+          id: string
+          is_premium: boolean
+          subscription_end: string | null
+          subscription_start: string | null
+          subscription_type: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_premium?: boolean
+          subscription_end?: string | null
+          subscription_start?: string | null
+          subscription_type?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_premium?: boolean
+          subscription_end?: string | null
+          subscription_start?: string | null
+          subscription_type?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           bio: string | null
@@ -738,6 +771,10 @@ export type Database = {
       }
       is_admin: {
         Args: { user_id_param: string }
+        Returns: boolean
+      }
+      is_premium_user: {
+        Args: Record<PropertyKey, never>
         Returns: boolean
       }
       log_admin_action: {

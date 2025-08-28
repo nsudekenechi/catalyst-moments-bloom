@@ -337,6 +337,7 @@ const Wellness = () => {
           </div>
         </div>
       </div>
+      </PremiumGuard>
     </PageLayout>
   );
 };
