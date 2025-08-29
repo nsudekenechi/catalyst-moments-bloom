@@ -2,6 +2,7 @@ import React from 'react';
 import { AdminGuard } from '@/components/admin/AdminGuard';
 import { UserPointsManager } from '@/components/admin/UserPointsManager';
 import { AffiliateApplicationManager } from '@/components/admin/AffiliateApplicationManager';
+import { BulkAffiliateApproval } from '@/components/admin/BulkAffiliateApproval';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -42,7 +43,8 @@ const Admin = () => {
               <UserPointsManager />
             </TabsContent>
 
-            <TabsContent value="affiliates">
+            <TabsContent value="affiliates" className="space-y-6">
+              <BulkAffiliateApproval />
               <AffiliateApplicationManager />
             </TabsContent>
 
