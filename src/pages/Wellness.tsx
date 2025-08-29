@@ -1,4 +1,6 @@
+import React, { useState } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
+import PremiumGuard from '@/components/subscription/PremiumGuard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -16,7 +18,6 @@ import {
 } from 'lucide-react';
 import { Calendar } from "@/components/ui/calendar";
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 import WellnessCoachButton from '@/components/wellness-coach/WellnessCoachButton';
 import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
 import { SleepTracker } from '@/components/wellness/SleepTracker';
@@ -41,7 +42,8 @@ const Wellness = () => {
   
   return (
     <PageLayout>
-      <div className="container px-4 mx-auto">
+      <PremiumGuard>
+        <div className="container px-4 mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-2">Wellness</h1>
@@ -336,7 +338,7 @@ const Wellness = () => {
             <QuickSelfCareIdeas />
           </div>
         </div>
-      </div>
+        </div>
       </PremiumGuard>
     </PageLayout>
   );
