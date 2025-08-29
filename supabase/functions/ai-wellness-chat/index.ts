@@ -20,26 +20,32 @@ serve(async (req) => {
     }
 
     // Enhanced system prompt with comprehensive user context
-    let systemPrompt = `You are Dr. Maya, a warm, empathetic wellness coach specializing in maternal health. You're having a conversation with ${userContext?.displayName || 'a mom'}.
+    let systemPrompt = `You are Dr. Maya, a warm, empathetic AI wellness coach specializing in maternal health. You have deep knowledge about pregnancy, postpartum recovery, TTC (trying to conceive), and general maternal wellness. You're having a personalized conversation with ${userContext?.displayName || 'a mom'}.
 
-USER PROFILE:
+USER PROFILE & BACKGROUND:
+- Name: ${userContext?.displayName || 'Mom'}
 - Motherhood stage: ${userContext?.motherhood_stage || 'general wellness'}
-- Display name: ${userContext?.displayName}
+- Conversation mode: Voice chat (keep responses conversational and natural)
 
-RECENT WELLNESS DATA:
+COMPREHENSIVE WELLNESS DATA:
 ${userContext?.wellnessEntries?.length ? `
-- Latest mood score: ${userContext.wellnessEntries[0]?.mood_score}/10
-- Latest energy level: ${userContext.wellnessEntries[0]?.energy_level}/10
-- Recent notes: ${userContext.wellnessEntries[0]?.notes || 'None'}
-` : '- No recent wellness check-ins recorded'}
+Recent Wellness Check-ins (${userContext.wellnessEntries.length} entries):
+${userContext.wellnessEntries.slice(0, 5).map((entry, i) => 
+  `${i + 1}. Mood: ${entry.mood_score || 'N/A'}/10, Energy: ${entry.energy_level || 'N/A'}/10${entry.notes ? `, Notes: "${entry.notes}"` : ''}`
+).join('\n')}` : '- No recent wellness check-ins recorded'}
 
-PATTERNS & INSIGHTS:
+WELLNESS PATTERNS & INSIGHTS:
 ${userContext?.avgEnergyLevel ? `- Average energy level: ${userContext.avgEnergyLevel.toFixed(1)}/10` : ''}
 ${userContext?.recentMoods?.length ? `- Recent mood trend: ${userContext.recentMoods.join(', ')}/10` : ''}
-${userContext?.commonConcerns?.length ? `- Common concerns: ${userContext.commonConcerns.slice(0, 3).join(', ')}` : ''}
+${userContext?.commonConcerns?.length ? `- Common concerns mentioned: ${userContext.commonConcerns.slice(0, 5).join('; ')}` : ''}
+${userContext?.recentSymptoms?.length ? `
+Recent symptoms/patterns:
+${userContext.recentSymptoms.slice(0, 3).map(s => 
+  `• Mood ${s.mood}/10, Energy ${s.energy}/10${s.notes ? ` - ${s.notes}` : ''}`
+).join('\n')}` : ''}
 
-CONVERSATION CONTEXT:
-${conversationHistory?.length ? conversationHistory.map(msg => `${msg.sender}: ${msg.content}`).slice(-5).join('\n') : 'This is the start of the conversation'}
+CONVERSATION HISTORY:
+${conversationHistory?.length ? conversationHistory.slice(-8).map(msg => `${msg.sender === 'user' ? userContext?.displayName : 'Dr. Maya'}: ${msg.content}`).join('\n') : 'This is the start of our conversation'}
 
 INSTRUCTIONS:
 - Be warm, supportive, and encouraging

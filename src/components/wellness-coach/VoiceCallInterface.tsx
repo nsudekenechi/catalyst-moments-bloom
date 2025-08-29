@@ -123,29 +123,48 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
     }
   };
 
+  const [conversationHistory, setConversationHistory] = useState<Array<{sender: string, content: string}>>([]);
+
   const handleUserSpeech = async (speechText: string) => {
     if (!speechText.trim()) return;
     
     setTranscript('');
     stopListening();
     
+    // Add user message to conversation history
+    const userMessage = { sender: 'user', content: speechText };
+    setConversationHistory(prev => [...prev, userMessage]);
+    
     try {
-      // Generate AI response
+      // Generate comprehensive AI response with full user context
       const userContext = {
-        display_name: profile?.display_name || user?.email?.split('@')[0],
+        displayName: profile?.display_name || user?.email?.split('@')[0] || 'there',
         motherhood_stage: profile?.motherhood_stage,
-        wellnessEntries: wellnessEntries?.slice(0, 5)
+        wellnessEntries: wellnessEntries?.slice(0, 10), // More wellness history
+        recentMoods: wellnessEntries?.slice(0, 7)?.map(e => e.mood_score).filter(Boolean),
+        avgEnergyLevel: wellnessEntries?.slice(0, 7)?.reduce((sum, e) => sum + (e.energy_level || 0), 0) / Math.max(wellnessEntries?.slice(0, 7)?.length || 1, 1),
+        commonConcerns: wellnessEntries?.slice(0, 10)?.map(e => e.notes).filter(Boolean),
+        recentSymptoms: wellnessEntries?.slice(0, 5)?.map(e => ({
+          mood: e.mood_score,
+          energy: e.energy_level,
+          notes: e.notes,
+          date: e.created_at
+        }))
       };
 
       const { data, error } = await supabase.functions.invoke('ai-wellness-chat', {
         body: {
           message: speechText,
           userContext,
-          conversationHistory: []
+          conversationHistory: conversationHistory.slice(-10) // Last 10 messages for context
         }
       });
 
       if (error) throw error;
+      
+      // Add AI response to conversation history
+      const aiMessage = { sender: 'coach', content: data.response };
+      setConversationHistory(prev => [...prev, aiMessage]);
       
       // Speak the AI response
       speakMessage(data.response);
