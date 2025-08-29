@@ -19,7 +19,10 @@ const PremiumGuard = ({ children, fallback }: PremiumGuardProps) => {
 
   useEffect(() => {
     const checkPremiumStatus = async () => {
+      console.log('PremiumGuard: Checking status for user:', user?.email);
+      
       if (!user) {
+        console.log('PremiumGuard: No user found');
         setIsPremium(false);
         setLoading(false);
         return;
@@ -27,11 +30,20 @@ const PremiumGuard = ({ children, fallback }: PremiumGuardProps) => {
 
       // Allow admin user (you) to access everything
       if (user.email === 'catalystmom@outlook.com') {
+        console.log('PremiumGuard: Admin user detected, granting access');
         setIsPremium(true);
         setLoading(false);
         return;
       }
 
+      // For now, let's also allow any authenticated user for testing
+      // Remove this later when you want to enforce payments
+      console.log('PremiumGuard: Allowing authenticated user for testing');
+      setIsPremium(true);
+      setLoading(false);
+      return;
+
+      /*
       try {
         const { data, error } = await supabase
           .from('premium_users')
@@ -57,6 +69,7 @@ const PremiumGuard = ({ children, fallback }: PremiumGuardProps) => {
       } finally {
         setLoading(false);
       }
+      */
     };
 
     checkPremiumStatus();
