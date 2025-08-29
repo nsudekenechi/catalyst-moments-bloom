@@ -179,7 +179,51 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
     }
   };
 
-  const speakMessage = (text: string) => {
+  const speakMessage = async (text: string) => {
+    try {
+      setIsCoachSpeaking(true);
+      
+      // Use ElevenLabs for much more human voice
+      const { data, error } = await supabase.functions.invoke('text-to-speech-elevenlabs', {
+        body: {
+          text,
+          voice_id: "EXAVITQu4vr4xnSDxMaL" // Sarah - warm, professional female voice
+        }
+      });
+
+      if (error) throw error;
+
+      // Play the audio
+      const audio = new Audio(`data:audio/mpeg;base64,${data.audioContent}`);
+      
+      audio.onended = () => {
+        setIsCoachSpeaking(false);
+        // Resume listening after coach finishes speaking
+        setTimeout(() => {
+          if (callState === 'connected') {
+            startListening();
+          }
+        }, 500);
+      };
+
+      audio.onerror = () => {
+        console.error('Audio playback error');
+        setIsCoachSpeaking(false);
+        // Fallback to browser speech synthesis
+        fallbackSpeech(text);
+      };
+
+      await audio.play();
+      
+    } catch (error) {
+      console.error('Error with ElevenLabs TTS:', error);
+      setIsCoachSpeaking(false);
+      // Fallback to browser speech synthesis
+      fallbackSpeech(text);
+    }
+  };
+
+  const fallbackSpeech = (text: string) => {
     if ('speechSynthesis' in window) {
       setIsCoachSpeaking(true);
       
