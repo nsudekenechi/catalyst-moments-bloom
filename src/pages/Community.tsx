@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import PageLayout from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/button';
@@ -8,13 +7,15 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Heart, MessageCircle, Share2, Users, ThumbsUp, Calendar, Search } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Users, ThumbsUp, Calendar, Search, Camera, Star } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
 import { ProgressTracker } from '@/components/gamification/ProgressTracker';
 import SubscriptionPrompt from '@/components/subscription/SubscriptionPrompt';
 import { Link, useLocation } from 'react-router-dom';
 import { getGroupsForStage } from '@/components/community/groups';
+import communityCover from '@/assets/community-cover.jpg';
+
 const Community = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const { user, profile, subscribed } = useAuth();
@@ -26,10 +27,78 @@ const Community = () => {
   
   return (
     <PageLayout>
-      <div className="container px-4 mx-auto">
+      {/* Hero Section with Cover Image */}
+      <div className="relative h-[60vh] min-h-[400px] overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src={communityCover} 
+            alt="CatalystMom Community" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/30" />
+        </div>
+        
+        <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
+          <div className="max-w-2xl text-white">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-fade-in">
+              Welcome to Our
+              <span className="block bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text text-transparent">
+                Community
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl mb-8 text-gray-200 animate-fade-in">
+              Connect with amazing mothers on similar journeys. Share experiences, get support, and grow together.
+            </p>
+            <div className="flex flex-wrap gap-4 animate-fade-in">
+              <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90">
+                <Users className="h-5 w-5 mr-2" />
+                Join Discussions
+              </Button>
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black">
+                <Camera className="h-5 w-5 mr-2" />
+                Share Your Story
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-12">
+        {/* Community Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+          <Card className="text-center hover-scale">
+            <CardContent className="pt-6">
+              <Users className="h-12 w-12 mx-auto mb-4 text-primary" />
+              <div className="text-3xl font-bold gradient-text mb-2">2,847</div>
+              <p className="text-muted-foreground">Community Members</p>
+            </CardContent>
+          </Card>
+          <Card className="text-center hover-scale">
+            <CardContent className="pt-6">
+              <MessageCircle className="h-12 w-12 mx-auto mb-4 text-primary" />
+              <div className="text-3xl font-bold gradient-text mb-2">12,435</div>
+              <p className="text-muted-foreground">Conversations</p>
+            </CardContent>
+          </Card>
+          <Card className="text-center hover-scale">
+            <CardContent className="pt-6">
+              <Heart className="h-12 w-12 mx-auto mb-4 text-primary" />
+              <div className="text-3xl font-bold gradient-text mb-2">48,921</div>
+              <p className="text-muted-foreground">Hearts Given</p>
+            </CardContent>
+          </Card>
+          <Card className="text-center hover-scale">
+            <CardContent className="pt-6">
+              <Star className="h-12 w-12 mx-auto mb-4 text-primary" />
+              <div className="text-3xl font-bold gradient-text mb-2">1,256</div>
+              <p className="text-muted-foreground">Success Stories</p>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Community</h1>
+            <h2 className="text-3xl font-bold mb-2 gradient-text">Community Hub</h2>
             <p className="text-muted-foreground mb-4 md:mb-0">
               Connect and share with other moms on similar journeys
             </p>
@@ -60,7 +129,7 @@ const Community = () => {
           <TabsContent value="feed" className="mt-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="md:w-2/3 space-y-6">
-{subscribed ? (
+                {subscribed ? (
                   <Card>
                     <CardHeader className="p-4 flex flex-row items-center space-x-4">
                       <Avatar>
@@ -248,7 +317,7 @@ const Community = () => {
           <TabsContent value="groups">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
               {stageGroups.map((g) => (
-                <Card key={g.slug} className="overflow-hidden transition hover:shadow-md">
+                <Card key={g.slug} className="overflow-hidden transition hover:shadow-md hover-scale">
                   <div className="h-32 w-full overflow-hidden">
                     <img
                       src={g.coverImage}
