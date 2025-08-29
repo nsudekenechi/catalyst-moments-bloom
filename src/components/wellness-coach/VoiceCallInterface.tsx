@@ -160,7 +160,10 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('AI function error:', error);
+        throw error;
+      }
       
       // Add AI response to conversation history
       const aiMessage = { sender: 'coach', content: data.response };
@@ -171,7 +174,8 @@ const VoiceCallInterface = ({ isOpen, onClose }: VoiceCallInterfaceProps) => {
       
     } catch (error) {
       console.error('Error generating response:', error);
-      speakMessage("I'm sorry, I didn't catch that. Could you please try again?");
+      // Fallback response when AI is unavailable
+      speakMessage("I understand you're trying to share something with me. While I'm having some technical difficulties with my AI right now, I'm still here to listen. Could you tell me more about how you're feeling today?");
     }
   };
 
