@@ -20,8 +20,11 @@ serve(async (req) => {
 
     const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
     if (!ELEVENLABS_API_KEY) {
+      console.error('ElevenLabs API key not found. Available env vars:', Object.keys(Deno.env.toObject()));
       throw new Error('ElevenLabs API key not configured');
     }
+
+    console.log('ElevenLabs API key found, length:', ELEVENLABS_API_KEY.length);
 
     // Generate speech using ElevenLabs
     const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`, {

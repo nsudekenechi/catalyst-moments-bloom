@@ -16,8 +16,11 @@ serve(async (req) => {
     
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
     if (!OPENAI_API_KEY) {
+      console.error('OpenAI API key not found. Available env vars:', Object.keys(Deno.env.toObject()));
       throw new Error('OpenAI API key not configured');
     }
+
+    console.log('OpenAI API key found, length:', OPENAI_API_KEY.length);
 
     // Enhanced system prompt with comprehensive user context
     let systemPrompt = `You are Dr. Maya, a highly qualified AI wellness coach and maternal health expert. You are warm, empathetic, and professional with deep expertise in pregnancy, postpartum recovery, TTC (trying to conceive), nutrition, fitness, mental health, and general maternal wellness. You're having a personalized voice conversation with ${userContext?.displayName || 'a mom'}.

@@ -17,12 +17,14 @@ serve(async (req) => {
     const { prompt, profile, action } = await req.json();
 
     if (!openAIApiKey) {
-      console.error('OpenAI API key not found');
+      console.error('OpenAI API key not found. Available env vars:', Object.keys(Deno.env.toObject()));
       return new Response(JSON.stringify({ error: 'OpenAI API key not configured' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    console.log('OpenAI API key found, length:', openAIApiKey.length);
 
     let systemPrompt = '';
     let userPrompt = '';
