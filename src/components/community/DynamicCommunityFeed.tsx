@@ -1,12 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Heart, MessageCircle, Share2, Trophy, Star, Flame, ShieldCheck } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 import { groupDiscussions, moderationPrompts, activityMessages, type CommunityPost } from './GroupDiscussions';
+
+// Import member avatars
+import mom1 from '@/assets/member-avatars/mom-1.jpg';
+import mom2 from '@/assets/member-avatars/mom-2.jpg';
+import mom3 from '@/assets/member-avatars/mom-3.jpg';
+import mom4 from '@/assets/member-avatars/mom-4.jpg';
+import mom5 from '@/assets/member-avatars/mom-5.jpg';
+import mom6 from '@/assets/member-avatars/mom-6.jpg';
+
+const memberAvatars = [mom1, mom2, mom3, mom4, mom5, mom6];
 
 interface DynamicCommunityFeedProps {
   groupSlug?: string;
@@ -196,6 +206,10 @@ const CommunityPost = ({ post }: { post: CommunityPost }) => {
       <CardContent className="p-6">
         <div className="flex items-start space-x-3 mb-4">
           <Avatar className="relative">
+            <AvatarImage 
+              src={memberAvatars[Math.floor(Math.random() * memberAvatars.length)]} 
+              alt={post.name}
+            />
             <AvatarFallback>{post.avatar}</AvatarFallback>
             {post.achievement && (
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-500 rounded-full flex items-center justify-center">

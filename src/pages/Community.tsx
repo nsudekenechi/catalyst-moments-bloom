@@ -15,6 +15,8 @@ import SubscriptionPrompt from '@/components/subscription/SubscriptionPrompt';
 import { Link, useLocation } from 'react-router-dom';
 import { getGroupsForStage } from '@/components/community/groups';
 import communityCover from '@/assets/community-cover.jpg';
+import EnhancedGroupsList from '@/components/community/EnhancedGroupsList';
+import EnhancedEventsList from '@/components/community/EnhancedEventsList';
 
 const Community = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -171,131 +173,14 @@ const Community = () => {
                 <ProgressTracker userStage={profile?.motherhood_stage} />
                 <Card>
                   <CardHeader className="pb-2">
-                    <h3 className="font-semibold flex items-center">
-                      <Users className="h-4 w-4 mr-2" /> Your Groups
-                    </h3>
+                    <EnhancedGroupsList />
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    {isTTC ? (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <div className="bg-pink-100 w-10 h-10 rounded-full flex items-center justify-center">
-                              <span className="text-xs">TTC</span>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">TTC Journey Support</p>
-                              <p className="text-xs text-muted-foreground">892 members</p>
-                            </div>
-                          </div>
-                          <Badge variant="outline" className="text-xs">New posts</Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <div className="bg-green-100 w-10 h-10 rounded-full flex items-center justify-center">
-                              <span className="text-xs">FN</span>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">Fertility Nutrition</p>
-                              <p className="text-xs text-muted-foreground">534 members</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <div className="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center">
-                              <span className="text-xs">MW</span>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">Mindful Wellness</p>
-                              <p className="text-xs text-muted-foreground">721 members</p>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <div className="bg-primary/20 w-10 h-10 rounded-full flex items-center justify-center">
-                              <span className="text-xs">PP</span>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">Postpartum Support</p>
-                              <p className="text-xs text-muted-foreground">1,245 members</p>
-                            </div>
-                          </div>
-                          <Badge variant="outline" className="text-xs">New posts</Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <div className="bg-secondary/60 w-10 h-10 rounded-full flex items-center justify-center">
-                              <span className="text-xs">WM</span>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">Working Moms</p>
-                              <p className="text-xs text-muted-foreground">876 members</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <div className="bg-accent/80 w-10 h-10 rounded-full flex items-center justify-center">
-                              <span className="text-xs">FT</span>
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">Fitness Together</p>
-                              <p className="text-xs text-muted-foreground">2,104 members</p>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" size="sm" className="w-full">
-                      View All Groups
-                    </Button>
-                  </CardFooter>
                 </Card>
                 
                 <Card>
                   <CardHeader className="pb-2">
-                    <h3 className="font-semibold flex items-center">
-                      <Calendar className="h-4 w-4 mr-2" /> Upcoming Events
-                    </h3>
+                    <EnhancedEventsList />
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <p className="text-sm font-medium">Virtual Meditation Session</p>
-                      <p className="text-xs text-muted-foreground mb-1">Tomorrow, 8:00 PM</p>
-                      <div className="flex items-center space-x-2">
-                        <div className="flex -space-x-2">
-                          <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs">+</div>
-                          <div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center text-xs">+</div>
-                        </div>
-                        <span className="text-xs text-muted-foreground">18 attending</span>
-                      </div>
-                    </div>
-                    <Separator />
-                    <div>
-                      <p className="text-sm font-medium">Q&A with Sleep Specialist</p>
-                      <p className="text-xs text-muted-foreground mb-1">Friday, 1:00 PM</p>
-                      <div className="flex items-center space-x-2">
-                        <div className="flex -space-x-2">
-                          <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs">+</div>
-                          <div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center text-xs">+</div>
-                          <div className="w-6 h-6 rounded-full bg-primary/40 flex items-center justify-center text-xs">+</div>
-                        </div>
-                        <span className="text-xs text-muted-foreground">34 attending</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" size="sm" className="w-full">
-                      View All Events
-                    </Button>
-                  </CardFooter>
                 </Card>
                 
                 <Card>
@@ -347,14 +232,7 @@ const Community = () => {
           </TabsContent>
           
           <TabsContent value="events">
-            <div className="text-center py-10 border rounded-lg bg-muted/30">
-              <Calendar className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
-              <h3 className="text-xl font-medium mb-2">Community Events</h3>
-              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                Join virtual and local events where you can learn, connect, and grow with other moms.
-              </p>
-              <Button>Browse Events</Button>
-            </div>
+            <EnhancedEventsList />
           </TabsContent>
         </Tabs>
       </div>
