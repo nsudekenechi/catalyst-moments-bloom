@@ -7,7 +7,6 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Helper logging function for debugging
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
   console.log(`[CREATE-CHECKOUT] ${step}${detailsStr}`);
@@ -18,7 +17,6 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Create Supabase client using the anon key for user authentication.
   const supabaseClient = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_ANON_KEY") ?? ""
@@ -27,14 +25,13 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
-    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    const stripeKey = Deno.env.get("Strip key");
     if (!stripeKey) {
-      logStep("ERROR: STRIPE_SECRET_KEY not configured");
-      throw new Error("Stripe integration not configured. Please add your Stripe secret key.");
+      logStep("ERROR: STRIPE_SECRET_KEY not found");
+      throw new Error("STRIPE_SECRET_KEY is not configured");
     }
     logStep("Stripe key verified");
 
-    // Retrieve authenticated user
     const authHeader = req.headers.get("Authorization")!;
     const token = authHeader.replace("Bearer ", "");
     const { data } = await supabaseClient.auth.getUser(token);
@@ -42,43 +39,28 @@ serve(async (req) => {
     if (!user?.email) throw new Error("User not authenticated or email not available");
     logStep("User authenticated", { userId: user.id, email: user.email });
 
-    // Initialize Stripe
-    const stripe = new Stripe(stripeKey, {
-      apiVersion: "2023-10-16",
-    });
-
-    // Check if a Stripe customer record exists for this user
+    const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     let customerId;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
-      logStep("Found existing Stripe customer", { customerId });
+      logStep("Existing customer found", { customerId });
     } else {
-      logStep("No existing Stripe customer found");
+      logStep("No existing customer found");
     }
 
-    // Create a subscription checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       line_items: [
         {
-          price_data: {
-            currency: "usd",
-            product_data: { 
-              name: "CatalystMom Premium",
-              description: "Access to all premium features, workouts, meal plans, and community"
-            },
-            unit_amount: 2997, // $29.97
-            recurring: { interval: "month" },
-          },
+          price: "price_1Rt3QMCNwyQa1NiQDwHF5QDw",
           quantity: 1,
         },
       ],
       mode: "subscription",
       success_url: `${req.headers.get("origin")}/dashboard?success=true`,
-      cancel_url: `${req.headers.get("origin")}/dashboard?canceled=true`,
-      allow_promotion_codes: true,
+      cancel_url: `${req.headers.get("origin")}/dashboard?cancelled=true`,
     });
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
