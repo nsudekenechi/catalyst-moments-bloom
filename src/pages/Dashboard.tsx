@@ -38,23 +38,42 @@ interface StatsCardProps {
 }
 
 const Dashboard = () => {
+  console.log('[DASHBOARD] Component starting to render');
+  
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [isCheckInOpen, setIsCheckInOpen] = useState(false);
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
+  
+  console.log('[DASHBOARD] About to call useWellnessData hook');
   const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
+  console.log('[DASHBOARD] useWellnessData completed');
+  
+  console.log('[DASHBOARD] About to call useAuth hook');
   const { user, profile, subscribed } = useAuth();
+  console.log('[DASHBOARD] useAuth completed', { user: !!user, profile: !!profile, subscribed });
+  
+  console.log('[DASHBOARD] About to call useContentFilter hook');
   const { stageInfo, hasJourney } = useContentFilter();
+  console.log('[DASHBOARD] useContentFilter completed', { stageInfo, hasJourney });
   
   const isTTC = stageInfo?.journey === 'ttc';
   const isPregnant = stageInfo?.journey === 'pregnant';
   const isPostpartum = stageInfo?.journey === 'postpartum';
   const isToddler = stageInfo?.journey === 'toddler';
   
+  console.log('[DASHBOARD] Journey states:', { isTTC, isPregnant, isPostpartum, isToddler, hasJourney });
+  
   // Auto-refresh data every 30 seconds for real-time updates
   useEffect(() => {
+    console.log('[DASHBOARD] Setting up auto-refresh interval');
     const interval = setInterval(refreshData, 30000);
-    return () => clearInterval(interval);
+    return () => {
+      console.log('[DASHBOARD] Cleaning up auto-refresh interval');
+      clearInterval(interval);
+    };
   }, [refreshData]);
+  
+  console.log('[DASHBOARD] About to render PageLayout');
   
   return (
     <PageLayout>
