@@ -54,14 +54,7 @@ serve(async (req) => {
       customer_email: customerId ? undefined : user.email,
       line_items: [
         {
-          price_data: {
-            currency: "usd",
-            product_data: { 
-              name: "Premium Access - Catalyst Mom Wellness" 
-            },
-            unit_amount: 4999, // $49.99
-            recurring: { interval: "month" },
-          },
+          price: "prod_Sz5qbjW4567wns",
           quantity: 1,
         },
       ],
