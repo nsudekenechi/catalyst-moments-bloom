@@ -46,14 +46,18 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 <div className="text-3xl font-bold text-primary mt-2">$14.99<span className="text-base font-normal">/month</span></div>
               </div>
               
-              <div className="space-y-3 mb-6">
+               <div className="space-y-3 mb-6">
                 <div className="flex items-center">
                   <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Dashboard & wellness tracking</span>
+                  <span className="text-sm">Access to workout programs & courses</span>
                 </div>
                 <div className="flex items-center">
                   <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">General wellness resources</span>
+                  <span className="text-sm">Progress tracking & analytics</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="h-4 w-4 text-green-500 mr-3" />
+                  <span className="text-sm">Access to dedicated Wellness Coach</span>
                 </div>
                 <div className="flex items-center">
                   <Check className="h-4 w-4 text-green-500 mr-3" />
@@ -80,14 +84,18 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 <div className="text-sm text-green-600 font-medium">Save $60 per year!</div>
               </div>
               
-              <div className="space-y-3 mb-6">
+               <div className="space-y-3 mb-6">
                 <div className="flex items-center">
                   <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Dashboard & wellness tracking</span>
+                  <span className="text-sm">Access to workout programs & courses</span>
                 </div>
                 <div className="flex items-center">
                   <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">General wellness resources</span>
+                  <span className="text-sm">Progress tracking & analytics</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="h-4 w-4 text-green-500 mr-3" />
+                  <span className="text-sm">Access to dedicated Wellness Coach</span>
                 </div>
                 <div className="flex items-center">
                   <Check className="h-4 w-4 text-green-500 mr-3" />
