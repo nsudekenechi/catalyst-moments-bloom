@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDevBypass } from "@/hooks/useDevBypass";
-import SubscriptionPrompt from "@/components/subscription/SubscriptionPrompt";
+import CheckoutModal from "@/components/subscription/CheckoutModal";
 
 interface SubscriptionGuardProps {
   children: ReactNode;
@@ -11,6 +11,7 @@ interface SubscriptionGuardProps {
 const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
   const { subscribed } = useAuth();
   const bypass = useDevBypass();
+  const [showModal, setShowModal] = useState(false);
   
   console.log('[SUBSCRIPTION_GUARD] Subscription state:', { subscribed, bypass });
   
@@ -26,7 +27,15 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
     }
     
     console.log('[SUBSCRIPTION_GUARD] No fallback, showing subscription prompt');
-    return <SubscriptionPrompt />;
+    return (
+      <>
+        {children}
+        <CheckoutModal 
+          isOpen={true} 
+          onClose={() => setShowModal(false)} 
+        />
+      </>
+    );
   }
   
   return <>{children}</>;
