@@ -47,10 +47,10 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
               </div>
               
                <div className="space-y-3 mb-6">
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Access to workout programs & courses</span>
-                </div>
+                 <div className="flex items-center">
+                   <Check className="h-4 w-4 text-green-500 mr-3" />
+                   <span className="text-sm">Access to workout library & healthy recipes</span>
+                 </div>
                 <div className="flex items-center">
                   <Check className="h-4 w-4 text-green-500 mr-3" />
                   <span className="text-sm">Progress tracking & analytics</span>
@@ -94,10 +94,10 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
               </div>
               
                <div className="space-y-3 mb-6">
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Access to workout programs & courses</span>
-                </div>
+                 <div className="flex items-center">
+                   <Check className="h-4 w-4 text-green-500 mr-3" />
+                   <span className="text-sm">Access to workout library & healthy recipes</span>
+                 </div>
                 <div className="flex items-center">
                   <Check className="h-4 w-4 text-green-500 mr-3" />
                   <span className="text-sm">Progress tracking & analytics</span>
