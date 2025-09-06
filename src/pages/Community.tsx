@@ -23,6 +23,8 @@ const Community = () => {
   const [showSubscriptionPrompt, setShowSubscriptionPrompt] = useState(false);
   const { user, profile, subscribed } = useAuth();
   
+  console.log('[COMMUNITY] Auth state:', { user: !!user, profile: !!profile, subscribed });
+  
   const isTTC = profile?.motherhood_stage === 'ttc';
   const stageGroups = getGroupsForStage(profile?.motherhood_stage);
   const location = useLocation();
