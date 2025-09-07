@@ -11,7 +11,7 @@ import { Heart, MessageCircle, Share2, Users, ThumbsUp, Calendar, Search, Camera
 import { useAuth } from '@/contexts/AuthContext';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
 import { ProgressTracker } from '@/components/gamification/ProgressTracker';
-import SubscriptionPrompt from '@/components/subscription/SubscriptionPrompt';
+import CheckoutModal from '@/components/subscription/CheckoutModal';
 import { Link, useLocation } from 'react-router-dom';
 import { getGroupsForStage } from '@/components/community/groups';
 import communityCover from '@/assets/community-cover.jpg';
@@ -155,7 +155,7 @@ const Community = () => {
                   </Card>
                 )}
                 
-                <SubscriptionPrompt 
+                <CheckoutModal 
                   isOpen={showSubscriptionPrompt} 
                   onClose={() => setShowSubscriptionPrompt(false)} 
                 />
