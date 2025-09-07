@@ -28,10 +28,10 @@ serve(async (req) => {
     // Get request body for plan type
     const { plan } = await req.json().catch(() => ({ plan: 'monthly' }));
 
-    const stripeKey = Deno.env.get("Strip key");
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {
-      logStep("ERROR: Strip key not found");
-      throw new Error("Strip key is not configured");
+      logStep("ERROR: STRIPE_SECRET_KEY not found");
+      throw new Error("STRIPE_SECRET_KEY is not configured");
     }
     logStep("Stripe key verified");
 
