@@ -51,8 +51,8 @@ const AffiliateButton = ({ variant = "outline", size = "default", className = ""
 
   const handleClick = () => {
     if (!isAuthenticated) {
-      // Redirect to login
-      window.location.href = '/login';
+      // Redirect to affiliate page (now accessible to guests)
+      window.location.href = '/affiliate';
       return;
     }
 
