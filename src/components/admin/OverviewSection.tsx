@@ -28,7 +28,7 @@ const OverviewSection = () => {
 
         // Calculate monthly growth (mock data for now)
         const monthlyGrowth = 34.8;
-        const totalRevenue = 456789;
+        const totalRevenue = 1245789; // $1.2M+ in last 6 months
 
         setStats({
           totalUsers: totalUsers || 0,
