@@ -421,19 +421,11 @@ export default function Affiliate() {
                   <CardTitle>Commission Structure</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span>Premium Subscription</span>
-                      <Badge>30%</Badge>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Course Purchase</span>
-                      <Badge>25%</Badge>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Meal Plans</span>
-                      <Badge>20%</Badge>
-                    </div>
+                  <div className="text-center py-4">
+                    <div className="text-2xl font-bold text-primary mb-2">$35</div>
+                    <p className="text-muted-foreground">
+                      Earn $35 per sale, every single time, for any subscription, course, or meal plan.
+                    </p>
                   </div>
                 </CardContent>
               </Card>
