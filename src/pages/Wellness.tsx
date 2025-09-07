@@ -42,8 +42,7 @@ const Wellness = () => {
   
   return (
     <PageLayout>
-      <PremiumGuard>
-        <div className="container px-4 mx-auto">
+      <div className="container px-4 mx-auto">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-2">Wellness</h1>
@@ -339,7 +338,6 @@ const Wellness = () => {
           </div>
         </div>
         </div>
-      </PremiumGuard>
     </PageLayout>
   );
 };

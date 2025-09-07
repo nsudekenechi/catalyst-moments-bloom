@@ -72,44 +72,32 @@ function AppContent() {
         {/* Protected Routes */}
         <Route path="/dashboard" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <Dashboard />
-            </SubscriptionGuard>
+            <Dashboard />
           </PrivateRoute>
         } />
         <Route path="/workouts" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <Workouts />
-            </SubscriptionGuard>
+            <Workouts />
           </PrivateRoute>
         } />
         <Route path="/workouts/:slug" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <WorkoutDetail />
-            </SubscriptionGuard>
+            <WorkoutDetail />
           </PrivateRoute>
         } />
         <Route path="/recipes" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <Recipes />
-            </SubscriptionGuard>
+            <Recipes />
           </PrivateRoute>
         } />
         <Route path="/recipes/:slug" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <RecipeDetail />
-            </SubscriptionGuard>
+            <RecipeDetail />
           </PrivateRoute>
         } />
         <Route path="/wellness" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <Wellness />
-            </SubscriptionGuard>
+            <Wellness />
           </PrivateRoute>
         } />
         <Route path="/community" element={<Community />} />
@@ -121,51 +109,37 @@ function AppContent() {
         } />
         <Route path="/questionnaire" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <Questionnaire />
-            </SubscriptionGuard>
+            <Questionnaire />
           </PrivateRoute>
         } />
         <Route path="/meal-plan" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <MealPlan />
-            </SubscriptionGuard>
+            <MealPlan />
           </PrivateRoute>
         } />
         <Route path="/meal-plan/:slug" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <MealPlanDetail />
-            </SubscriptionGuard>
+            <MealPlanDetail />
           </PrivateRoute>
         } />
         <Route path="/workout-plan" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <WorkoutPlan />
-            </SubscriptionGuard>
+            <WorkoutPlan />
           </PrivateRoute>
         } />
         <Route path="/saved-workout-plans" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <SavedWorkoutPlans />
-            </SubscriptionGuard>
+            <SavedWorkoutPlans />
           </PrivateRoute>
         } />
         <Route path="/saved-workout-plans/:planId" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <WorkoutPlanDetail />
-            </SubscriptionGuard>
+            <WorkoutPlanDetail />
           </PrivateRoute>
         } />
         <Route path="/courses" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <Courses />
-            </SubscriptionGuard>
+            <Courses />
           </PrivateRoute>
         } />
         <Route path="/course/:id" element={
@@ -175,9 +149,7 @@ function AppContent() {
         } />
         <Route path="/programs/glow-and-go" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <GlowAndGo />
-            </SubscriptionGuard>
+            <GlowAndGo />
           </PrivateRoute>
         } />
         <Route path="/affiliate" element={
@@ -192,16 +164,12 @@ function AppContent() {
         } />
         <Route path="/wellness/self-care" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <SelfCareGuide />
-            </SubscriptionGuard>
+            <SelfCareGuide />
           </PrivateRoute>
         } />
         <Route path="/wellness/resources" element={
           <PrivateRoute>
-            <SubscriptionGuard>
-              <WellnessResources />
-            </SubscriptionGuard>
+            <WellnessResources />
           </PrivateRoute>
         } />
         
