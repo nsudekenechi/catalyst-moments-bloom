@@ -12,14 +12,15 @@ import PageLayout from "@/components/layout/PageLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import AffiliateSignupModal from "@/components/affiliate/AffiliateSignupModal";
+import { DashboardCard } from "@/components/admin/DashboardCard";
 
 export default function Affiliate() {
   const { toast } = useToast();
   const { user } = useAuth();
   const [referralCode] = useState("GLOW2024USER123");
-  const [earnings] = useState(247.50);
-  const [referrals] = useState(15);
-  const [conversionRate] = useState(12.5);
+  const [earnings] = useState(8547.50);
+  const [referrals] = useState(187);
+  const [conversionRate] = useState(24.8);
   const [affiliateStatus, setAffiliateStatus] = useState<'none' | 'pending' | 'approved' | 'rejected'>('none');
   const [isLoading, setIsLoading] = useState(true);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
@@ -211,41 +212,35 @@ export default function Affiliate() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <CardContent className="flex items-center space-x-4 p-6">
-              <div className="p-3 bg-green-500/10 rounded-full">
-                <DollarSign className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">${earnings}</p>
-                <p className="text-sm text-muted-foreground">Total Earnings</p>
-              </div>
-            </CardContent>
-          </Card>
+          <DashboardCard
+            title="Total Earnings"
+            value={`$${earnings.toLocaleString()}`}
+            subtitle="Commission earned"
+            colors={["#10B981", "#34D399", "#6EE7B7"]}
+            delay={0.1}
+          >
+            <DollarSign className="h-8 w-8 text-green-500" />
+          </DashboardCard>
           
-          <Card>
-            <CardContent className="flex items-center space-x-4 p-6">
-              <div className="p-3 bg-blue-500/10 rounded-full">
-                <Users className="h-6 w-6 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{referrals}</p>
-                <p className="text-sm text-muted-foreground">Active Referrals</p>
-              </div>
-            </CardContent>
-          </Card>
+          <DashboardCard
+            title="Active Referrals"
+            value={referrals}
+            subtitle="People you've referred"
+            colors={["#3B82F6", "#60A5FA", "#93C5FD"]}
+            delay={0.2}
+          >
+            <Users className="h-8 w-8 text-blue-500" />
+          </DashboardCard>
           
-          <Card>
-            <CardContent className="flex items-center space-x-4 p-6">
-              <div className="p-3 bg-purple-500/10 rounded-full">
-                <TrendingUp className="h-6 w-6 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{conversionRate}%</p>
-                <p className="text-sm text-muted-foreground">Conversion Rate</p>
-              </div>
-            </CardContent>
-          </Card>
+          <DashboardCard
+            title="Conversion Rate"
+            value={`${conversionRate}%`}
+            subtitle="Referral to sale rate"
+            colors={["#8B5CF6", "#A78BFA", "#C4B5FD"]}
+            delay={0.3}
+          >
+            <TrendingUp className="h-8 w-8 text-purple-500" />
+          </DashboardCard>
         </div>
 
         <Tabs defaultValue="dashboard" className="space-y-6">
@@ -296,9 +291,9 @@ export default function Affiliate() {
               <CardContent>
                 <div className="space-y-4">
                   {[
-                    { name: "Sarah M.", action: "Joined Premium", earnings: "$25.00", date: "2 hours ago" },
-                    { name: "Jessica L.", action: "Purchased Course", earnings: "$15.00", date: "1 day ago" },
-                    { name: "Maria K.", action: "Joined Premium", earnings: "$25.00", date: "3 days ago" },
+                    { name: "Sarah M.", action: "Joined Premium", earnings: "$129.00", date: "2 hours ago" },
+                    { name: "Jessica L.", action: "Purchased Course", earnings: "$87.00", date: "1 day ago" },
+                    { name: "Maria K.", action: "Joined Premium", earnings: "$129.00", date: "3 days ago" },
                   ].map((activity, index) => (
                     <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                       <div>
@@ -361,7 +356,7 @@ export default function Affiliate() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>This Month</span>
-                    <span className="font-semibold">$89.50</span>
+                    <span className="font-semibold">$2,879.50</span>
                   </div>
                   <Progress value={65} className="h-2" />
                 </div>
@@ -369,7 +364,7 @@ export default function Affiliate() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Last Month</span>
-                    <span className="font-semibold">$158.00</span>
+                    <span className="font-semibold">$5,668.00</span>
                   </div>
                   <Progress value={100} className="h-2" />
                 </div>

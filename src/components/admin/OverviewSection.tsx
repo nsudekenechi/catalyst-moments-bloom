@@ -23,12 +23,12 @@ const OverviewSection = () => {
     const fetchOverviewData = async () => {
       try {
         // Mock data for demo
-        const totalUsers = 1247;
-        const activeSubscriptions = 25;
+        const totalUsers = 46607;
+        const activeSubscriptions = 13965;
 
         // Calculate monthly growth (mock data for now)
-        const monthlyGrowth = 15.2;
-        const totalRevenue = (activeSubscriptions || 0) * 29.99;
+        const monthlyGrowth = 34.8;
+        const totalRevenue = 456789;
 
         setStats({
           totalUsers: totalUsers || 0,
