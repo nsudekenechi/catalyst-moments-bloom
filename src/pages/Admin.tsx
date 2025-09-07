@@ -1,8 +1,7 @@
 import React from 'react';
 import { AdminGuard } from '@/components/admin/AdminGuard';
 import { UserPointsManager } from '@/components/admin/UserPointsManager';
-import { AffiliateApplicationManager } from '@/components/admin/AffiliateApplicationManager';
-import { BulkAffiliateApproval } from '@/components/admin/BulkAffiliateApproval';
+import { AffiliateSection } from '@/components/admin/AffiliateSection';
 import { OverviewSection } from '@/components/admin/OverviewSection';
 import { UsersSection } from '@/components/admin/UsersSection';
 import { RevenueSection } from '@/components/admin/RevenueSection';
@@ -68,9 +67,8 @@ const Admin = () => {
               <AnalyticsSection />
             </TabsContent>
 
-            <TabsContent value="affiliates" className="space-y-6">
-              <BulkAffiliateApproval />
-              <AffiliateApplicationManager />
+            <TabsContent value="affiliates">
+              <AffiliateSection />
             </TabsContent>
           </Tabs>
         </div>

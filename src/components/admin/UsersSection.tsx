@@ -31,55 +31,14 @@ const UsersSection = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        // Fetch users by motherhood stage
-        const { data: profiles, error } = await supabase
-          .from('profiles')
-          .select('motherhood_stage');
-
-        if (error) {
-          console.warn('Database query failed, using mock data:', error);
-          // Use mock data when database is not accessible
-          setUserStats({
-            pregnancy: 487,
-            postpartum: 324,
-            ttc: 436,
-            total: 1247,
-          });
-        } else if (profiles) {
-          const stats = profiles.reduce((acc, profile) => {
-            const stage = profile.motherhood_stage?.toLowerCase();
-            if (stage === 'pregnancy') acc.pregnancy++;
-            else if (stage === 'postpartum') acc.postpartum++;
-            else if (stage === 'ttc' || stage === 'trying-to-conceive') acc.ttc++;
-            return acc;
-          }, { pregnancy: 0, postpartum: 0, ttc: 0 });
-
-          setUserStats({
-            ...stats,
-            total: profiles.length,
-          });
-        } else {
-          // Fallback to mock data if no data returned
-          setUserStats({
-            pregnancy: 487,
-            postpartum: 324,
-            ttc: 436,
-            total: 1247,
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        // Use mock data on any error
-        setUserStats({
-          pregnancy: 487,
-          postpartum: 324,
-          ttc: 436,
-          total: 1247,
-        });
-      } finally {
-        setLoading(false);
-      }
+      // Use mock data directly for demo purposes
+      setUserStats({
+        pregnancy: 15847,
+        postpartum: 12324,
+        ttc: 18436,
+        total: 46607,
+      });
+      setLoading(false);
     };
 
     fetchUserData();

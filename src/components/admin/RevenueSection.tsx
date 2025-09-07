@@ -23,12 +23,12 @@ const RevenueSection = () => {
 
   // Mock data for revenue trends (in real app, this would come from payment processor)
   const revenueData = [
-    { month: 'Jan', revenue: 12500, subscriptions: 420 },
-    { month: 'Feb', revenue: 15800, subscriptions: 530 },
-    { month: 'Mar', revenue: 18200, subscriptions: 610 },
-    { month: 'Apr', revenue: 22100, subscriptions: 740 },
-    { month: 'May', revenue: 25600, subscriptions: 855 },
-    { month: 'Jun', revenue: 28900, subscriptions: 965 },
+    { month: 'Jan', revenue: 287500, subscriptions: 8420 },
+    { month: 'Feb', revenue: 345800, subscriptions: 9530 },
+    { month: 'Mar', revenue: 398200, subscriptions: 10610 },
+    { month: 'Apr', revenue: 432100, subscriptions: 11740 },
+    { month: 'May', revenue: 465600, subscriptions: 12855 },
+    { month: 'Jun', revenue: 489900, subscriptions: 13965 },
   ];
 
   useEffect(() => {
@@ -36,10 +36,10 @@ const RevenueSection = () => {
       try {
         // Mock revenue data for demo (in real app, this would come from payment processor)
         setRevenueStats({
-          totalRevenue: 174936,
-          monthlyRevenue: 749.75,
-          averageRevenuePerUser: 179.97,
-          subscriptionGrowth: 23.5,
+          totalRevenue: 2847593,
+          monthlyRevenue: 456789,
+          averageRevenuePerUser: 189.97,
+          subscriptionGrowth: 34.8,
         });
       } catch (error) {
         console.error('Error fetching revenue data:', error);
