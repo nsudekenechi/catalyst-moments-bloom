@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -12,10 +13,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogIn, UserPlus, User, Settings, LogOut } from "lucide-react";
+import { LogIn, UserPlus, User, Settings, LogOut, Shield } from "lucide-react";
 
 const AuthLinks = () => {
   const { user, profile, isAuthenticated, logout } = useAuth();
+  const { isAdmin } = useAdminAuth();
 
   const getInitials = (name: string) => {
     return name
@@ -54,6 +56,14 @@ const AuthLinks = () => {
                 <span>Dashboard</span>
               </Link>
             </DropdownMenuItem>
+            {isAdmin && (
+              <DropdownMenuItem asChild>
+                <Link to="/admin" className="cursor-pointer flex w-full items-center">
+                  <Shield className="mr-2 h-4 w-4" />
+                  <span>Admin</span>
+                </Link>
+              </DropdownMenuItem>
+            )}
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem 
