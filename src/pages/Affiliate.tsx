@@ -76,7 +76,7 @@ export default function Affiliate() {
   };
 
   const copyReferralLink = () => {
-    const link = `https://catalystmom.lovable.app/signup?ref=${referralCode}`;
+    const link = `https://catalystmom.com/signup?ref=${referralCode}`;
     navigator.clipboard.writeText(link);
     toast({
       title: "Copied!",
@@ -252,7 +252,7 @@ export default function Affiliate() {
                 </div>
                 <div className="flex gap-2">
                   <Input 
-                    value={`https://catalystmom.lovable.app/signup?ref=${referralCode}`} 
+                    value={`https://catalystmom.com/signup?ref=${referralCode}`} 
                     readOnly 
                     className="font-mono text-sm"
                   />
