@@ -110,27 +110,40 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       title: 'Complete 3 workouts',
       progress: 2,
       maxProgress: 3,
-      icon: '💪'
+      icon: '💪',
+      points: 20
     },
     {
       title: 'Log meals daily',
       progress: 5,
       maxProgress: 7,
-      icon: '🍎'
+      icon: '🍎',
+      points: 25
     },
     {
       title: 'Track mood 5 times',
       progress: 3,
       maxProgress: 5,
-      icon: '😊'
+      icon: '😊',
+      points: 15
     },
     {
       title: 'Connect with community',
       progress: 1,
       maxProgress: 3,
-      icon: '💬'
+      icon: '💬',
+      points: 20
     }
   ];
+
+  // Calculate weekly points (capped at 100)
+  const weeklyPoints = Math.min(
+    weeklyGoals.reduce((total, goal) => {
+      const completionRatio = goal.progress / goal.maxProgress;
+      return total + Math.floor(completionRatio * goal.points);
+    }, 0),
+    100
+  );
 
   const getLevelTitle = (level: number) => {
     const titles = [
@@ -172,8 +185,9 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
           
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Flame className="w-4 h-4 text-orange-500" />
+              <Flame className={`w-4 h-4 ${streak > 0 ? 'text-orange-500' : 'text-gray-400'}`} />
               <span className="text-sm font-medium">{streak} day streak</span>
+              {streak > 0 && <span>🔥</span>}
             </div>
             <Badge variant="outline" className="text-xs">
               Keep it up! 💪
@@ -185,9 +199,14 @@ export const ProgressTracker = ({ userStage }: ProgressTrackerProps) => {
       {/* Weekly Goals */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5" />
-            Weekly Goals
+          <CardTitle className="flex items-center gap-2 justify-between">
+            <div className="flex items-center gap-2">
+              <Target className="w-5 h-5" />
+              Weekly Goals
+            </div>
+            <Badge variant="secondary">
+              {weeklyPoints}/100 pts
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">

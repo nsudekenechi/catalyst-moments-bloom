@@ -198,9 +198,16 @@ const WellnessResources = () => {
                         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                         <span className="text-sm font-medium">{resource.rating}</span>
                       </div>
-                      <Button size="sm" className="gap-2">
+                      <Button 
+                        size="sm" 
+                        className="gap-2"
+                        onClick={() => {
+                          // Open full article instead of just showing button
+                          window.open(`/wellness/article/${resource.id}`, '_blank');
+                        }}
+                      >
                         <Download className="w-4 h-4" />
-                        Access
+                        View
                       </Button>
                     </div>
                   </div>

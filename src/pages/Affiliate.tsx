@@ -97,7 +97,7 @@ export default function Affiliate() {
                     <div className="p-3 bg-green-500/10 rounded-full w-fit mx-auto">
                       <DollarSign className="h-6 w-6 text-green-600" />
                     </div>
-                    <h3 className="font-semibold">Earn Up to 30%</h3>
+                    <h3 className="font-semibold">Earn $35-per sale, every time</h3>
                     <p className="text-sm text-muted-foreground">Commission on all referrals</p>
                   </div>
                   <div className="text-center space-y-2">

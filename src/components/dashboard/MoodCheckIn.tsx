@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -19,6 +19,14 @@ export const MoodCheckIn = () => {
   
   const { addMoodEntry } = useWellnessData();
   const { toast } = useToast();
+
+  // Initialize mood tracking storage
+  useEffect(() => {
+    const moodEntries = localStorage.getItem('moodEntries');
+    if (!moodEntries) {
+      localStorage.setItem('moodEntries', JSON.stringify([]));
+    }
+  }, []);
 
   const getActionableAdvice = () => {
     const advice = [];
@@ -59,6 +67,45 @@ export const MoodCheckIn = () => {
         stress_level: stressLevel[0],
         notes: notes.trim() || undefined,
       });
+      
+      // Store mood entry for tracking
+      const moodEntries = JSON.parse(localStorage.getItem('moodEntries') || '[]');
+      const newEntry = {
+        mood_score: moodScore[0],
+        energy_level: energyLevel[0],
+        stress_level: stressLevel[0],
+        timestamp: new Date().toISOString()
+      };
+      moodEntries.push(newEntry);
+      localStorage.setItem('moodEntries', JSON.stringify(moodEntries));
+      
+      // Check for mood notifications after 3 entries
+      const recentEntries = moodEntries.slice(-3);
+      const lowMoodCount = recentEntries.filter((entry: any) => entry.mood_score <= 5).length;
+      
+      if (recentEntries.length >= 3 && lowMoodCount >= 2) {
+        // Show breathing reset notification
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Hey, mood\'s dipping. Want a 30-second breathing reset?', {
+            icon: '/favicon.ico',
+            badge: '/favicon.ico'
+          });
+        } else if ('Notification' in window && Notification.permission !== 'denied') {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              new Notification('Hey, mood\'s dipping. Want a 30-second breathing reset?', {
+                icon: '/favicon.ico',
+                badge: '/favicon.ico'
+              });
+            }
+          });
+        } else {
+          toast({
+            title: "Mood Check-In",
+            description: "Hey, mood's dipping. Want a 30-second breathing reset?",
+          });
+        }
+      }
       
       const advice = getActionableAdvice();
       

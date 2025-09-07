@@ -114,6 +114,12 @@ export const BabyKickCounter = () => {
 
   const recordKick = () => {
     if (!isTracking) return;
+    
+    // Add haptic vibration
+    if (navigator.vibrate) {
+      navigator.vibrate(100);
+    }
+    
     setKickCount(prev => prev + 1);
     
     // Check if we've reached 10 kicks

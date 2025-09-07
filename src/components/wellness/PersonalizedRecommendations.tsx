@@ -147,7 +147,16 @@ export const PersonalizedRecommendations = () => {
             <div className="space-y-2">
               {insights.map((insight, index) => (
                 <div key={index} className="p-3 rounded-lg bg-muted/50 border-l-4 border-primary">
-                  <p className="text-sm">{insight}</p>
+                  <p className="text-sm font-medium">
+                    {/* Make AI talk conversationally */}
+                    {insight.includes('Hydration') && insight.includes('60%') 
+                      ? 'Hydration at 60%-dance break, +5 points!' 
+                      : insight.includes('mood') 
+                      ? `Mood tracker noticed something - ${insight.toLowerCase()}, here's what might help!`
+                      : insight.includes('energy')
+                      ? `Energy levels looking ${insight.includes('high') ? 'amazing' : 'low'} - ${insight.toLowerCase()}, let's boost it!`
+                      : insight}
+                  </p>
                 </div>
               ))}
             </div>
