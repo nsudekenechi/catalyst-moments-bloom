@@ -16,6 +16,7 @@ interface AffiliateSignupModalProps {
 const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) => {
   const [formData, setFormData] = useState({
     fullName: '',
+    email: '',
     socialMediaHandles: '',
     audienceSize: '',
     experience: '',
@@ -28,6 +29,18 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Security validation: Require email for all users
+    const email = user?.email || formData.email;
+    if (!email || !isValidEmail(email)) {
+      toast({
+        title: "Email Required",
+        description: "Please provide a valid email address.",
+        variant: "destructive",
+        duration: 5000,
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const { error } = await (supabase as any).rpc('create_affiliate_application', {
@@ -36,7 +49,7 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
         audience_size_param: formData.audienceSize,
         experience_param: formData.experience,
         motivation_param: formData.motivation,
-        email_param: user?.email || 'guest@example.com'
+        email_param: email
       });
 
       if (error) throw error;
@@ -50,6 +63,7 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
       onClose();
       setFormData({
         fullName: '',
+        email: '',
         socialMediaHandles: '',
         audienceSize: '',
         experience: '',
@@ -69,6 +83,12 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Email validation helper
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   return (
@@ -91,6 +111,21 @@ const AffiliateSignupModal = ({ isOpen, onClose }: AffiliateSignupModalProps) =>
               disabled={isLoading}
             />
           </div>
+
+          {!user && (
+            <div>
+              <Label htmlFor="email">Email Address *</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleChange('email', e.target.value)}
+                required
+                disabled={isLoading}
+                placeholder="your@email.com"
+              />
+            </div>
+          )}
           
           <div>
             <Label htmlFor="socialMedia">Social Media Handles</Label>
