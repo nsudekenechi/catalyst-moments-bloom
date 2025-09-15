@@ -42,35 +42,31 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
                 <Star className="h-5 w-5 text-yellow-500 fill-current" />
               </div>
               <h3 className="text-lg font-semibold">Monthly Access</h3>
-              <div className="text-3xl font-bold text-primary mt-2">$14.99<span className="text-base font-normal">/month</span></div>
+              <div className="text-3xl font-bold text-primary mt-2">$29<span className="text-base font-normal">/month</span></div>
             </div>
             
              <div className="space-y-3 mb-6">
+                <div className="flex items-center">
+                  <Check className="h-4 w-4 text-green-500 mr-3" />
+                  <span className="text-sm">Workout that fit your body today</span>
+                </div>
                <div className="flex items-center">
                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                 <span className="text-sm">Access to workout library & healthy recipes</span>
+                 <span className="text-sm">24/7 dedicated wellness coach + voice check-ins</span>
                </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-500 mr-3" />
-                <span className="text-sm">Progress tracking & analytics</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-500 mr-3" />
-                <span className="text-sm">Access to dedicated Wellness Coach</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-500 mr-3" />
-                <span className="text-sm">Calorie checker</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-500 mr-3" />
-                <span className="text-sm">Personalized nutrition plans</span>
-              </div>
-              <div className="flex items-center">
-                <Check className="h-4 w-4 text-green-500 mr-3" />
-                <span className="text-sm">Community support</span>
-              </div>
-            </div>
+               <div className="flex items-center">
+                 <Check className="h-4 w-4 text-green-500 mr-3" />
+                 <span className="text-sm">Kick counter, breathing reset, streaks</span>
+               </div>
+               <div className="flex items-center">
+                 <Check className="h-4 w-4 text-green-500 mr-3" />
+                 <span className="text-sm">Personalized nutrition plans</span>
+               </div>
+               <div className="flex items-center">
+                 <Check className="h-4 w-4 text-green-500 mr-3" />
+                 <span className="text-sm">Private community for your stage</span>
+               </div>
+             </div>
             
             <SubscriptionButton 
               variant="default" 

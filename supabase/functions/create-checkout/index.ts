@@ -52,10 +52,10 @@ serve(async (req) => {
       logStep("No existing customer found");
     }
 
-    // Use the provided Stripe product ID
+    // Use the provided Stripe price ID
     const lineItems = [
       {
-        price: "prod_T16JB6CXsrZhg5", // Using the provided Stripe product ID
+        price: "prod_T16JB6CXsrZhg5", // This should be a price ID, not product ID
         quantity: 1,
       }
     ];
