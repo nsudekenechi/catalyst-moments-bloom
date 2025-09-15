@@ -27,7 +27,7 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
             Complete Your Journey
           </DialogTitle>
           <DialogDescription className="text-center text-muted-foreground">
-            Unlock wellness tracking and community access
+            Unlock personalized wellness and private community access
           </DialogDescription>
         </DialogHeader>
         

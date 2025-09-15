@@ -52,15 +52,43 @@ serve(async (req) => {
       logStep("No existing customer found");
     }
 
-    // Use the provided Stripe price ID
-    const lineItems = [
-      {
-        price: "prod_T16JB6CXsrZhg5", // This should be a price ID, not product ID
-        quantity: 1,
+    // Resolve a valid Stripe price for the subscription (handle product ID gracefully)
+    let priceId: string | undefined;
+    try {
+      const productId = "prod_T16JB6CXsrZhg5";
+      const product = await stripe.products.retrieve(productId);
+
+      if (typeof product.default_price === 'string') {
+        priceId = product.default_price;
+        logStep("Using product's default price", { priceId });
+      } else {
+        const prices = await stripe.prices.list({ product: productId, active: true, type: 'recurring', limit: 10 });
+        const monthly = prices.data.find(p => p.recurring?.interval === 'month' && p.currency === 'usd');
+        if (monthly) {
+          priceId = monthly.id;
+          logStep("Found monthly price", { priceId, unit_amount: monthly.unit_amount });
+        } else {
+          const created = await stripe.prices.create({
+            unit_amount: 2900,
+            currency: 'usd',
+            recurring: { interval: 'month' },
+            product: productId,
+            lookup_key: 'catalystmom_monthly_29usd'
+          });
+          priceId = created.id;
+          logStep("Created monthly price", { priceId, unit_amount: created.unit_amount });
+        }
       }
+    } catch (e) {
+      logStep("ERROR resolving price", { message: e instanceof Error ? e.message : String(e) });
+      throw e;
+    }
+
+    const lineItems = [
+      { price: priceId!, quantity: 1 }
     ];
     
-    logStep("Created line items", { plan, amount: plan === 'yearly' ? 11999 : 1499 });
+    logStep("Created line items", { plan, priceId });
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
