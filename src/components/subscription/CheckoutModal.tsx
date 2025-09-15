@@ -31,104 +31,55 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-4">
-          <Card className="border-2 border-primary/20">
-            <CardContent className="p-6">
-              <div className="text-center mb-4">
-                <div className="flex items-center justify-center mb-2">
-                  <Star className="h-5 w-5 text-yellow-500 fill-current" />
-                  <Star className="h-5 w-5 text-yellow-500 fill-current" />
-                  <Star className="h-5 w-5 text-yellow-500 fill-current" />
-                  <Star className="h-5 w-5 text-yellow-500 fill-current" />
-                  <Star className="h-5 w-5 text-yellow-500 fill-current" />
-                </div>
-                <h3 className="text-lg font-semibold">Monthly Access</h3>
-                <div className="text-3xl font-bold text-primary mt-2">$14.99<span className="text-base font-normal">/month</span></div>
+        <Card className="border-2 border-primary/20">
+          <CardContent className="p-6">
+            <div className="text-center mb-4">
+              <div className="flex items-center justify-center mb-2">
+                <Star className="h-5 w-5 text-yellow-500 fill-current" />
+                <Star className="h-5 w-5 text-yellow-500 fill-current" />
+                <Star className="h-5 w-5 text-yellow-500 fill-current" />
+                <Star className="h-5 w-5 text-yellow-500 fill-current" />
+                <Star className="h-5 w-5 text-yellow-500 fill-current" />
               </div>
-              
-               <div className="space-y-3 mb-6">
-                 <div className="flex items-center">
-                   <Check className="h-4 w-4 text-green-500 mr-3" />
-                   <span className="text-sm">Access to workout library & healthy recipes</span>
-                 </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Progress tracking & analytics</span>
-                </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Access to dedicated Wellness Coach</span>
-                </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Calorie checker</span>
-                </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Personalized nutrition plans</span>
-                </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Community support</span>
-                </div>
+              <h3 className="text-lg font-semibold">Monthly Access</h3>
+              <div className="text-3xl font-bold text-primary mt-2">$14.99<span className="text-base font-normal">/month</span></div>
+            </div>
+            
+             <div className="space-y-3 mb-6">
+               <div className="flex items-center">
+                 <Check className="h-4 w-4 text-green-500 mr-3" />
+                 <span className="text-sm">Access to workout library & healthy recipes</span>
+               </div>
+              <div className="flex items-center">
+                <Check className="h-4 w-4 text-green-500 mr-3" />
+                <span className="text-sm">Progress tracking & analytics</span>
               </div>
-              
-              <SubscriptionButton 
-                variant="default" 
-                size="lg" 
-                className="w-full rounded-full"
-                plan="monthly"
-              />
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 border-green-500/30 bg-green-50/30">
-            <CardContent className="p-6">
-              <div className="text-center mb-4">
-                <div className="bg-green-500 text-white px-2 py-1 text-xs rounded-full mb-2 inline-block">
-                  BEST VALUE
-                </div>
-                <h3 className="text-lg font-semibold">Yearly Access</h3>
-                <div className="text-3xl font-bold text-primary mt-2">$119.99<span className="text-base font-normal">/year</span></div>
-                <div className="text-sm text-green-600 font-medium">Save $60 per year!</div>
+              <div className="flex items-center">
+                <Check className="h-4 w-4 text-green-500 mr-3" />
+                <span className="text-sm">Access to dedicated Wellness Coach</span>
               </div>
-              
-               <div className="space-y-3 mb-6">
-                 <div className="flex items-center">
-                   <Check className="h-4 w-4 text-green-500 mr-3" />
-                   <span className="text-sm">Access to workout library & healthy recipes</span>
-                 </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Progress tracking & analytics</span>
-                </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Access to dedicated Wellness Coach</span>
-                </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Calorie checker</span>
-                </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Personalized nutrition plans</span>
-                </div>
-                <div className="flex items-center">
-                  <Check className="h-4 w-4 text-green-500 mr-3" />
-                  <span className="text-sm">Community support</span>
-                </div>
+              <div className="flex items-center">
+                <Check className="h-4 w-4 text-green-500 mr-3" />
+                <span className="text-sm">Calorie checker</span>
               </div>
-              
-              <SubscriptionButton 
-                variant="default" 
-                size="lg" 
-                className="w-full rounded-full bg-green-600 hover:bg-green-700"
-                plan="yearly"
-              />
-            </CardContent>
-          </Card>
-        </div>
+              <div className="flex items-center">
+                <Check className="h-4 w-4 text-green-500 mr-3" />
+                <span className="text-sm">Personalized nutrition plans</span>
+              </div>
+              <div className="flex items-center">
+                <Check className="h-4 w-4 text-green-500 mr-3" />
+                <span className="text-sm">Community support</span>
+              </div>
+            </div>
+            
+            <SubscriptionButton 
+              variant="default" 
+              size="lg" 
+              className="w-full rounded-full"
+              plan="monthly"
+            />
+          </CardContent>
+        </Card>
         
         <div className="flex items-center justify-center mt-4 mb-4">
           <Users className="h-4 w-4 text-muted-foreground mr-1" />

@@ -52,25 +52,10 @@ serve(async (req) => {
       logStep("No existing customer found");
     }
 
-    // Create line items with dynamic pricing (works in both test and live mode)
-    const lineItems = plan === 'yearly' ? [
+    // Use the provided Stripe product ID
+    const lineItems = [
       {
-        price_data: {
-          currency: "usd",
-          product_data: { name: "Premium Subscription - Yearly" },
-          unit_amount: 11999, // $119.99 in cents
-          recurring: { interval: "year" },
-        },
-        quantity: 1,
-      }
-    ] : [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: { name: "Premium Subscription - Monthly" },
-          unit_amount: 1499, // $14.99 in cents
-          recurring: { interval: "month" },
-        },
+        price: "prod_T16JB6CXsrZhg5", // Using the provided Stripe product ID
         quantity: 1,
       }
     ];
