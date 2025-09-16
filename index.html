@@ -55,9 +55,12 @@
     }
     </script>
   </head>
-
+ 
   <body>
     <div id="root"></div>
+    <!-- CAPTCHA providers (loaded lazily). If you enabled only one in Supabase, the widget will pick it. -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script src="https://hcaptcha.com/1/api.js" async defer></script>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
     <script type="module" src="/src/main.tsx"></script>

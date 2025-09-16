@@ -27,7 +27,7 @@ interface AuthContextType {
   showCheckoutModal: boolean;
   setShowCheckoutModal: (show: boolean) => void;
   login: (email: string, password: string, captchaToken?: string) => Promise<void>;
-  register: (name: string, email: string, password: string, stage: MotherhoodStage) => Promise<void>;
+  register: (name: string, email: string, password: string, stage: MotherhoodStage, captchaToken?: string) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (data: { display_name?: string; motherhood_stage?: string; bio?: string }) => Promise<void>;
   checkSubscription: () => Promise<void>;
@@ -122,7 +122,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email,
         password,
         options: captchaToken ? { captchaToken } : undefined,
-      });
+      } as any); // cast to any to allow conditional options
 
       if (error) {
         throw error;
@@ -140,7 +140,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (name: string, email: string, password: string, stage: MotherhoodStage) => {
+  const register = async (name: string, email: string, password: string, stage: MotherhoodStage, captchaToken?: string) => {
     setIsLoading(true);
     
     try {
@@ -151,6 +151,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         password,
         options: {
           emailRedirectTo: redirectUrl,
+          captchaToken,
           data: {
             name: name,
             full_name: name,

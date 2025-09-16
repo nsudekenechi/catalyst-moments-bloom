@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import PageLayout from "@/components/layout/PageLayout";
 import { LogIn, Loader2 } from "lucide-react";
+import Captcha, { CaptchaHandle } from "@/components/auth/Captcha";
+import { CAPTCHA_PROVIDER, CAPTCHA_SITE_KEY } from "@/config/captcha";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,14 +17,14 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const captchaRef = useRef<any>(null);
+  const captchaRef = useRef<CaptchaHandle | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     
     try {
-      const captchaToken = captchaRef.current?.getValue();
+      const captchaToken = captchaRef.current?.getToken() || undefined;
       await login(email, password, captchaToken);
       navigate("/dashboard");
     } catch (err) {
@@ -75,9 +77,6 @@ const Login = () => {
                     required
                   />
                 </div>
-                <div className="space-y-2">
-                  <div id="recaptcha-container"></div>
-                </div>
                 <Button 
                   type="submit" 
                   className="w-full bg-catalyst-copper hover:bg-catalyst-copper/90" 
@@ -95,6 +94,9 @@ const Login = () => {
                     </>
                   )}
                 </Button>
+                <div className="mt-4">
+                  <Captcha ref={captchaRef} provider={CAPTCHA_PROVIDER} siteKey={CAPTCHA_SITE_KEY} />
+                </div>
               </div>
             </form>
           </CardContent>

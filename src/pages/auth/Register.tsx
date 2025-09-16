@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { useAuth, MotherhoodStage } from "@/contexts/AuthContext";
 import PageLayout from "@/components/layout/PageLayout";
 import { UserPlus, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Captcha, { CaptchaHandle } from "@/components/auth/Captcha";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [motherhoodStage, setMotherhoodStage] = useState<MotherhoodStage>("none");
   const [error, setError] = useState("");
+  const captchaRef = useRef<CaptchaHandle | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,10 +32,12 @@ const Register = () => {
     }
     
     try {
-      await register(name, email, password, motherhoodStage);
+      const captchaToken = captchaRef.current?.getToken() || undefined;
+      await register(name, email, password, motherhoodStage, captchaToken);
       navigate("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to register");
+      captchaRef.current?.reset();
     }
   };
 
@@ -114,6 +118,9 @@ const Register = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                   />
+                </div>
+                <div className="mt-2">
+                  <Captcha ref={captchaRef} />
                 </div>
                 <Button 
                   type="submit" 
