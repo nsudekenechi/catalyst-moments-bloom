@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,16 +15,20 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const captchaRef = useRef<any>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     
     try {
-      await login(email, password);
+      const captchaToken = captchaRef.current?.getValue();
+      await login(email, password, captchaToken);
       navigate("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to login");
+      // Reset captcha on error
+      captchaRef.current?.reset();
     }
   };
 
@@ -70,6 +74,9 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
+                </div>
+                <div className="space-y-2">
+                  <div id="recaptcha-container"></div>
                 </div>
                 <Button 
                   type="submit" 
