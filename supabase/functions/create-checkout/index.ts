@@ -96,13 +96,21 @@ serve(async (req) => {
     
     logStep("Created line items", { plan, priceId });
 
+    // Build a reliable base URL for redirects
+    const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+    const protocol = req.headers.get("x-forwarded-proto") ?? "https";
+    const origin = req.headers.get("origin") ?? (host ? `${protocol}://${host}` : undefined);
+    if (!origin) {
+      throw new Error("Unable to determine app origin for redirect URLs");
+    }
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       line_items: lineItems,
       mode: "subscription",
-      success_url: `${req.headers.get("origin")}/dashboard?success=true`,
-      cancel_url: `${req.headers.get("origin")}/cancel`,
+      success_url: `${origin}/dashboard?success=true`,
+      cancel_url: `${origin}/cancel`,
     });
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
