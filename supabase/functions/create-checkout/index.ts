@@ -52,49 +52,38 @@ serve(async (req) => {
       logStep("No existing customer found");
     }
 
-    // Resolve a valid Stripe price for the subscription (handle product ID gracefully)
+    // Use live Stripe price for production
     let priceId: string | undefined;
-    try {
-      const productId = "prod_T16JB6CXsrZhg5";
-      const product = await stripe.products.retrieve(productId);
-
-      if (typeof product.default_price === 'string') {
-        priceId = product.default_price;
-        logStep("Using product's default price", { priceId });
-      } else {
-        const prices = await stripe.prices.list({ product: productId, active: true, type: 'recurring', limit: 10 });
-        const monthly = prices.data.find(p => p.recurring?.interval === 'month' && p.currency === 'usd');
-        if (monthly) {
-          priceId = monthly.id;
-          logStep("Found monthly price", { priceId, unit_amount: monthly.unit_amount });
-        } else {
-          const created = await stripe.prices.create({
-            unit_amount: 2900,
-            currency: 'usd',
-            recurring: { interval: 'month' },
-            product: productId,
-            lookup_key: 'catalystmom_monthly_29usd'
-          });
-          priceId = created.id;
-          logStep("Created monthly price", { priceId, unit_amount: created.unit_amount });
-        }
-      }
-    } catch (e) {
-      // If the provided product ID belongs to live mode while using a test key, create a fallback test product/price
-      logStep("ERROR resolving price", { message: e instanceof Error ? e.message : String(e) });
-      logStep("Falling back to creating a TEST product and $29 monthly price");
-      const fallbackProduct = await stripe.products.create({
-        name: 'Catalyst Mom Monthly',
+    
+    // First try to find existing live prices
+    const prices = await stripe.prices.list({ 
+      active: true, 
+      type: 'recurring',
+      lookup_key: 'catalystmom_monthly_29usd',
+      limit: 1 
+    });
+    
+    if (prices.data.length > 0) {
+      priceId = prices.data[0].id;
+      logStep("Found existing price by lookup_key", { priceId });
+    } else {
+      // Create new live product and price
+      logStep("Creating new live product and price");
+      const product = await stripe.products.create({
+        name: 'Catalyst Mom Monthly Subscription',
+        description: 'Monthly wellness subscription for moms',
         default_price_data: {
-          unit_amount: 2900,
+          unit_amount: 2900, // $29 USD
           currency: 'usd',
-          recurring: { interval: 'month' }
+          recurring: { interval: 'month' },
+          lookup_key: 'catalystmom_monthly_29usd'
         },
       });
-      if (typeof fallbackProduct.default_price === 'string') {
-        priceId = fallbackProduct.default_price;
+      
+      if (typeof product.default_price === 'string') {
+        priceId = product.default_price;
+        logStep("Created live product and price", { productId: product.id, priceId });
       }
-      logStep("Created fallback product and price", { productId: fallbackProduct.id, priceId });
     }
 
     if (!priceId) {
