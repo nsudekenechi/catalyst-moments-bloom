@@ -52,39 +52,9 @@ serve(async (req) => {
       logStep("No existing customer found");
     }
 
-    // Use live Stripe price for production
-    let priceId: string | undefined;
-    
-    // First try to find existing live prices
-    const prices = await stripe.prices.list({ 
-      active: true, 
-      type: 'recurring',
-      lookup_key: 'catalystmom_monthly_29usd',
-      limit: 1 
-    });
-    
-    if (prices.data.length > 0) {
-      priceId = prices.data[0].id;
-      logStep("Found existing price by lookup_key", { priceId });
-    } else {
-      // Create new live product and price
-      logStep("Creating new live product and price");
-      const product = await stripe.products.create({
-        name: 'Catalyst Mom Monthly Subscription',
-        description: 'Monthly wellness subscription for moms',
-        default_price_data: {
-          unit_amount: 2900, // $29 USD
-          currency: 'usd',
-          recurring: { interval: 'month' },
-          lookup_key: 'catalystmom_monthly_29usd'
-        },
-      });
-      
-      if (typeof product.default_price === 'string') {
-        priceId = product.default_price;
-        logStep("Created live product and price", { productId: product.id, priceId });
-      }
-    }
+    // Use existing live price ID for production
+    const priceId = "price_1S7xeRCNwyQa1NiQbqju7ts7"; // $29/month live price
+    logStep("Using live price", { priceId });
 
     if (!priceId) {
       throw new Error('Failed to resolve or create a Stripe price for $29/month');
