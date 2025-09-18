@@ -318,6 +318,45 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_responses: {
+        Row: {
+          activity_level: string
+          created_at: string | null
+          dietary_preferences: string
+          email: string
+          equipment: string
+          id: string
+          name: string
+          primary_goal: string
+          special_notes: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activity_level: string
+          created_at?: string | null
+          dietary_preferences: string
+          email: string
+          equipment: string
+          id?: string
+          name: string
+          primary_goal: string
+          special_notes?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activity_level?: string
+          created_at?: string | null
+          dietary_preferences?: string
+          email?: string
+          equipment?: string
+          id?: string
+          name?: string
+          primary_goal?: string
+          special_notes?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           created_at: string
