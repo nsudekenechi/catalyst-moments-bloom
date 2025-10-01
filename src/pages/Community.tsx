@@ -30,6 +30,12 @@ const Community = () => {
   const location = useLocation();
   const initialTab = new URLSearchParams(location.search).get('tab') || 'feed';
   
+  const handleInteractionClick = (action: string) => {
+    if (!subscribed) {
+      setShowSubscriptionPrompt(true);
+    }
+  };
+  
   return (
     <PageLayout>
       {/* Hero Section with Cover Image */}
@@ -55,11 +61,20 @@ const Community = () => {
               Connect with amazing mothers on similar journeys. Share experiences, get support, and grow together.
             </p>
             <div className="flex flex-wrap gap-4 animate-fade-in">
-              <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90"
+                onClick={() => handleInteractionClick('join')}
+              >
                 <Users className="h-5 w-5 mr-2" />
                 Join Discussions
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-black">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white text-white hover:bg-white hover:text-black"
+                onClick={() => handleInteractionClick('share')}
+              >
                 <Camera className="h-5 w-5 mr-2" />
                 Share Your Story
               </Button>
@@ -118,7 +133,7 @@ const Community = () => {
                 className="pl-9"
               />
             </div>
-            <Button>
+            <Button onClick={() => handleInteractionClick('join-group')}>
               <Users className="h-4 w-4 mr-2" /> Join Groups
             </Button>
           </div>
@@ -139,8 +154,12 @@ const Community = () => {
                     <Avatar>
                       <AvatarFallback>CM</AvatarFallback>
                     </Avatar>
-                    <Input placeholder="Share something with other moms..." />
-                    <Button size="sm">Post</Button>
+                    <Input 
+                      placeholder="Share something with other moms..." 
+                      onClick={() => handleInteractionClick('post')}
+                      readOnly={!subscribed}
+                    />
+                    <Button size="sm" onClick={() => handleInteractionClick('post')}>Post</Button>
                   </CardHeader>
                 </Card>
                 

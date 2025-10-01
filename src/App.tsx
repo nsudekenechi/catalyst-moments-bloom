@@ -101,8 +101,16 @@ function AppContent() {
             <Wellness />
           </PrivateRoute>
         } />
-        <Route path="/community" element={<Community />} />
-        <Route path="/community/groups/:slug" element={<GroupDetail />} />
+        <Route path="/community" element={
+          <PrivateRoute>
+            <Community />
+          </PrivateRoute>
+        } />
+        <Route path="/community/groups/:slug" element={
+          <PrivateRoute>
+            <GroupDetail />
+          </PrivateRoute>
+        } />
         <Route path="/profile" element={
           <PrivateRoute>
             <Profile />

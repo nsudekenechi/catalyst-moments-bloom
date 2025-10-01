@@ -10,10 +10,12 @@ import { Users, ArrowLeft, Bell, ShieldCheck } from 'lucide-react';
 import { DynamicCommunityFeed } from '@/components/community/DynamicCommunityFeed';
 import { groups } from '@/components/community/groups';
 import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 const GroupDetail = () => {
   const { slug } = useParams();
   const { toast } = useToast();
+  const { subscribed, setShowCheckoutModal } = useAuth();
   const group = useMemo(() => groups.find(g => g.slug === slug), [slug]);
   const [joined, setJoined] = useState(false);
 
@@ -39,6 +41,10 @@ const GroupDetail = () => {
   const isTTCGroup = group.journey === 'ttc';
 
   const handleJoin = () => {
+    if (!subscribed) {
+      setShowCheckoutModal(true);
+      return;
+    }
     setJoined((prev) => !prev);
     toast({
       title: joined ? 'Left group' : 'Joined group',
