@@ -1,6 +1,7 @@
 import React from 'react';
 import { AdminGuard } from '@/components/admin/AdminGuard';
 import { UserPointsManager } from '@/components/admin/UserPointsManager';
+import { PendingUsersSection } from '@/components/admin/PendingUsersSection';
 import { AffiliateSection } from '@/components/admin/AffiliateSection';
 import { OverviewSection } from '@/components/admin/OverviewSection';
 import { UsersSection } from '@/components/admin/UsersSection';
@@ -55,6 +56,7 @@ const Admin = () => {
             </TabsContent>
 
             <TabsContent value="users" className="space-y-6">
+              <PendingUsersSection />
               <UsersSection />
               <UserPointsManager />
             </TabsContent>

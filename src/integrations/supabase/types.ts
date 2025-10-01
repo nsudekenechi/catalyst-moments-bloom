@@ -482,6 +482,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          approved: boolean
           bio: string | null
           created_at: string
           display_name: string | null
@@ -491,6 +492,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          approved?: boolean
           bio?: string | null
           created_at?: string
           display_name?: string | null
@@ -500,6 +502,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          approved?: boolean
           bio?: string | null
           created_at?: string
           display_name?: string | null
@@ -806,6 +809,10 @@ export type Database = {
           updated_count: number
         }[]
       }
+      approve_user: {
+        Args: { user_id_param: string }
+        Returns: undefined
+      }
       create_affiliate_application: {
         Args: {
           audience_size_param: string
@@ -847,6 +854,16 @@ export type Database = {
           email: string
           level: number
           total_points: number
+          user_id: string
+        }[]
+      }
+      get_pending_users: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          created_at: string
+          display_name: string
+          email: string
+          motherhood_stage: string
           user_id: string
         }[]
       }
