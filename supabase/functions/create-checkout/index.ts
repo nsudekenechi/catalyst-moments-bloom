@@ -55,7 +55,7 @@ serve(async (req) => {
     }
 
     // Use the $29/month price ID
-    const priceId = "price_1S7xeRCNwyQa1NiQbqju7ts7";
+    const priceId = "price_1S546jCNwyQa1NiQYpl3OjEe";
     logStep("Using monthly price", { priceId });
 
     const lineItems = [
