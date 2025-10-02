@@ -9,7 +9,8 @@ interface SubscriptionButtonProps {
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
   children?: React.ReactNode;
-  plan?: 'monthly' | 'yearly';
+  monthlyPriceId?: string;
+  yearlyPriceId?: string;
 }
 
 const SubscriptionButton = ({ 
@@ -17,7 +18,8 @@ const SubscriptionButton = ({
   size = "default", 
   className,
   children = "Subscribe Now",
-  plan = "monthly"
+  monthlyPriceId = "price_1S7xeRCNwyQa1NiQbqju7ts7", // Default monthly price
+  yearlyPriceId = "price_1S7xeRCNwyQa1NiQbqju7ts7"  // Replace with actual yearly price ID
 }: SubscriptionButtonProps) => {
   const { user } = useAuth();
 
@@ -29,7 +31,10 @@ const SubscriptionButton = ({
 
     try {
       const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { plan }
+        body: { 
+          monthly_price_id: monthlyPriceId,
+          yearly_price_id: yearlyPriceId
+        }
       });
       
       if (error) {

@@ -72,7 +72,8 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
               variant="default" 
               size="lg" 
               className="w-full rounded-full"
-              plan="monthly"
+              monthlyPriceId="price_1S7xeRCNwyQa1NiQbqju7ts7"
+              yearlyPriceId="price_1S7xeRCNwyQa1NiQbqju7ts7"
             />
           </CardContent>
         </Card>
