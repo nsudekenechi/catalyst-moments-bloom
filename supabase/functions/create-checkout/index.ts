@@ -25,8 +25,8 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
-    // Get request body for plan type
-    const { plan } = await req.json().catch(() => ({ plan: 'monthly' }));
+    // Get request body for plan/price
+    const { plan, price_id } = await req.json().catch(() => ({ plan: 'monthly' }));
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {
@@ -54,13 +54,16 @@ serve(async (req) => {
       logStep("No existing customer found, will create during checkout");
     }
 
-    // Use the price ID from your Stripe account
-    const priceId = "price_1S7xeRCNwyQa1NiQbqju7ts7"; // $29/month
-    logStep("Using price", { priceId });
-
+    // Resolve price ID with priority: request body -> env -> first active recurring price
+    let priceId = price_id || Deno.env.get('STRIPE_PRICE_ID') || null;
     if (!priceId) {
-      throw new Error('Failed to resolve Stripe price ID');
+      const prices = await stripe.prices.list({ active: true, type: 'recurring', limit: 1 });
+      if (prices.data.length === 0) {
+        throw new Error('No active recurring Stripe prices found. Set STRIPE_PRICE_ID or pass price_id');
+      }
+      priceId = prices.data[0].id;
     }
+    logStep("Using price", { priceId });
 
     const lineItems = [
       { price: priceId!, quantity: 1 }

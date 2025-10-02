@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Calendar, Clock, Users, MapPin, Star } from 'lucide-react';
 import EventRegistrationModal from './EventRegistrationModal';
-import { useAuth } from '@/contexts/AuthContext';
+
 
 // Import member avatars
 import mom1 from '@/assets/member-avatars/mom-1.jpg';
@@ -86,13 +86,8 @@ const upcomingEvents: Event[] = [
 const EnhancedEventsList = () => {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
-  const { subscribed, setShowCheckoutModal } = useAuth();
 
   const handleEventClick = (event: Event) => {
-    if (!subscribed) {
-      setShowCheckoutModal(true);
-      return;
-    }
     setSelectedEvent(event);
     setShowRegistrationModal(true);
   };
