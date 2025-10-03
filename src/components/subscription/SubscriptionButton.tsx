@@ -29,6 +29,9 @@ const SubscriptionButton = ({
 
     setIsLoading(true);
     try {
+      // Pre-open a tab to avoid Safari popup blockers on mobile
+      const checkoutWindow = window.open('', '_blank');
+
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: {}
       });
@@ -36,16 +39,22 @@ const SubscriptionButton = ({
       if (error) {
         console.error('Checkout error:', error);
         toast.error('Failed to create checkout session');
+        if (checkoutWindow) checkoutWindow.close();
         setIsLoading(false);
         return;
       }
 
       if (data?.url) {
         toast.success('Redirecting to checkout...');
-        // Redirect to Stripe checkout in the same window for better mobile compatibility
-        window.location.href = data.url;
+        if (checkoutWindow) {
+          checkoutWindow.location.href = data.url;
+        } else {
+          // Fallback to same-window redirect
+          window.location.href = data.url;
+        }
       } else {
         toast.error('No checkout URL received');
+        if (checkoutWindow) checkoutWindow.close();
         setIsLoading(false);
       }
     } catch (error) {
