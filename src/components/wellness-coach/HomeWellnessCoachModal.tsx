@@ -48,7 +48,7 @@ const HomeWellnessCoachModal = ({ isOpen, onClose }: HomeWellnessCoachModalProps
       setTimeout(() => {
         addCoachMessage(
           "Hey girl! 💕\n\n" +
-          "It's like 2am and we're just chatting, no pressure! I'm here to help you figure out what you need.\n\n" +
+          "I'm here to help you figure out what you need.\n\n" +
           "First things first - where are you at in your journey?\n\n" +
           "Are you:\n" +
           "• Trying to conceive (TTC)?\n" +

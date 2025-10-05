@@ -101,11 +101,13 @@ export const groups: CommunityGroup[] = [
     coverImage: postpartumSupportCover,
     badge: 'PP'
   },
+
+  // General groups - visible to everyone
   {
     slug: 'working-moms',
     name: 'Working Moms',
     description: 'Balance career and motherhood—time-saving tips, routines, and solidarity. Monthly work-life balance workshops and productivity hacks.',
-    journey: 'postpartum',
+    journey: 'general',
     memberCount: 1_123,
     coverImage: workingMomsCover,
     badge: 'WM'
@@ -114,13 +116,11 @@ export const groups: CommunityGroup[] = [
     slug: 'mental-health',
     name: 'Mental Health for Moms',
     description: 'Safe space for discussing anxiety, depression, and mental wellness. Weekly virtual support circles and professional guidance available.',
-    journey: 'postpartum',
+    journey: 'general',
     memberCount: 967,
     coverImage: mentalHealthCover,
     badge: 'MH'
   },
-
-  // General groups
   {
     slug: 'nutrition-for-moms',
     name: 'Nutrition for Moms',
