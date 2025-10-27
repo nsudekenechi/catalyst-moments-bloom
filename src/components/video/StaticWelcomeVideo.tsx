@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { supabase } from '@/integrations/supabase/client';
 import scene1 from '@/assets/welcome-video/scene-1-welcome.jpg';
 import scene2 from '@/assets/welcome-video/scene-2-fitness.jpg';
 import scene3 from '@/assets/welcome-video/scene-3-nutrition.jpg';
@@ -61,38 +62,61 @@ interface StaticWelcomeVideoProps {
 export default function StaticWelcomeVideo({ onComplete, autoPlay = true }: StaticWelcomeVideoProps) {
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(autoPlay);
-  const speechRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (!isPlaying) return;
 
     const currentScene = videoScenes[currentSceneIndex];
     
-    // Use Web Speech API for narration
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(currentScene.narration);
-      utterance.rate = 0.9;
-      utterance.pitch = 1.0;
-      utterance.volume = 1.0;
-      speechRef.current = utterance;
-      
-      window.speechSynthesis.speak(utterance);
-    }
+    // Generate and play high-quality audio narration
+    const playNarration = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('text-to-speech', {
+          body: { 
+            text: currentScene.narration,
+            voice: 'nova' // Using OpenAI's nova voice for warm, engaging narration
+          }
+        });
 
-    // Move to next scene after duration
-    const timer = setTimeout(() => {
-      if (currentSceneIndex < videoScenes.length - 1) {
-        setCurrentSceneIndex(prev => prev + 1);
-      } else {
-        setIsPlaying(false);
-        onComplete?.();
+        if (error) throw error;
+
+        if (data?.audioContent) {
+          const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
+          audioRef.current = audio;
+          
+          audio.onended = () => {
+            // Move to next scene after audio finishes
+            if (currentSceneIndex < videoScenes.length - 1) {
+              setCurrentSceneIndex(prev => prev + 1);
+            } else {
+              setIsPlaying(false);
+              onComplete?.();
+            }
+          };
+          
+          await audio.play();
+        }
+      } catch (error) {
+        console.error('Error playing narration:', error);
+        // Fallback to moving to next scene after duration
+        setTimeout(() => {
+          if (currentSceneIndex < videoScenes.length - 1) {
+            setCurrentSceneIndex(prev => prev + 1);
+          } else {
+            setIsPlaying(false);
+            onComplete?.();
+          }
+        }, currentScene.duration);
       }
-    }, currentScene.duration);
+    };
+
+    playNarration();
 
     return () => {
-      clearTimeout(timer);
-      if (speechRef.current) {
-        window.speechSynthesis.cancel();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
       }
     };
   }, [currentSceneIndex, isPlaying, onComplete]);
