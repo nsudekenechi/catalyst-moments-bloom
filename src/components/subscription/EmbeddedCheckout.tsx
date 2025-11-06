@@ -16,6 +16,7 @@ declare global {
 
 const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const checkoutRef = useRef<HTMLDivElement>(null);
+  const stripeCheckoutRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,6 +27,16 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
       try {
         setIsLoading(true);
         setError(null);
+
+        // Clean up any existing checkout instance
+        if (stripeCheckoutRef.current) {
+          try {
+            stripeCheckoutRef.current.unmount();
+          } catch (e) {
+            console.log('Cleanup error:', e);
+          }
+          stripeCheckoutRef.current = null;
+        }
 
         // Get client secret from edge function
         const { data, error: invokeError } = await supabase.functions.invoke('create-checkout', {
@@ -54,7 +65,12 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
           clientSecret: data.clientSecret,
         });
 
-        if (!mounted) return;
+        if (!mounted) {
+          checkout.unmount();
+          return;
+        }
+
+        stripeCheckoutRef.current = checkout;
 
         if (checkoutRef.current) {
           checkout.mount(checkoutRef.current);
@@ -74,6 +90,15 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
 
     return () => {
       mounted = false;
+      // Properly unmount the checkout on cleanup
+      if (stripeCheckoutRef.current) {
+        try {
+          stripeCheckoutRef.current.unmount();
+        } catch (e) {
+          console.log('Cleanup error:', e);
+        }
+        stripeCheckoutRef.current = null;
+      }
     };
   }, [priceId]);
 
