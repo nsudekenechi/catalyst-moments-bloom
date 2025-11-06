@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Calendar } from "@/components/ui/calendar";
-import { Activity, Baby, Calendar as CalendarIcon, CheckCircle, Heart, LineChart, Smile, Timer, User, Users, TrendingUp, CreditCard } from 'lucide-react';
+import { Activity, Baby, Calendar as CalendarIcon, CheckCircle, Heart, LineChart, Smile, Timer, User, Users, TrendingUp, CreditCard, Crown, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
@@ -45,7 +45,7 @@ const Dashboard = () => {
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
   const [isManagingSubscription, setIsManagingSubscription] = useState(false);
   const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
-  const { user, profile, subscribed } = useAuth();
+  const { user, profile, subscribed, subscriptionTier, subscriptionEnd } = useAuth();
   const { stageInfo, hasJourney } = useContentFilter();
   
   const isTTC = stageInfo?.journey === 'ttc';
@@ -131,6 +131,77 @@ const Dashboard = () => {
                 </Dialog>
               </div>
             </div>
+        
+        {subscribed && (
+          <Card className="mb-8 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+            <CardContent className="pt-6">
+              <div className="flex items-start justify-between">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-primary/10 p-3 rounded-lg">
+                    <Crown className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-lg">Premium Membership</h3>
+                      <div className="flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
+                        <CheckCircle className="h-3 w-3" />
+                        <span className="text-xs font-medium">Active</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Full access to all premium features
+                    </p>
+                    {subscriptionEnd && (
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Renews on {new Date(subscriptionEnd).toLocaleDateString('en-US', { 
+                          month: 'long', 
+                          day: 'numeric', 
+                          year: 'numeric' 
+                        })}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleManageSubscription}
+                  disabled={isManagingSubscription}
+                  className="gap-2"
+                >
+                  <CreditCard className="h-4 w-4" />
+                  Manage
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {!subscribed && (
+          <Card className="mb-8 border-amber-200 dark:border-amber-900/30 bg-gradient-to-br from-amber-50 to-transparent dark:from-amber-950/20">
+            <CardContent className="pt-6">
+              <div className="flex items-start justify-between">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-amber-100 dark:bg-amber-900/30 p-3 rounded-lg">
+                    <AlertCircle className="h-6 w-6 text-amber-600 dark:text-amber-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-lg">Free Plan</h3>
+                      <div className="flex items-center gap-1 px-2 py-0.5 bg-muted rounded-full">
+                        <span className="text-xs font-medium text-muted-foreground">Limited Access</span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Upgrade to unlock all premium features, workouts, and meal plans
+                    </p>
+                  </div>
+                </div>
+                <SubscriptionButton />
+              </div>
+            </CardContent>
+          </Card>
+        )}
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatsCard
