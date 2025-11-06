@@ -6,11 +6,15 @@ import { Button } from '@/components/ui/button';
 interface PricingToggleProps {
   onSelectPlan: (priceId: string) => void;
   isLoading?: boolean;
+  yearlyPriceId?: string; // Optional yearly price ID
 }
 
-const PricingToggle = ({ onSelectPlan, isLoading }: PricingToggleProps) => {
+const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggleProps) => {
+  // Only show yearly option if live price ID is provided
+  const showYearly = !!yearlyPriceId;
+  
   return (
-    <div className="grid md:grid-cols-2 gap-6 w-full max-w-4xl mx-auto">
+    <div className={`grid ${showYearly ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-6 w-full max-w-4xl mx-auto`}>
       {/* Monthly Plan */}
       <Card className="relative border-2">
         <CardContent className="p-6">
@@ -51,7 +55,8 @@ const PricingToggle = ({ onSelectPlan, isLoading }: PricingToggleProps) => {
         </CardContent>
       </Card>
 
-      {/* Yearly Plan */}
+      {/* Yearly Plan - Only show if price ID exists */}
+      {showYearly && (
       <Card className="relative border-2 border-primary shadow-lg">
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
           Save $99
@@ -87,13 +92,14 @@ const PricingToggle = ({ onSelectPlan, isLoading }: PricingToggleProps) => {
           
           <Button 
             className="w-full" 
-            onClick={() => onSelectPlan('price_1SQTZDCNwyQa1NiQNzphjxgi')}
+            onClick={() => onSelectPlan(yearlyPriceId!)}
             disabled={isLoading}
           >
             Select Yearly
           </Button>
         </CardContent>
       </Card>
+      )}
     </div>
   );
 };
