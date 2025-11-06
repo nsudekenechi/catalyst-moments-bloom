@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Calendar } from "@/components/ui/calendar";
-import { Activity, Baby, Calendar as CalendarIcon, CheckCircle, Heart, LineChart, Smile, Timer, User, Users, TrendingUp } from 'lucide-react';
+import { Activity, Baby, Calendar as CalendarIcon, CheckCircle, Heart, LineChart, Smile, Timer, User, Users, TrendingUp, CreditCard } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useWellnessData } from '@/hooks/useWellnessData';
 import { MoodCheckIn } from '@/components/dashboard/MoodCheckIn';
@@ -28,6 +28,8 @@ import JourneySelector from '@/components/onboarding/JourneySelector';
 import SubscriptionStatus from '@/components/subscription/SubscriptionStatus';
 import SubscriptionButton from '@/components/subscription/SubscriptionButton';
 import AffiliateButton from '@/components/affiliate/AffiliateButton';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface StatsCardProps {
   title: string;
@@ -41,6 +43,7 @@ const Dashboard = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [isCheckInOpen, setIsCheckInOpen] = useState(false);
   const [isJourneySelectorOpen, setIsJourneySelectorOpen] = useState(false);
+  const [isManagingSubscription, setIsManagingSubscription] = useState(false);
   const { wellnessScore, weeklyWorkoutProgress, weeklyWorkoutGoal, workoutSessions, refreshData } = useWellnessData();
   const { user, profile, subscribed } = useAuth();
   const { stageInfo, hasJourney } = useContentFilter();
@@ -55,6 +58,24 @@ const Dashboard = () => {
     const interval = setInterval(refreshData, 30000);
     return () => clearInterval(interval);
   }, [refreshData]);
+
+  const handleManageSubscription = async () => {
+    try {
+      setIsManagingSubscription(true);
+      const { data, error } = await supabase.functions.invoke('customer-portal');
+      
+      if (error) throw error;
+      
+      if (data?.url) {
+        window.open(data.url, '_blank');
+      }
+    } catch (error) {
+      console.error('Error opening customer portal:', error);
+      toast.error('Failed to open subscription management portal');
+    } finally {
+      setIsManagingSubscription(false);
+    }
+  };
   
   return (
     <PageLayout>
@@ -80,6 +101,18 @@ const Dashboard = () => {
                 </p>
               </div>
               <div className="mt-4 md:mt-0 flex items-center space-x-2">
+                {subscribed && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="gap-2"
+                    onClick={handleManageSubscription}
+                    disabled={isManagingSubscription}
+                  >
+                    <CreditCard className="h-4 w-4" />
+                    {isManagingSubscription ? 'Loading...' : 'Manage Subscription'}
+                  </Button>
+                )}
                 <AffiliateButton variant="outline" size="sm" />
                 <span className="text-sm text-muted-foreground">Current stage:</span>
                 <Dialog open={isJourneySelectorOpen} onOpenChange={setIsJourneySelectorOpen}>
