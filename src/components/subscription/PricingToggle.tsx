@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, TrendingUp } from 'lucide-react';
+import { Check, TrendingUp, Users, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { usePlanPopularity } from '@/hooks/usePlanPopularity';
@@ -23,15 +23,16 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
   };
   
   return (
-    <div className={`grid ${showYearly ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-6 w-full max-w-4xl mx-auto`}>
-      {/* Monthly Plan */}
-      <Card className="relative border-2">
-        {mostPopular === 'monthly' && (
-          <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-primary/80 border-0 gap-1">
-            <TrendingUp className="h-3 w-3" />
-            Most Popular
-          </Badge>
-        )}
+    <div className="w-full max-w-4xl mx-auto">
+      <div className={`grid ${showYearly ? 'md:grid-cols-2' : 'md:grid-cols-1'} gap-6 mb-12`}>
+        {/* Monthly Plan */}
+        <Card className="relative border-2">
+          {mostPopular === 'monthly' && (
+            <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-primary to-primary/80 border-0 gap-1 z-10">
+              <TrendingUp className="h-3 w-3" />
+              Most Popular
+            </Badge>
+          )}
         <CardContent className="p-6">
           <div className="text-center mb-6">
             <h3 className="text-2xl font-bold mb-2">Monthly</h3>
@@ -121,6 +122,59 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
         </CardContent>
       </Card>
       )}
+      </div>
+
+      {/* Social Proof Section */}
+      <div className="text-center space-y-6">
+        <div className="flex items-center justify-center gap-8 flex-wrap">
+          <div className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-primary" />
+            <span className="text-lg font-semibold">1,000+ Happy Members</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Star className="h-5 w-5 text-catalyst-copper fill-catalyst-copper" />
+            <span className="text-lg font-semibold">4.9/5 Average Rating</span>
+          </div>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-4 mt-6">
+          <Card className="border-0 shadow-soft bg-card/50">
+            <CardContent className="p-4">
+              <div className="flex gap-1 mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-4 w-4 text-catalyst-copper fill-catalyst-copper" />
+                ))}
+              </div>
+              <p className="text-sm text-muted-foreground italic">"Life-changing! The personalized plans fit perfectly into my busy schedule."</p>
+              <p className="text-sm font-semibold mt-2">- Sarah M.</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-0 shadow-soft bg-card/50">
+            <CardContent className="p-4">
+              <div className="flex gap-1 mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-4 w-4 text-catalyst-copper fill-catalyst-copper" />
+                ))}
+              </div>
+              <p className="text-sm text-muted-foreground italic">"The AI coach feels like having a personal wellness expert 24/7."</p>
+              <p className="text-sm font-semibold mt-2">- Jessica L.</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-0 shadow-soft bg-card/50">
+            <CardContent className="p-4">
+              <div className="flex gap-1 mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-4 w-4 text-catalyst-copper fill-catalyst-copper" />
+                ))}
+              </div>
+              <p className="text-sm text-muted-foreground italic">"Best investment in my health. The community support is incredible!"</p>
+              <p className="text-sm font-semibold mt-2">- Emily R.</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };
