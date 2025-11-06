@@ -27,30 +27,9 @@ const SubscriptionButton = ({
       return;
     }
 
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: {}
-      });
-      
-      if (error) {
-        console.error('Checkout error:', error);
-        toast.error('Failed to create checkout session');
-        setIsLoading(false);
-        return;
-      }
-
-      if (data?.url) {
-        window.location.href = data.url;
-      } else {
-        toast.error('No checkout URL received');
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.error('Subscription error:', error);
-      toast.error('Failed to start subscription process');
-      setIsLoading(false);
-    }
+    // Open checkout modal instead of redirecting
+    toast.info("Opening secure checkout...");
+    // The CheckoutModal will handle the embedded checkout
   };
 
   return (
