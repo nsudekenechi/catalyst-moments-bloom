@@ -17,6 +17,8 @@ declare global {
 const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const checkoutRef = useRef<HTMLDivElement>(null);
   const stripeCheckoutRef = useRef<any>(null);
+  const currentClientSecretRef = useRef<string | null>(null);
+  const isInitializingRef = useRef(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,6 +27,8 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
 
     const initializeCheckout = async () => {
       try {
+        if (isInitializingRef.current) return;
+        isInitializingRef.current = true;
         setIsLoading(true);
         setError(null);
 
@@ -47,8 +51,16 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
           throw new Error(invokeError.message);
         }
 
-        if (!data?.clientSecret) {
+        const clientSecret = data?.clientSecret || data?.client_secret;
+        if (!clientSecret) {
           throw new Error('No client secret received');
+        }
+
+        // Prevent duplicate init with the same session
+        if (currentClientSecretRef.current === clientSecret && stripeCheckoutRef.current) {
+          setIsLoading(false);
+          isInitializingRef.current = false;
+          return;
         }
 
         // Initialize Stripe
@@ -62,7 +74,7 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
 
         // Mount embedded checkout
         const checkout = await stripe.initEmbeddedCheckout({
-          clientSecret: data.clientSecret,
+          clientSecret: clientSecret,
         });
 
         if (!mounted) {
@@ -73,16 +85,20 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
         stripeCheckoutRef.current = checkout;
 
         if (checkoutRef.current) {
+          checkoutRef.current.innerHTML = '';
           checkout.mount(checkoutRef.current);
         }
 
+        currentClientSecretRef.current = clientSecret;
         setIsLoading(false);
+        isInitializingRef.current = false;
       } catch (err) {
         console.error('Checkout initialization error:', err);
         const errorMessage = err instanceof Error ? err.message : 'Failed to initialize checkout';
         setError(errorMessage);
         toast.error(errorMessage);
         setIsLoading(false);
+        isInitializingRef.current = false;
       }
     };
 
