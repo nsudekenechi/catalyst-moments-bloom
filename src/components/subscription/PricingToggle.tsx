@@ -145,8 +145,8 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
                   <Star key={i} className="h-4 w-4 text-catalyst-copper fill-catalyst-copper" />
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground italic">"Life-changing! The personalized plans fit perfectly into my busy schedule."</p>
-              <p className="text-sm font-semibold mt-2">- Sarah M.</p>
+              <p className="text-sm text-muted-foreground italic">"I was trying for 9 months with no luck. After joining Catalyst Mom and following the fertility optimization protocols, I got pregnant in 6 weeks. The app gave me everything I needed in one place best $29 I've ever spent."</p>
+              <p className="text-sm font-semibold mt-2">— Kristi., Now 18 weeks pregnant</p>
             </CardContent>
           </Card>
           
@@ -157,8 +157,8 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
                   <Star key={i} className="h-4 w-4 text-catalyst-copper fill-catalyst-copper" />
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground italic">"The AI coach feels like having a personal wellness expert 24/7."</p>
-              <p className="text-sm font-semibold mt-2">- Jessica L.</p>
+              <p className="text-sm text-muted-foreground italic">"The pelvic floor + birth prep protocols changed EVERYTHING. My second labor was 6 hours (first was 24 hours). I walked in confident instead of terrified. Worth way more than $29/month."</p>
+              <p className="text-sm font-semibold mt-2">— Emily K., Mom of 2</p>
             </CardContent>
           </Card>
           
@@ -169,8 +169,8 @@ const PricingToggle = ({ onSelectPlan, isLoading, yearlyPriceId }: PricingToggle
                   <Star key={i} className="h-4 w-4 text-catalyst-copper fill-catalyst-copper" />
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground italic">"Best investment in my health. The community support is incredible!"</p>
-              <p className="text-sm font-semibold mt-2">- Emily R.</p>
+              <p className="text-sm text-muted-foreground italic">"I was leaking every time I sneezed and my mom pooch made me avoid mirrors. The postpartum protocols inside the app closed my gap from 3 fingers to 0.5 in 12 weeks, stopped the leaking by week 3, and the community kept me consistent. I started during pregnancy and switching to postpartum content right after birth was seamless. Best $29/month I've spent."</p>
+              <p className="text-sm font-semibold mt-2">— Sarah T., 6 months postpartum</p>
             </CardContent>
           </Card>
         </div>
