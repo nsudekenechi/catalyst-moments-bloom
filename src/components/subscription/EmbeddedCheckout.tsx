@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
 interface EmbeddedCheckoutProps {
+  priceId: string;
   onSuccess?: () => void;
 }
 
@@ -13,7 +14,7 @@ declare global {
   }
 }
 
-const EmbeddedCheckout = ({ onSuccess }: EmbeddedCheckoutProps) => {
+const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const checkoutRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +29,7 @@ const EmbeddedCheckout = ({ onSuccess }: EmbeddedCheckoutProps) => {
 
         // Get client secret from edge function
         const { data, error: invokeError } = await supabase.functions.invoke('create-checkout', {
-          body: {}
+          body: { priceId }
         });
 
         if (invokeError) {
@@ -74,7 +75,7 @@ const EmbeddedCheckout = ({ onSuccess }: EmbeddedCheckoutProps) => {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [priceId]);
 
   if (error) {
     return (

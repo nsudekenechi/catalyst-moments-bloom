@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import EmbeddedCheckout from "./EmbeddedCheckout";
+import PricingToggle from "./PricingToggle";
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface CheckoutModalProps {
 
 const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
   const navigate = useNavigate();
+  const [selectedPriceId, setSelectedPriceId] = useState<string | null>(null);
 
   const handleSuccess = () => {
     onClose();
@@ -20,6 +22,14 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
   const handleContinueBrowsing = () => {
     onClose();
     navigate('/');
+  };
+
+  const handleSelectPlan = (priceId: string) => {
+    setSelectedPriceId(priceId);
+  };
+
+  const handleBack = () => {
+    setSelectedPriceId(null);
   };
 
   return (
@@ -39,16 +49,31 @@ const CheckoutModal = ({ isOpen, onClose }: CheckoutModalProps) => {
         </DialogHeader>
 
         <div className="space-y-4">
-          <EmbeddedCheckout onSuccess={handleSuccess} />
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleContinueBrowsing}
-            className="w-full"
-          >
-            Continue browsing
-          </Button>
+          {!selectedPriceId ? (
+            <>
+              <PricingToggle onSelectPlan={handleSelectPlan} />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleContinueBrowsing}
+                className="w-full"
+              >
+                Continue browsing
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBack}
+                className="mb-4"
+              >
+                ← Back to plans
+              </Button>
+              <EmbeddedCheckout priceId={selectedPriceId} onSuccess={handleSuccess} />
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>

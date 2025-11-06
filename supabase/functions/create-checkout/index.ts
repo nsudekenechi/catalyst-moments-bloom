@@ -25,8 +25,10 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
-    // Get request body (kept for compatibility but not required)
-    await req.json().catch(() => ({}));
+    // Get request body to extract priceId
+    const body = await req.json().catch(() => ({}));
+    const priceId = body.priceId || "price_1S546jCNwyQa1NiQYpl3OjEe"; // Default to monthly if not provided
+    logStep("Price ID received", { priceId });
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {
@@ -53,10 +55,6 @@ serve(async (req) => {
     } else {
       logStep("No existing customer found, will create during checkout");
     }
-
-    // Use the $29/month price ID
-    const priceId = "price_1S546jCNwyQa1NiQYpl3OjEe";
-    logStep("Using monthly price", { priceId });
 
     const lineItems = [
       { price: priceId, quantity: 1 }
