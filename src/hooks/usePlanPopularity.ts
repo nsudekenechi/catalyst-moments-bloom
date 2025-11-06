@@ -33,7 +33,7 @@ export const usePlanPopularity = () => {
 
   const getMostPopular = (): 'monthly' | 'yearly' | null => {
     if (stats.monthly === 0 && stats.yearly === 0) {
-      return 'yearly'; // Default to yearly as it's better value
+      return 'monthly'; // Default to monthly
     }
     if (stats.yearly > stats.monthly) return 'yearly';
     if (stats.monthly > stats.yearly) return 'monthly';
