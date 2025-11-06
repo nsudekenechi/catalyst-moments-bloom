@@ -17,6 +17,7 @@ declare global {
       ownerId: symbol | null;
       isInitializing: boolean;
     };
+    __STRIPE_INSTANCE__?: any;
   }
 }
 
@@ -26,6 +27,7 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const currentClientSecretRef = useRef<string | null>(null);
   const instanceIdRef = useRef(Symbol('embeddedCheckoutInstance'));
   const isInitializingRef = useRef(false);
+  const hasRetriedRef = useRef(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -78,12 +80,12 @@ try {
           return;
         }
 
-        // Initialize Stripe
+        // Initialize Stripe (singleton)
         if (!window.Stripe) {
           throw new Error('Stripe.js failed to load');
         }
-
-        const stripe = window.Stripe('pk_live_51S4sMACNwyQa1NiQmZrjG7oSMVWDUNPdqMWKbGmkk1f8KXcnqXQITGVP2XsI9aXLMxMOQSX8CtU2nEAoNSmrCdGN00aIWz1BSl');
+        const PUBLISHABLE_KEY = 'pk_live_51S4sMACNwyQa1NiQmZrjG7oSMVWDUNPdqMWKbGmkk1f8KXcnqXQITGVP2XsI9aXLMxMOQSX8CtU2nEAoNSmrCdGN00aIWz1BSl';
+        const stripe = (window.__STRIPE_INSTANCE__ ||= window.Stripe(PUBLISHABLE_KEY));
 
 if (!mounted) return;
 
@@ -122,6 +124,36 @@ isInitializingRef.current = false;
       } catch (err) {
         console.error('Checkout initialization error:', err);
         const errorMessage = err instanceof Error ? err.message : 'Failed to initialize checkout';
+
+        // If Stripe complains about multiple embedded instances, force a hard reset and retry once
+        if (/multiple.*embedded/i.test(String(errorMessage)) && !hasRetriedRef.current) {
+          hasRetriedRef.current = true;
+          try {
+            const gForce = (window as any).__STRIPE_EMBEDDED__;
+            if (gForce?.checkout) {
+              try { gForce.checkout.unmount(); } catch {}
+              gForce.checkout = null;
+              gForce.clientSecret = null;
+              gForce.ownerId = null;
+              gForce.isInitializing = false;
+            }
+            if (stripeCheckoutRef.current) {
+              try { stripeCheckoutRef.current.unmount(); } catch {}
+              stripeCheckoutRef.current = null;
+            }
+            if (checkoutRef.current) checkoutRef.current.innerHTML = '';
+            await new Promise((r) => setTimeout(r, 200));
+          } catch {}
+          // Retry once after a brief delay
+          setTimeout(() => {
+            // Avoid retry if component unmounted
+            if (typeof window !== 'undefined') {
+              initializeCheckout();
+            }
+          }, 150);
+          return;
+        }
+
         setError(errorMessage);
         toast.error(errorMessage);
         setIsLoading(false);
