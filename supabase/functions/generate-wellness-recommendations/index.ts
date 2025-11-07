@@ -66,54 +66,74 @@ Return as JSON: {"ideas": [array of idea objects with fields: id, title, descrip
       userPrompt = prompt;
     }
 
-    const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${lovableApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        response_format: { type: "json_object" }
-      }),
-    });
-
-    if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: 'Rate limits exceeded, please try again later.' }), {
-          status: 429,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: 'Payment required, please add credits to your Lovable AI workspace.' }), {
-          status: 402,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
-      const errorData = await response.text();
-      console.error('Lovable AI error:', errorData);
-      throw new Error(`Lovable AI error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const content = data.choices[0].message.content;
+    // Retry logic with exponential backoff
+    const maxRetries = 3;
+    let lastError;
     
-    let recommendations;
-    try {
-      recommendations = JSON.parse(content);
-    } catch (parseError) {
-      console.error('Error parsing AI response:', parseError);
-      throw new Error('Invalid JSON response from AI');
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        if (attempt > 0) {
+          const delay = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+          console.log(`Retry attempt ${attempt} after ${delay}ms delay`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+
+        const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${lovableApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'google/gemini-2.5-flash',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: userPrompt }
+            ],
+            response_format: { type: "json_object" }
+          }),
+        });
+
+        if (!response.ok) {
+          if (response.status === 429) {
+            return new Response(JSON.stringify({ error: 'Rate limits exceeded, please try again later.' }), {
+              status: 429,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+          }
+          if (response.status === 402) {
+            return new Response(JSON.stringify({ error: 'Payment required, please add credits to your Lovable AI workspace.' }), {
+              status: 402,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+          }
+          const errorData = await response.text();
+          console.error('Lovable AI error:', errorData);
+          throw new Error(`Lovable AI error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const content = data.choices[0].message.content;
+        
+        let recommendations;
+        try {
+          recommendations = JSON.parse(content);
+        } catch (parseError) {
+          console.error('Error parsing AI response:', parseError);
+          throw new Error('Invalid JSON response from AI');
+        }
+
+        return new Response(JSON.stringify(recommendations), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } catch (error) {
+        lastError = error;
+        console.error(`Attempt ${attempt + 1} failed:`, error.message);
+        if (attempt === maxRetries - 1) break;
+      }
     }
 
-    return new Response(JSON.stringify(recommendations), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    throw lastError;
 
   } catch (error) {
     console.error('Error in generate-wellness-recommendations function:', error);
