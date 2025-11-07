@@ -32,6 +32,7 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
   const retryCountRef = useRef(0);
   const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const initTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevPriceIdRef = useRef(priceId);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
@@ -49,6 +50,40 @@ const EmbeddedCheckout = ({ priceId, onSuccess }: EmbeddedCheckoutProps) => {
     setError(null);
     hasRetriedRef.current = false;
   };
+
+  // Force full refresh when priceId changes (user switches plans)
+  useEffect(() => {
+    if (prevPriceIdRef.current !== priceId) {
+      console.log('[CHECKOUT] Price changed, forcing full refresh', { from: prevPriceIdRef.current, to: priceId });
+      prevPriceIdRef.current = priceId;
+      
+      // Reset all state
+      retryCountRef.current = 0;
+      setRetryAttempt(0);
+      setError(null);
+      setIsLoading(true);
+      setCheckoutUrl(null);
+      hasRetriedRef.current = false;
+      
+      // Clear any existing checkout
+      const g = (window as any).__STRIPE_EMBEDDED__;
+      if (g?.checkout) {
+        try { g.checkout.unmount(); } catch (e) { console.log('Price change cleanup error:', e); }
+        g.checkout = null;
+        g.clientSecret = null;
+        g.ownerId = null;
+        g.isInitializing = false;
+      }
+      if (stripeCheckoutRef.current) {
+        try { stripeCheckoutRef.current.unmount(); } catch (e) { console.log('Local cleanup error:', e); }
+        stripeCheckoutRef.current = null;
+      }
+      currentClientSecretRef.current = null;
+      
+      // Force re-init
+      setRefreshKey(prev => prev + 1);
+    }
+  }, [priceId]);
 
   const createHostedFallback = async () => {
     try {
