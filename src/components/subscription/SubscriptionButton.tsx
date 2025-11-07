@@ -18,7 +18,7 @@ const SubscriptionButton = ({
   className,
   children = "Subscribe Now"
 }: SubscriptionButtonProps) => {
-  const { user } = useAuth();
+  const { user, setShowCheckoutModal } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubscribe = async () => {
@@ -27,9 +27,14 @@ const SubscriptionButton = ({
       return;
     }
 
-    // Open checkout modal instead of redirecting
-    toast.info("Opening secure checkout...");
-    // The CheckoutModal will handle the embedded checkout
+    // Open checkout modal
+    setIsLoading(true);
+    try {
+      setShowCheckoutModal(true);
+      toast.info("Opening secure checkout...");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

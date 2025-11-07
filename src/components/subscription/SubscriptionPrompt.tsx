@@ -13,7 +13,9 @@ interface SubscriptionPromptProps {
 const SubscriptionPrompt = ({ isOpen, onClose }: SubscriptionPromptProps) => {
   const handleSubscribe = async () => {
     try {
-      const { data, error } = await supabase.functions.invoke('create-checkout');
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { priceId: 'price_1S546jCNwyQa1NiQYpl3OjEe', uiMode: 'hosted' }
+      });
       
       if (error) {
         console.error('Checkout error:', error);
@@ -23,6 +25,9 @@ const SubscriptionPrompt = ({ isOpen, onClose }: SubscriptionPromptProps) => {
 
       if (data?.url) {
         window.open(data.url, '_blank');
+        toast.message('Opened secure checkout in a new tab');
+      } else {
+        toast.error('Checkout URL not available');
       }
     } catch (error) {
       console.error('Subscription error:', error);
