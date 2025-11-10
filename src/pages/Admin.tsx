@@ -12,6 +12,7 @@ import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, Award, Users, BarChart3, DollarSign, TrendingUp, Sparkles } from 'lucide-react';
 import { BlogPostGenerator } from '@/components/admin/BlogPostGenerator';
+import { BlogPostManager } from '@/components/admin/BlogPostManager';
 
 const Admin = () => {
   return (
@@ -78,8 +79,9 @@ const Admin = () => {
               <AffiliateSection />
             </TabsContent>
 
-            <TabsContent value="blog">
+            <TabsContent value="blog" className="space-y-6">
               <BlogPostGenerator />
+              <BlogPostManager />
             </TabsContent>
           </Tabs>
         </div>

@@ -848,6 +848,21 @@ export type Database = {
         }
         Returns: undefined
       }
+      admin_delete_blog: { Args: { blog_id: string }; Returns: undefined }
+      admin_update_blog: {
+        Args: {
+          blog_author: string
+          blog_content: string
+          blog_excerpt: string
+          blog_featured_image_url: string
+          blog_id: string
+          blog_slug: string
+          blog_status: string
+          blog_tags: string[]
+          blog_title: string
+        }
+        Returns: undefined
+      }
       approve_all_pending_affiliates: {
         Args: never
         Returns: {
@@ -886,6 +901,28 @@ export type Database = {
           status: string
           updated_at: string
           user_id: string
+        }[]
+      }
+      get_all_blogs: {
+        Args: {
+          page_number?: number
+          page_size?: number
+          search_query?: string
+        }
+        Returns: {
+          author: string
+          content: string
+          created_at: string
+          excerpt: string
+          featured_image_url: string
+          id: string
+          published_at: string
+          slug: string
+          status: string
+          tags: string[]
+          title: string
+          total_count: number
+          updated_at: string
         }[]
       }
       get_all_users_with_points: {
