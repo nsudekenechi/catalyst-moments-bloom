@@ -20,6 +20,7 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import CheckoutModal from "./components/subscription/CheckoutModal";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import SubscriptionGuard from "./components/auth/SubscriptionGuard";
@@ -72,6 +73,7 @@ function AppContent() {
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/food-calories" element={<FoodCalorieChecker />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/experts" element={<Experts />} />
