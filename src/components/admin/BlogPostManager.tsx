@@ -1,16 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Search, Edit, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Edit, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface BlogPost {
@@ -30,21 +59,20 @@ interface BlogPost {
 }
 
 export const BlogPostManager = () => {
-  const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
-  const [deletingBlogId, setDeletingBlogId] = useState<string | null>(null);
+  const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [deletingPostId, setDeletingPostId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const pageSize = 10;
-  const totalPages = Math.ceil(totalCount / pageSize);
 
-  const fetchBlogs = async () => {
-    setLoading(true);
+  const fetchPosts = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase.rpc('get_all_blogs', {
         search_query: searchQuery || null,
         page_number: currentPage,
@@ -54,52 +82,57 @@ export const BlogPostManager = () => {
       if (error) throw error;
 
       if (data && data.length > 0) {
-        setBlogs(data);
-        setTotalCount(data[0].total_count || 0);
+        setPosts(data);
+        setTotalCount(data[0].total_count);
       } else {
-        setBlogs([]);
+        setPosts([]);
         setTotalCount(0);
       }
-    } catch (error: any) {
-      console.error('Error fetching blogs:', error);
-      toast.error('Failed to fetch blog posts');
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      toast.error('Failed to load blog posts');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchBlogs();
-  }, [searchQuery, currentPage]);
+    fetchPosts();
+  }, [currentPage, searchQuery]);
 
-  const handleEdit = (blog: BlogPost) => {
-    setEditingBlog(blog);
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1);
+  };
+
+  const handleEdit = (post: BlogPost) => {
+    setEditingPost(post);
   };
 
   const handleUpdate = async () => {
-    if (!editingBlog) return;
+    if (!editingPost) return;
 
-    setIsSubmitting(true);
     try {
+      setIsSubmitting(true);
       const { error } = await supabase.rpc('admin_update_blog', {
-        blog_id: editingBlog.id,
-        blog_title: editingBlog.title,
-        blog_content: editingBlog.content,
-        blog_slug: editingBlog.slug,
-        blog_status: editingBlog.status,
-        blog_author: editingBlog.author,
-        blog_excerpt: editingBlog.excerpt,
-        blog_featured_image_url: editingBlog.featured_image_url,
-        blog_tags: editingBlog.tags,
+        blog_id: editingPost.id,
+        blog_title: editingPost.title,
+        blog_content: editingPost.content,
+        blog_slug: editingPost.slug,
+        blog_status: editingPost.status,
+        blog_author: editingPost.author,
+        blog_excerpt: editingPost.excerpt,
+        blog_featured_image_url: editingPost.featured_image_url || '',
+        blog_tags: editingPost.tags || [],
       });
 
       if (error) throw error;
 
       toast.success('Blog post updated successfully');
-      setEditingBlog(null);
-      fetchBlogs();
-    } catch (error: any) {
-      console.error('Error updating blog:', error);
+      setEditingPost(null);
+      fetchPosts();
+    } catch (error) {
+      console.error('Error updating post:', error);
       toast.error('Failed to update blog post');
     } finally {
       setIsSubmitting(false);
@@ -107,120 +140,120 @@ export const BlogPostManager = () => {
   };
 
   const handleDelete = async () => {
-    if (!deletingBlogId) return;
+    if (!deletingPostId) return;
 
-    setIsSubmitting(true);
     try {
+      setIsSubmitting(true);
       const { error } = await supabase.rpc('admin_delete_blog', {
-        blog_id: deletingBlogId,
+        blog_id: deletingPostId,
       });
 
       if (error) throw error;
 
       toast.success('Blog post deleted successfully');
-      setDeletingBlogId(null);
-      fetchBlogs();
-    } catch (error: any) {
-      console.error('Error deleting blog:', error);
+      setDeletingPostId(null);
+      fetchPosts();
+    } catch (error) {
+      console.error('Error deleting post:', error);
       toast.error('Failed to delete blog post');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const totalPages = Math.ceil(totalCount / pageSize);
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Manage Blog Posts</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex gap-2">
+        <div className="flex items-center gap-4 mt-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search by title, content, tags..."
+              placeholder="Search posts by title, content, or tags..."
               value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="pl-9"
+              onChange={(e) => handleSearch(e.target.value)}
+              className="pl-10"
             />
           </div>
         </div>
-
+      </CardHeader>
+      <CardContent>
         {loading ? (
-          <div className="flex items-center justify-center py-8">
+          <div className="flex justify-center items-center py-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
-        ) : blogs.length === 0 ? (
+        ) : posts.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             No blog posts found
           </div>
         ) : (
           <>
-            <div className="border rounded-lg">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Author</TableHead>
-                    <TableHead>Tags</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Author</TableHead>
+                  <TableHead>Tags</TableHead>
+                  <TableHead>Published</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {posts.map((post) => (
+                  <TableRow key={post.id}>
+                    <TableCell className="font-medium">{post.title}</TableCell>
+                    <TableCell>
+                      <Badge variant={post.status === 'published' ? 'default' : 'secondary'}>
+                        {post.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{post.author}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-1 flex-wrap">
+                        {post.tags?.slice(0, 2).map((tag, idx) => (
+                          <Badge key={idx} variant="outline" className="text-xs">
+                            {tag}
+                          </Badge>
+                        ))}
+                        {post.tags?.length > 2 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{post.tags.length - 2}
+                          </Badge>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {post.published_at
+                        ? new Date(post.published_at).toLocaleDateString()
+                        : '-'}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEdit(post)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => setDeletingPostId(post.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {blogs.map((blog) => (
-                    <TableRow key={blog.id}>
-                      <TableCell className="font-medium">{blog.title}</TableCell>
-                      <TableCell>
-                        <Badge variant={blog.status === 'published' ? 'default' : 'secondary'}>
-                          {blog.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{blog.author}</TableCell>
-                      <TableCell>
-                        <div className="flex gap-1 flex-wrap">
-                          {blog.tags?.slice(0, 2).map((tag, i) => (
-                            <Badge key={i} variant="outline" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                          {blog.tags?.length > 2 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{blog.tags.length - 2}
-                            </Badge>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>{new Date(blog.created_at).toLocaleDateString()}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex gap-2 justify-end">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleEdit(blog)}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setDeletingBlogId(blog.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                ))}
+              </TableBody>
+            </Table>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mt-4">
               <div className="text-sm text-muted-foreground">
                 Showing {(currentPage - 1) * pageSize + 1} to{' '}
                 {Math.min(currentPage * pageSize, totalCount)} of {totalCount} posts
@@ -232,7 +265,6 @@ export const BlogPostManager = () => {
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
                 >
-                  <ChevronLeft className="h-4 w-4" />
                   Previous
                 </Button>
                 <Button
@@ -242,7 +274,6 @@ export const BlogPostManager = () => {
                   disabled={currentPage === totalPages}
                 >
                   Next
-                  <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -251,42 +282,44 @@ export const BlogPostManager = () => {
       </CardContent>
 
       {/* Edit Dialog */}
-      <Dialog open={!!editingBlog} onOpenChange={(open) => !open && setEditingBlog(null)}>
+      <Dialog open={!!editingPost} onOpenChange={() => setEditingPost(null)}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Blog Post</DialogTitle>
+            <DialogDescription>
+              Make changes to the blog post below
+            </DialogDescription>
           </DialogHeader>
-          {editingBlog && (
+
+          {editingPost && (
             <div className="space-y-4">
               <div>
-                <Label htmlFor="title">Title</Label>
+                <Label>Title</Label>
                 <Input
-                  id="title"
-                  value={editingBlog.title}
-                  onChange={(e) => setEditingBlog({ ...editingBlog, title: e.target.value })}
+                  value={editingPost.title}
+                  onChange={(e) =>
+                    setEditingPost({ ...editingPost, title: e.target.value })
+                  }
                 />
               </div>
+
               <div>
-                <Label htmlFor="slug">Slug</Label>
+                <Label>Slug</Label>
                 <Input
-                  id="slug"
-                  value={editingBlog.slug}
-                  onChange={(e) => setEditingBlog({ ...editingBlog, slug: e.target.value })}
+                  value={editingPost.slug}
+                  onChange={(e) =>
+                    setEditingPost({ ...editingPost, slug: e.target.value })
+                  }
                 />
               </div>
+
               <div>
-                <Label htmlFor="author">Author</Label>
-                <Input
-                  id="author"
-                  value={editingBlog.author}
-                  onChange={(e) => setEditingBlog({ ...editingBlog, author: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label htmlFor="status">Status</Label>
+                <Label>Status</Label>
                 <Select
-                  value={editingBlog.status}
-                  onValueChange={(value) => setEditingBlog({ ...editingBlog, status: value })}
+                  value={editingPost.status}
+                  onValueChange={(value) =>
+                    setEditingPost({ ...editingPost, status: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -297,51 +330,73 @@ export const BlogPostManager = () => {
                   </SelectContent>
                 </Select>
               </div>
+
               <div>
-                <Label htmlFor="excerpt">Excerpt</Label>
+                <Label>Author</Label>
+                <Input
+                  value={editingPost.author}
+                  onChange={(e) =>
+                    setEditingPost({ ...editingPost, author: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <Label>Excerpt</Label>
                 <Textarea
-                  id="excerpt"
-                  value={editingBlog.excerpt}
-                  onChange={(e) => setEditingBlog({ ...editingBlog, excerpt: e.target.value })}
+                  value={editingPost.excerpt}
+                  onChange={(e) =>
+                    setEditingPost({ ...editingPost, excerpt: e.target.value })
+                  }
                   rows={3}
                 />
               </div>
+
               <div>
-                <Label htmlFor="content">Content</Label>
+                <Label>Content</Label>
                 <Textarea
-                  id="content"
-                  value={editingBlog.content}
-                  onChange={(e) => setEditingBlog({ ...editingBlog, content: e.target.value })}
+                  value={editingPost.content}
+                  onChange={(e) =>
+                    setEditingPost({ ...editingPost, content: e.target.value })
+                  }
                   rows={10}
                 />
               </div>
+
               <div>
-                <Label htmlFor="tags">Tags (comma-separated)</Label>
+                <Label>Featured Image URL</Label>
                 <Input
-                  id="tags"
-                  value={editingBlog.tags?.join(', ') || ''}
+                  value={editingPost.featured_image_url || ''}
                   onChange={(e) =>
-                    setEditingBlog({
-                      ...editingBlog,
-                      tags: e.target.value.split(',').map((t) => t.trim()).filter(Boolean),
+                    setEditingPost({
+                      ...editingPost,
+                      featured_image_url: e.target.value,
                     })
                   }
                 />
               </div>
+
               <div>
-                <Label htmlFor="image">Featured Image URL</Label>
+                <Label>Tags (comma-separated)</Label>
                 <Input
-                  id="image"
-                  value={editingBlog.featured_image_url}
+                  value={editingPost.tags?.join(', ') || ''}
                   onChange={(e) =>
-                    setEditingBlog({ ...editingBlog, featured_image_url: e.target.value })
+                    setEditingPost({
+                      ...editingPost,
+                      tags: e.target.value.split(',').map((t) => t.trim()),
+                    })
                   }
                 />
               </div>
             </div>
           )}
+
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingBlog(null)}>
+            <Button
+              variant="outline"
+              onClick={() => setEditingPost(null)}
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
             <Button onClick={handleUpdate} disabled={isSubmitting}>
@@ -353,17 +408,24 @@ export const BlogPostManager = () => {
       </Dialog>
 
       {/* Delete Confirmation */}
-      <AlertDialog open={!!deletingBlogId} onOpenChange={(open) => !open && setDeletingBlogId(null)}>
+      <AlertDialog
+        open={!!deletingPostId}
+        onOpenChange={() => setDeletingPostId(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Blog Post</AlertDialogTitle>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this blog post? This action cannot be undone.
+              This action cannot be undone. This will permanently delete the blog post.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} disabled={isSubmitting}>
+            <AlertDialogCancel disabled={isSubmitting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={isSubmitting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Delete
             </AlertDialogAction>
