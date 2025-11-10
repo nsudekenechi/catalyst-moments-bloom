@@ -49,6 +49,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const [showLinkDialog, setShowLinkDialog] = React.useState(false);
   const [linkUrl, setLinkUrl] = React.useState('');
   const [isDraggingOver, setIsDraggingOver] = React.useState(false);
+  const [showImageGallery, setShowImageGallery] = React.useState(false);
+  const [galleryImages, setGalleryImages] = React.useState<string[]>([]);
+  const [isLoadingGallery, setIsLoadingGallery] = React.useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
@@ -176,6 +179,45 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }
   }, [handleImageUpload]);
 
+  const loadGalleryImages = useCallback(async () => {
+    setIsLoadingGallery(true);
+    try {
+      const { data, error } = await supabase.storage
+        .from('blog-images')
+        .list('', {
+          limit: 100,
+          sortBy: { column: 'created_at', order: 'desc' },
+        });
+
+      if (error) throw error;
+
+      const urls = data.map((file) => {
+        const { data: { publicUrl } } = supabase.storage
+          .from('blog-images')
+          .getPublicUrl(file.name);
+        return publicUrl;
+      });
+
+      setGalleryImages(urls);
+    } catch (error) {
+      console.error('Error loading gallery images:', error);
+      toast.error('Failed to load gallery images');
+    } finally {
+      setIsLoadingGallery(false);
+    }
+  }, []);
+
+  const handleOpenGallery = useCallback(() => {
+    setShowImageGallery(true);
+    loadGalleryImages();
+  }, [loadGalleryImages]);
+
+  const handleInsertGalleryImage = useCallback((imageUrl: string) => {
+    editor?.chain().focus().setImage({ src: imageUrl }).run();
+    setShowImageGallery(false);
+    toast.success('Image inserted');
+  }, [editor]);
+
   if (!editor) {
     return null;
   }
@@ -274,7 +316,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           size="sm"
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploadingImage}
-          title="Insert Image"
+          title="Upload Image"
           className="h-8 w-8 p-0"
         >
           {isUploadingImage ? (
@@ -282,6 +324,17 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           ) : (
             <ImageIcon className="h-4 w-4" />
           )}
+        </Button>
+        
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={handleOpenGallery}
+          title="Browse Gallery"
+          className="h-8 w-8 p-0"
+        >
+          <ImageIcon className="h-4 w-4 fill-current" />
         </Button>
         
         <ToolbarButton
@@ -356,6 +409,56 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
               Cancel
             </Button>
             <Button onClick={addLink}>Insert Link</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showImageGallery} onOpenChange={setShowImageGallery}>
+        <DialogContent className="max-w-4xl max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle>Image Gallery</DialogTitle>
+            <DialogDescription>
+              Select a previously uploaded image to insert
+            </DialogDescription>
+          </DialogHeader>
+          <div className="overflow-y-auto max-h-[60vh]">
+            {isLoadingGallery ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : galleryImages.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <ImageIcon className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                <p>No images found in gallery</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-4">
+                {galleryImages.map((imageUrl, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => handleInsertGalleryImage(imageUrl)}
+                    className="group relative aspect-video overflow-hidden rounded-lg border-2 border-border hover:border-primary transition-all"
+                  >
+                    <img
+                      src={imageUrl}
+                      alt={`Gallery image ${index + 1}`}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                      <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity font-medium">
+                        Insert
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowImageGallery(false)}>
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
