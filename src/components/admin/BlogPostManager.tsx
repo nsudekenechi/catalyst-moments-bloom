@@ -38,9 +38,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Search, Edit, Trash2, Loader2 } from 'lucide-react';
+import { Search, Edit, Trash2, Loader2, Eye } from 'lucide-react';
 import { toast } from 'sonner';
+import { BlogPostPreview } from './BlogPostPreview';
 
 interface BlogPost {
   id: string;
@@ -163,6 +165,102 @@ export const BlogPostManager = () => {
 
   const totalPages = Math.ceil(totalCount / pageSize);
 
+  const EditorForm = () => (
+    <div className="space-y-4">
+      <div>
+        <Label>Title</Label>
+        <Input
+          value={editingPost?.title || ''}
+          onChange={(e) =>
+            setEditingPost(editingPost ? { ...editingPost, title: e.target.value } : null)
+          }
+        />
+      </div>
+      <div>
+        <Label>Slug</Label>
+        <Input
+          value={editingPost?.slug || ''}
+          onChange={(e) =>
+            setEditingPost(editingPost ? { ...editingPost, slug: e.target.value } : null)
+          }
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label>Status</Label>
+          <Select
+            value={editingPost?.status}
+            onValueChange={(value) =>
+              setEditingPost(editingPost ? { ...editingPost, status: value } : null)
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="draft">Draft</SelectItem>
+              <SelectItem value="published">Published</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Author</Label>
+          <Input
+            value={editingPost?.author || ''}
+            onChange={(e) =>
+              setEditingPost(editingPost ? { ...editingPost, author: e.target.value } : null)
+            }
+          />
+        </div>
+      </div>
+      <div>
+        <Label>Excerpt</Label>
+        <Textarea
+          value={editingPost?.excerpt || ''}
+          onChange={(e) =>
+            setEditingPost(editingPost ? { ...editingPost, excerpt: e.target.value } : null)
+          }
+          rows={3}
+        />
+      </div>
+      <div>
+        <Label>Content</Label>
+        <Textarea
+          value={editingPost?.content || ''}
+          onChange={(e) =>
+            setEditingPost(editingPost ? { ...editingPost, content: e.target.value } : null)
+          }
+          rows={12}
+        />
+      </div>
+      <div>
+        <Label>Featured Image URL</Label>
+        <Input
+          value={editingPost?.featured_image_url || ''}
+          onChange={(e) =>
+            setEditingPost(editingPost ? { ...editingPost, featured_image_url: e.target.value } : null)
+          }
+        />
+      </div>
+      <div>
+        <Label>Tags (comma-separated)</Label>
+        <Input
+          value={editingPost?.tags?.join(', ') || ''}
+          onChange={(e) =>
+            setEditingPost(
+              editingPost
+                ? {
+                    ...editingPost,
+                    tags: e.target.value.split(',').map((t) => t.trim()),
+                  }
+                : null
+            )
+          }
+        />
+      </div>
+    </div>
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -233,6 +331,14 @@ export const BlogPostManager = () => {
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEdit(post)}
+                          title="Preview & Edit"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleEdit(post)}
@@ -281,117 +387,67 @@ export const BlogPostManager = () => {
         )}
       </CardContent>
 
-      {/* Edit Dialog */}
+      {/* Edit Dialog with Live Preview */}
       <Dialog open={!!editingPost} onOpenChange={() => setEditingPost(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Blog Post</DialogTitle>
+        <DialogContent className="max-w-7xl max-h-[95vh] overflow-hidden p-0">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle>Edit Blog Post with Live Preview</DialogTitle>
             <DialogDescription>
-              Make changes to the blog post below
+              Edit on the left and see changes in real-time on the right
             </DialogDescription>
           </DialogHeader>
 
           {editingPost && (
-            <div className="space-y-4">
-              <div>
-                <Label>Title</Label>
-                <Input
-                  value={editingPost.title}
-                  onChange={(e) =>
-                    setEditingPost({ ...editingPost, title: e.target.value })
-                  }
-                />
-              </div>
+            <Tabs defaultValue="split" className="flex-1 flex flex-col h-[calc(95vh-12rem)]">
+              <TabsList className="mx-6 grid w-auto grid-cols-3">
+                <TabsTrigger value="split">Split View</TabsTrigger>
+                <TabsTrigger value="edit">Edit Only</TabsTrigger>
+                <TabsTrigger value="preview">Preview Only</TabsTrigger>
+              </TabsList>
 
-              <div>
-                <Label>Slug</Label>
-                <Input
-                  value={editingPost.slug}
-                  onChange={(e) =>
-                    setEditingPost({ ...editingPost, slug: e.target.value })
-                  }
-                />
-              </div>
+              <TabsContent value="split" className="flex-1 mt-0 p-6 pt-4 overflow-hidden">
+                <div className="grid grid-cols-2 gap-6 h-full">
+                  <div className="overflow-y-auto pr-4">
+                    <EditorForm />
+                  </div>
+                  <div className="overflow-y-auto pl-4 border-l">
+                    <div className="sticky top-0 bg-background pb-4 mb-4 z-10">
+                      <h3 className="text-sm font-medium text-muted-foreground">Live Preview</h3>
+                    </div>
+                    <BlogPostPreview
+                      title={editingPost.title}
+                      content={editingPost.content}
+                      excerpt={editingPost.excerpt}
+                      author={editingPost.author}
+                      featuredImageUrl={editingPost.featured_image_url}
+                      tags={editingPost.tags}
+                      publishedAt={editingPost.published_at}
+                    />
+                  </div>
+                </div>
+              </TabsContent>
 
-              <div>
-                <Label>Status</Label>
-                <Select
-                  value={editingPost.status}
-                  onValueChange={(value) =>
-                    setEditingPost({ ...editingPost, status: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <TabsContent value="edit" className="flex-1 mt-0 p-6 pt-4 overflow-y-auto">
+                <div className="max-w-3xl mx-auto">
+                  <EditorForm />
+                </div>
+              </TabsContent>
 
-              <div>
-                <Label>Author</Label>
-                <Input
-                  value={editingPost.author}
-                  onChange={(e) =>
-                    setEditingPost({ ...editingPost, author: e.target.value })
-                  }
+              <TabsContent value="preview" className="flex-1 mt-0 p-6 pt-4 overflow-y-auto">
+                <BlogPostPreview
+                  title={editingPost.title}
+                  content={editingPost.content}
+                  excerpt={editingPost.excerpt}
+                  author={editingPost.author}
+                  featuredImageUrl={editingPost.featured_image_url}
+                  tags={editingPost.tags}
+                  publishedAt={editingPost.published_at}
                 />
-              </div>
-
-              <div>
-                <Label>Excerpt</Label>
-                <Textarea
-                  value={editingPost.excerpt}
-                  onChange={(e) =>
-                    setEditingPost({ ...editingPost, excerpt: e.target.value })
-                  }
-                  rows={3}
-                />
-              </div>
-
-              <div>
-                <Label>Content</Label>
-                <Textarea
-                  value={editingPost.content}
-                  onChange={(e) =>
-                    setEditingPost({ ...editingPost, content: e.target.value })
-                  }
-                  rows={10}
-                />
-              </div>
-
-              <div>
-                <Label>Featured Image URL</Label>
-                <Input
-                  value={editingPost.featured_image_url || ''}
-                  onChange={(e) =>
-                    setEditingPost({
-                      ...editingPost,
-                      featured_image_url: e.target.value,
-                    })
-                  }
-                />
-              </div>
-
-              <div>
-                <Label>Tags (comma-separated)</Label>
-                <Input
-                  value={editingPost.tags?.join(', ') || ''}
-                  onChange={(e) =>
-                    setEditingPost({
-                      ...editingPost,
-                      tags: e.target.value.split(',').map((t) => t.trim()),
-                    })
-                  }
-                />
-              </div>
-            </div>
+              </TabsContent>
+            </Tabs>
           )}
 
-          <DialogFooter>
+          <DialogFooter className="p-6 pt-0 border-t">
             <Button
               variant="outline"
               onClick={() => setEditingPost(null)}
