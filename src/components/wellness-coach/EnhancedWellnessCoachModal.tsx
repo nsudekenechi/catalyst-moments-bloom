@@ -44,6 +44,7 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
   const [isInCall, setIsInCall] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<any[]>([]);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [showQuickSuggestions, setShowQuickSuggestions] = useState(true);
   
   const { toast } = useToast();
   const { user, profile } = useAuth();
@@ -132,6 +133,96 @@ I'm here to support you with personalized advice, workouts, nutrition, and just 
     return "I'm here to support your wellness journey with personalized advice, workouts, and nutrition guidance.";
   };
 
+  const getStageSpecificSuggestions = (): string[] => {
+    const stage = profile?.motherhood_stage || '';
+    
+    if (stage.includes('ttc')) {
+      return [
+        "Tips for boosting fertility naturally",
+        "How to track my cycle effectively",
+        "Managing stress while TTC",
+        "Nutrition for conception"
+      ];
+    }
+    
+    if (stage.includes('trimester_1')) {
+      return [
+        "Help with morning sickness",
+        "Safe exercises for first trimester",
+        "What foods to eat/avoid",
+        "Managing fatigue"
+      ];
+    }
+    
+    if (stage.includes('trimester_2')) {
+      return [
+        "Safe workouts for growing belly",
+        "Nutrition for baby's development",
+        "Preparing for third trimester",
+        "Managing back pain"
+      ];
+    }
+    
+    if (stage.includes('trimester_3')) {
+      return [
+        "Birth preparation tips",
+        "Managing swelling and discomfort",
+        "What to pack for hospital",
+        "Safe movements before labor"
+      ];
+    }
+    
+    if (stage.includes('postpartum_0-6')) {
+      return [
+        "Gentle recovery exercises",
+        "Nutrition for healing",
+        "Managing sleep deprivation",
+        "Postpartum mood support"
+      ];
+    }
+    
+    if (stage.includes('postpartum_6-12') || stage.includes('postpartum_3-6m')) {
+      return [
+        "Core recovery tips",
+        "Rebuilding strength safely",
+        "Energy-boosting meals",
+        "When to return to exercise"
+      ];
+    }
+    
+    if (stage.includes('postpartum')) {
+      return [
+        "Postpartum workout routines",
+        "Self-care strategies",
+        "Nutrition while breastfeeding",
+        "Finding time for fitness"
+      ];
+    }
+    
+    if (stage.includes('toddler')) {
+      return [
+        "Quick 10-minute workouts",
+        "Healthy snacks for busy moms",
+        "Staying patient and energized",
+        "Self-care on a tight schedule"
+      ];
+    }
+    
+    return [
+      "Tell me about your wellness goals",
+      "I'm feeling tired, what should I do?",
+      "Can you recommend some stretches?",
+      "Help me with sleep strategies"
+    ];
+  };
+
+  const handleQuickSuggestion = (suggestion: string) => {
+    setInputMessage(suggestion);
+    setShowQuickSuggestions(false);
+    // Auto-send the suggestion
+    setTimeout(() => handleSendMessage(), 100);
+  };
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim() && selectedImages.length === 0) return;
 
@@ -147,6 +238,7 @@ I'm here to support you with personalized advice, workouts, nutrition, and just 
     setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
     setSelectedImages([]);
+    setShowQuickSuggestions(false);
     setIsLoading(true);
 
     try {
@@ -515,6 +607,26 @@ I'm here to support you with personalized advice, workouts, nutrition, and just 
         </ScrollArea>
 
         <div className="p-4 border-t space-y-3">
+          {/* Quick Suggestions */}
+          {showQuickSuggestions && messages.length <= 2 && (
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground font-medium">Quick suggestions:</p>
+              <div className="flex flex-wrap gap-2">
+                {getStageSpecificSuggestions().map((suggestion, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleQuickSuggestion(suggestion)}
+                    className="text-xs h-8 rounded-full"
+                  >
+                    {suggestion}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {selectedImages.length > 0 && (
             <div className="flex space-x-2">
               {selectedImages.map((image, index) => (
