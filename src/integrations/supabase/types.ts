@@ -297,6 +297,87 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_meal_plans: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          duration_days: number
+          id: string
+          is_active: boolean
+          plan_data: Json
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          duration_days?: number
+          id?: string
+          is_active?: boolean
+          plan_data: Json
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          duration_days?: number
+          id?: string
+          is_active?: boolean
+          plan_data?: Json
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      custom_workout_programs: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          difficulty_level: string
+          duration_weeks: number
+          id: string
+          is_active: boolean
+          program_data: Json
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          difficulty_level?: string
+          duration_weeks?: number
+          id?: string
+          is_active?: boolean
+          program_data: Json
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          difficulty_level?: string
+          duration_weeks?: number
+          id?: string
+          is_active?: boolean
+          program_data?: Json
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       food_detection_logs: {
         Row: {
           calories: number | null
