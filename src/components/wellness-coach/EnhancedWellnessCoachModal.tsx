@@ -260,7 +260,7 @@ What would you like help with today?`;
             ...conversationHistory,
             { role: 'user', content: inputMessage }
           ],
-          userProfile: profile
+          userProfile: { ...profile, user_id: user?.id }
         }
       });
 
@@ -280,6 +280,17 @@ What would you like help with today?`;
         { role: 'user', content: inputMessage },
         { role: 'assistant', content: response.data.response }
       ]);
+
+      // Show success toast if plans were created
+      if (response.data.created_plans && response.data.created_plans.length > 0) {
+        response.data.created_plans.forEach((plan: any) => {
+          toast({
+            title: "Plan Created! 🎉",
+            description: `${plan.title} has been saved to your account.`,
+            duration: 5000,
+          });
+        });
+      }
 
       // Convert response to speech if in call mode
       if (isInCall) {
@@ -391,7 +402,7 @@ What would you like help with today?`;
               ...conversationHistory,
               { role: 'user', content: transcribedText }
             ],
-            userProfile: profile
+            userProfile: { ...profile, user_id: user?.id }
           }
         });
 
@@ -411,6 +422,17 @@ What would you like help with today?`;
           { role: 'user', content: transcribedText },
           { role: 'assistant', content: response.data.response }
         ]);
+
+        // Show success toast if plans were created
+        if (response.data.created_plans && response.data.created_plans.length > 0) {
+          response.data.created_plans.forEach((plan: any) => {
+            toast({
+              title: "Plan Created! 🎉",
+              description: `${plan.title} has been saved to your account.`,
+              duration: 5000,
+            });
+          });
+        }
 
         // Convert response to speech
         await playTextAsAudio(response.data.response);

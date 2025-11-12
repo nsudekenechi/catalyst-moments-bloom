@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.4';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,13 +16,20 @@ serve(async (req) => {
     console.log('[WELLNESS_COACH] Received messages:', messages.length, 'Profile:', userProfile?.motherhood_stage);
     
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
+    // Initialize Supabase client with service role key for database operations
+    const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+
     // Get journey context
     const motherhoodStage = userProfile?.motherhood_stage || null;
     const displayName = userProfile?.display_name || 'there';
+    const userId = userProfile?.user_id;
     
     // Build comprehensive system prompt focused on the four pillars
     const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.
@@ -40,10 +48,10 @@ The four pillars of our platform:
 - **Toddler & Beyond**: Energy-boosting strategies, quick workouts, sustainable wellness
 
 ## YOUR COACHING APPROACH
-1. **Funnel users toward solutions**: Don't just answer questions - guide them to specific Catalyst Mom tools, plans, or programs that can help
+1. **Create actionable plans**: When users need meal plans or workout programs, USE YOUR TOOLS to create and save them directly to their account
 2. **Emphasize personalization**: Everything is tailored to their exact stage and individual needs
-3. **Focus on growth**: Remind them that plans and tools evolve as they progress through their journey
-4. **Be action-oriented**: Offer concrete next steps, not just information
+3. **Focus on growth**: Plans and tools evolve as they progress through their journey
+4. **Be action-oriented**: Offer concrete next steps and actually CREATE the plans they need
 
 ## CURRENT USER
 ${motherhoodStage ? `Stage: ${motherhoodStage}` : 'Stage: Unknown - ASK them where they are in their motherhood journey first'}
@@ -51,11 +59,134 @@ Name: ${displayName}
 
 ## CONVERSATION GUIDELINES
 - If stage is unknown, start by asking where they are in their journey to personalize everything
+- When users ask for meal plans or workout programs, CREATE them using your tools immediately
 - Connect all advice to Catalyst Mom's four pillars: nutrition, expert advice, personalized plans, growing tools
 - Keep responses warm but concise (100-150 words) - use emojis sparingly (💚, 💪, 🥗, ✨)
-- Always funnel toward actionable features: "I can create a personalized meal plan for your stage" or "Let me recommend a workout program designed specifically for ${motherhoodStage || 'your journey'}"
-- Prioritize safety: remind pregnant/postpartum users to consult healthcare providers for medical concerns
-- End responses with a clear next step or question to keep the conversation flowing`;
+- After creating a plan, celebrate it: "I've created a personalized [meal plan/workout program] just for you! It's now saved to your account."
+- Prioritize safety: remind pregnant/postpartum users to consult healthcare providers for medical concerns`;
+
+    // Define tools for creating plans
+    const tools = [
+      {
+        type: "function",
+        function: {
+          name: "create_meal_plan",
+          description: "Create and save a personalized meal plan for the user based on their motherhood stage and goals",
+          parameters: {
+            type: "object",
+            properties: {
+              title: {
+                type: "string",
+                description: "Title of the meal plan (e.g., 'First Trimester Energy Boost Meal Plan')"
+              },
+              description: {
+                type: "string",
+                description: "Brief description of the meal plan and its benefits"
+              },
+              duration_days: {
+                type: "number",
+                description: "Number of days the meal plan covers (typically 7 or 14)"
+              },
+              plan_data: {
+                type: "object",
+                description: "The actual meal plan structure with daily meals",
+                properties: {
+                  daily_meals: {
+                    type: "array",
+                    description: "Array of daily meal plans",
+                    items: {
+                      type: "object",
+                      properties: {
+                        day: { type: "number" },
+                        breakfast: { type: "string" },
+                        morning_snack: { type: "string" },
+                        lunch: { type: "string" },
+                        afternoon_snack: { type: "string" },
+                        dinner: { type: "string" },
+                        evening_snack: { type: "string" },
+                        notes: { type: "string" }
+                      }
+                    }
+                  },
+                  nutrition_tips: {
+                    type: "array",
+                    items: { type: "string" }
+                  }
+                }
+              }
+            },
+            required: ["title", "description", "duration_days", "plan_data"]
+          }
+        }
+      },
+      {
+        type: "function",
+        function: {
+          name: "create_workout_program",
+          description: "Create and save a personalized workout program for the user based on their motherhood stage and fitness level",
+          parameters: {
+            type: "object",
+            properties: {
+              title: {
+                type: "string",
+                description: "Title of the workout program (e.g., 'Second Trimester Safe Strength Program')"
+              },
+              description: {
+                type: "string",
+                description: "Brief description of the program and its benefits"
+              },
+              duration_weeks: {
+                type: "number",
+                description: "Number of weeks the program runs (typically 4, 6, or 8)"
+              },
+              difficulty_level: {
+                type: "string",
+                enum: ["beginner", "intermediate", "advanced"],
+                description: "Difficulty level of the program"
+              },
+              program_data: {
+                type: "object",
+                description: "The actual workout program structure",
+                properties: {
+                  weekly_schedule: {
+                    type: "array",
+                    description: "Array of weekly workout schedules",
+                    items: {
+                      type: "object",
+                      properties: {
+                        week: { type: "number" },
+                        focus: { type: "string" },
+                        workouts: {
+                          type: "array",
+                          items: {
+                            type: "object",
+                            properties: {
+                              day: { type: "string" },
+                              workout_name: { type: "string" },
+                              duration_minutes: { type: "number" },
+                              exercises: {
+                                type: "array",
+                                items: { type: "string" }
+                              },
+                              notes: { type: "string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  safety_guidelines: {
+                    type: "array",
+                    items: { type: "string" }
+                  }
+                }
+              }
+            },
+            required: ["title", "description", "duration_weeks", "difficulty_level", "program_data"]
+          }
+        }
+      }
+    ];
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -69,7 +200,8 @@ Name: ${displayName}
           { role: 'system', content: systemPrompt },
           ...messages
         ],
-        temperature: 0.8,
+        tools: tools,
+        tool_choice: "auto"
       }),
     });
 
@@ -80,11 +212,68 @@ Name: ${displayName}
     }
 
     const data = await response.json();
-    const aiResponse = data.choices[0].message.content;
+    const aiMessage = data.choices[0].message;
+    
+    // Handle tool calls if present
+    const toolCalls = aiMessage.tool_calls;
+    const createdPlans: any[] = [];
+    
+    if (toolCalls && toolCalls.length > 0 && userId) {
+      console.log('[WELLNESS_COACH] Processing tool calls:', toolCalls.length);
+      
+      for (const toolCall of toolCalls) {
+        const functionName = toolCall.function.name;
+        const functionArgs = JSON.parse(toolCall.function.arguments);
+        
+        console.log('[WELLNESS_COACH] Tool call:', functionName, functionArgs);
+        
+        if (functionName === 'create_meal_plan') {
+          const { error } = await supabase
+            .from('custom_meal_plans')
+            .insert({
+              user_id: userId,
+              title: functionArgs.title,
+              description: functionArgs.description,
+              duration_days: functionArgs.duration_days,
+              plan_data: functionArgs.plan_data,
+              created_by: 'coach_sarah'
+            });
+          
+          if (error) {
+            console.error('[WELLNESS_COACH] Error creating meal plan:', error);
+          } else {
+            createdPlans.push({ type: 'meal_plan', title: functionArgs.title });
+          }
+        } else if (functionName === 'create_workout_program') {
+          const { error } = await supabase
+            .from('custom_workout_programs')
+            .insert({
+              user_id: userId,
+              title: functionArgs.title,
+              description: functionArgs.description,
+              duration_weeks: functionArgs.duration_weeks,
+              difficulty_level: functionArgs.difficulty_level,
+              program_data: functionArgs.program_data,
+              created_by: 'coach_sarah'
+            });
+          
+          if (error) {
+            console.error('[WELLNESS_COACH] Error creating workout program:', error);
+          } else {
+            createdPlans.push({ type: 'workout_program', title: functionArgs.title });
+          }
+        }
+      }
+    }
+    
+    const aiResponse = aiMessage.content || "I've created your personalized plan!";
     
     console.log('[WELLNESS_COACH] AI response generated successfully');
     
-    return new Response(JSON.stringify({ response: aiResponse }), {
+    return new Response(JSON.stringify({ 
+      response: aiResponse,
+      created_plans: createdPlans 
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
