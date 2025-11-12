@@ -71,23 +71,35 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
     let greeting = '';
     
     if (!profile?.motherhood_stage) {
-      greeting = `Hi ${profile?.display_name || 'there'}! I'm Coach Sarah, your wellness companion at Catalyst Mom 💚
+      greeting = `Hi ${profile?.display_name || 'there'}! 👋 I'm Coach Sarah, your personal wellness guide at Catalyst Mom.
 
-Before we dive in, I'd love to know - where are you in your motherhood journey?
-• Trying to conceive? (How many months?)
-• Pregnant? (Which trimester/weeks?)
-• Postpartum? (How many weeks/months?)
-• Chasing toddlers? (How old?)
+I'm here to provide you with:
+✨ **Nutrition guidance** tailored to your needs
+🎯 **Expert advice** backed by science
+📋 **Personalized plans** that evolve with you
+🌱 **Tools that grow** as you progress
 
-This helps me personalize everything just for you!`;
+To give you the best support, I'd love to know - where are you in your motherhood journey?
+• Trying to conceive?
+• Pregnant? (Which trimester?)
+• Postpartum?
+• Toddler mom?
+
+This helps me create a truly personalized experience for you!`;
     } else {
       // Generate stage-specific quick suggestions
       const stageGreeting = getStageGreeting(profile.motherhood_stage);
-      greeting = `Hi ${profile?.display_name || 'there'}! I'm Coach Sarah from Catalyst Mom 💚
+      greeting = `Hi ${profile?.display_name || 'there'}! 👋 I'm Coach Sarah, your wellness companion.
 
 ${stageGreeting}
 
-I'm here to support you with personalized advice, workouts, nutrition, and just to listen. What brings you here today?`;
+I'm ready to help you with:
+🥗 **Nutrition guidance** for your stage
+💡 **Expert advice** on what matters most
+📋 **Personalized plans** built for you
+🎯 **Smart tools** that adapt as you grow
+
+What would you like help with today?`;
     }
 
     const welcomeMessage: Message = {
@@ -138,81 +150,81 @@ I'm here to support you with personalized advice, workouts, nutrition, and just 
     
     if (stage.includes('ttc')) {
       return [
-        "Tips for boosting fertility naturally",
-        "How to track my cycle effectively",
-        "Managing stress while TTC",
-        "Nutrition for conception"
+        "🥗 Fertility-boosting nutrition plan",
+        "📊 Cycle tracking tips",
+        "💪 TTC-friendly workouts",
+        "🧘 Stress management strategies"
       ];
     }
     
     if (stage.includes('trimester_1')) {
       return [
-        "Help with morning sickness",
-        "Safe exercises for first trimester",
-        "What foods to eat/avoid",
-        "Managing fatigue"
+        "🤢 Managing morning sickness naturally",
+        "🍎 First trimester nutrition guide",
+        "💪 Safe exercises for first trimester",
+        "😴 Combating first trimester fatigue"
       ];
     }
     
     if (stage.includes('trimester_2')) {
       return [
-        "Safe workouts for growing belly",
-        "Nutrition for baby's development",
-        "Preparing for third trimester",
-        "Managing back pain"
+        "🤰 Safe prenatal workouts",
+        "🥗 Nutrition for baby's growth",
+        "💪 Building strength for labor",
+        "🧘 Managing back & hip pain"
       ];
     }
     
     if (stage.includes('trimester_3')) {
       return [
-        "Birth preparation tips",
-        "Managing swelling and discomfort",
-        "What to pack for hospital",
-        "Safe movements before labor"
+        "🎯 Birth prep exercises",
+        "🍎 Third trimester nutrition",
+        "💼 Hospital bag checklist",
+        "😌 Managing swelling & discomfort"
       ];
     }
     
     if (stage.includes('postpartum_0-6')) {
       return [
-        "Gentle recovery exercises",
-        "Nutrition for healing",
-        "Managing sleep deprivation",
-        "Postpartum mood support"
+        "🌸 Gentle postpartum recovery",
+        "🥗 Healing nutrition plan",
+        "😴 Sleep strategies for new moms",
+        "💚 Emotional wellness support"
       ];
     }
     
     if (stage.includes('postpartum_6-12') || stage.includes('postpartum_3-6m')) {
       return [
-        "Core recovery tips",
-        "Rebuilding strength safely",
-        "Energy-boosting meals",
-        "When to return to exercise"
+        "💪 Core recovery program",
+        "🏋️ Rebuilding strength safely",
+        "⚡ Energy-boosting meal plan",
+        "📅 When to return to exercise"
       ];
     }
     
     if (stage.includes('postpartum')) {
       return [
-        "Postpartum workout routines",
-        "Self-care strategies",
-        "Nutrition while breastfeeding",
-        "Finding time for fitness"
+        "🏋️ Postpartum workout plans",
+        "🥗 Breastfeeding nutrition",
+        "💆 Self-care routines",
+        "⏰ Fitness for busy moms"
       ];
     }
     
     if (stage.includes('toddler')) {
       return [
-        "Quick 10-minute workouts",
-        "Healthy snacks for busy moms",
-        "Staying patient and energized",
-        "Self-care on a tight schedule"
+        "⚡ Quick 10-min workouts",
+        "🍎 Healthy meal prep ideas",
+        "🧘 Patience & energy tips",
+        "💆 Self-care on the go"
       ];
     }
     
     return [
-      "Tell me about your wellness goals",
-      "I'm feeling tired, what should I do?",
-      "Can you recommend some stretches?",
-      "Help me with sleep strategies"
+      "🎯 Create my personalized plan",
+      "🥗 Nutrition guidance for me",
+      "💪 Workout recommendations",
+      "💡 Expert advice for my goals"
     ];
   };
 
