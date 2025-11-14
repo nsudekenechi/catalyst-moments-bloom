@@ -69,15 +69,16 @@ const EnhancedWellnessCoachModal = ({ isOpen, onClose }: EnhancedWellnessCoachMo
 
   const startPersonalizedConversation = async () => {
     let greeting = '';
+    const displayName = profile?.display_name || 'there';
     
     if (!profile?.motherhood_stage) {
-      greeting = `Hi ${profile?.display_name || 'there'}! 👋 I'm Coach Sarah, your personal wellness guide at Catalyst Mom.
+      greeting = `Hi ${displayName}! 👋 I'm Coach Sarah, your personal wellness guide at Catalyst Mom.
 
 I'm here to provide you with:
-✨ **Nutrition guidance** tailored to your needs
-🎯 **Expert advice** backed by science
-📋 **Personalized plans** that evolve with you
-🌱 **Tools that grow** as you progress
+✨ Nutrition guidance tailored to your needs
+🎯 Expert advice backed by science
+📋 Personalized plans that evolve with you
+🌱 Tools that grow as you progress
 
 To give you the best support, I'd love to know - where are you in your motherhood journey?
 • Trying to conceive?
@@ -87,17 +88,16 @@ To give you the best support, I'd love to know - where are you in your motherhoo
 
 This helps me create a truly personalized experience for you!`;
     } else {
-      // Generate stage-specific quick suggestions
       const stageGreeting = getStageGreeting(profile.motherhood_stage);
-      greeting = `Hi ${profile?.display_name || 'there'}! 👋 I'm Coach Sarah, your wellness companion.
+      greeting = `Hi ${displayName}! 👋 I'm Coach Sarah, your wellness companion.
 
 ${stageGreeting}
 
 I'm ready to help you with:
-🥗 **Nutrition guidance** for your stage
-💡 **Expert advice** on what matters most
-📋 **Personalized plans** built for you
-🎯 **Smart tools** that adapt as you grow
+🥗 Nutrition guidance for your stage
+💡 Expert advice on what matters most
+📋 Personalized plans built just for you
+🎯 Smart tools that adapt as you grow
 
 What would you like help with today?`;
     }
