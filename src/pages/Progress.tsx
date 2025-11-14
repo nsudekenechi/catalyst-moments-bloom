@@ -14,10 +14,15 @@ import {
   Target,
   Crown,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Share2,
+  Trophy
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AchievementBadge } from '@/components/social/AchievementBadge';
+import { ProgressCard } from '@/components/social/ProgressCard';
+import { ShareModal } from '@/components/social/ShareModal';
 
 interface CheckIn {
   id: string;
@@ -42,6 +47,9 @@ const Progress = () => {
     weightChange: 0,
     measurementChanges: {} as Record<string, number>
   });
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [shareContent, setShareContent] = useState<'achievement' | 'progress'>('progress');
+  const [selectedAchievement, setSelectedAchievement] = useState<any>(null);
 
   useEffect(() => {
     if (user) {
@@ -134,6 +142,60 @@ const Progress = () => {
   };
 
   const { currentMilestone, progress: milestoneProgress } = getMilestoneProgress();
+
+  const achievements = [
+    {
+      id: 'first-month',
+      title: 'First Month Complete',
+      description: 'Completed 4 weekly check-ins',
+      icon: 'trophy',
+      unlocked: stats.totalCheckIns >= 4,
+      date: stats.totalCheckIns >= 4 ? format(new Date(), 'MMM d, yyyy') : undefined,
+    },
+    {
+      id: 'consistency-star',
+      title: 'Consistency Star',
+      description: 'Maintained 12 weeks of progress',
+      icon: 'star',
+      unlocked: stats.totalCheckIns >= 12,
+      date: stats.totalCheckIns >= 12 ? format(new Date(), 'MMM d, yyyy') : undefined,
+    },
+    {
+      id: 'transformation-warrior',
+      title: 'Transformation Warrior',
+      description: 'Lost 5+ pounds',
+      icon: 'flame',
+      unlocked: stats.weightChange <= -5,
+      date: stats.weightChange <= -5 ? format(new Date(), 'MMM d, yyyy') : undefined,
+    },
+    {
+      id: 'measurement-champion',
+      title: 'Measurement Champion',
+      description: 'Lost 5+ total inches',
+      icon: 'target',
+      unlocked: Object.values(stats.measurementChanges).reduce((sum, val) => sum + Math.abs(val || 0), 0) >= 5,
+      date: Object.values(stats.measurementChanges).reduce((sum, val) => sum + Math.abs(val || 0), 0) >= 5 ? format(new Date(), 'MMM d, yyyy') : undefined,
+    },
+    {
+      id: 'six-month-champion',
+      title: 'Six Month Champion',
+      description: '24 weeks of dedication',
+      icon: 'crown',
+      unlocked: stats.totalCheckIns >= 24,
+      date: stats.totalCheckIns >= 24 ? format(new Date(), 'MMM d, yyyy') : undefined,
+    },
+  ];
+
+  const handleShareAchievement = (achievement: any) => {
+    setSelectedAchievement(achievement);
+    setShareContent('achievement');
+    setShareModalOpen(true);
+  };
+
+  const handleShareProgress = () => {
+    setShareContent('progress');
+    setShareModalOpen(true);
+  };
 
   if (loading) {
     return (
@@ -229,6 +291,84 @@ const Progress = () => {
                 </CardHeader>
               </Card>
             </div>
+
+            {/* Share Progress CTA */}
+            <Card className="mb-8 border-2 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="flex-1 text-center md:text-left">
+                    <h3 className="text-xl font-bold mb-2 flex items-center justify-center md:justify-start gap-2">
+                      <Share2 className="h-5 w-5 text-primary" />
+                      Share Your Transformation
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Inspire others and earn referral rewards by sharing your progress on social media!
+                    </p>
+                  </div>
+                  <Button onClick={handleShareProgress} size="lg" className="gap-2">
+                    <Share2 className="h-4 w-4" />
+                    Share Progress
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Achievements Section */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-primary" />
+                  Your Achievements
+                </CardTitle>
+                <CardDescription>
+                  Share your milestones and inspire the community
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {achievements.map((achievement) => (
+                    <Card 
+                      key={achievement.id}
+                      className={`transition-all ${
+                        achievement.unlocked 
+                          ? 'bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/30 shadow-md' 
+                          : 'bg-muted/50 opacity-60'
+                      }`}
+                    >
+                      <CardContent className="p-4 text-center">
+                        <div className={`text-4xl mb-3 ${achievement.unlocked ? 'animate-pulse-soft' : 'grayscale'}`}>
+                          {achievement.icon === 'trophy' && <Trophy className="w-12 h-12 mx-auto text-primary" />}
+                          {achievement.icon === 'star' && <Sparkles className="w-12 h-12 mx-auto text-primary" />}
+                          {achievement.icon === 'flame' && '🔥'}
+                          {achievement.icon === 'target' && <Target className="w-12 h-12 mx-auto text-primary" />}
+                          {achievement.icon === 'crown' && <Crown className="w-12 h-12 mx-auto text-primary" />}
+                        </div>
+                        <h4 className="font-semibold mb-1">{achievement.title}</h4>
+                        <p className="text-xs text-muted-foreground mb-3">
+                          {achievement.description}
+                        </p>
+                        {achievement.unlocked ? (
+                          <>
+                            <Badge variant="secondary" className="mb-2">Unlocked!</Badge>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="w-full gap-2"
+                              onClick={() => handleShareAchievement(achievement)}
+                            >
+                              <Share2 className="w-3 h-3" />
+                              Share
+                            </Button>
+                          </>
+                        ) : (
+                          <Badge variant="outline">Locked</Badge>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Milestone Progress */}
             <Card className="mb-8 border-2 bg-gradient-to-r from-primary/5 via-secondary/5 to-accent/5">
@@ -388,6 +528,45 @@ const Progress = () => {
             </Card>
           </>
         )}
+
+        {/* Share Modal */}
+        <ShareModal
+          open={shareModalOpen}
+          onOpenChange={setShareModalOpen}
+          content={
+            shareContent === 'achievement' && selectedAchievement ? (
+              <AchievementBadge 
+                achievement={selectedAchievement}
+                size="md"
+                showBranding={true}
+              />
+            ) : (
+              <ProgressCard
+                stats={{
+                  totalCheckIns: stats.totalCheckIns,
+                  daysActive: stats.daysActive,
+                  weightChange: stats.weightChange,
+                  measurementChanges: stats.measurementChanges,
+                  startDate: checkIns.length > 0 ? checkIns[0].week_date : undefined,
+                  currentStreak: Math.floor(stats.daysActive / 7),
+                }}
+                userName={profile?.display_name || 'Catalyst Mom Member'}
+                size="md"
+                showBranding={true}
+              />
+            )
+          }
+          shareText={
+            shareContent === 'achievement' && selectedAchievement
+              ? `🎉 I just earned the "${selectedAchievement.title}" achievement on my fitness journey with Catalyst Mom! Join me! 💪`
+              : `🔥 ${stats.daysActive} days into my transformation with Catalyst Mom! ${stats.weightChange < 0 ? `Lost ${Math.abs(stats.weightChange).toFixed(1)} lbs` : ''} and feeling stronger every day! 💪✨`
+          }
+          fileName={
+            shareContent === 'achievement' 
+              ? `catalyst-mom-${selectedAchievement?.id}` 
+              : 'catalyst-mom-progress'
+          }
+        />
       </div>
     </PageLayout>
   );
