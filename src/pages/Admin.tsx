@@ -10,9 +10,10 @@ import { AnalyticsSection } from '@/components/admin/AnalyticsSection';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Award, Users, BarChart3, DollarSign, TrendingUp, Sparkles } from 'lucide-react';
+import { Shield, Award, Users, BarChart3, DollarSign, TrendingUp, Sparkles, CreditCard } from 'lucide-react';
 import { BlogPostGenerator } from '@/components/admin/BlogPostGenerator';
 import { BlogPostManager } from '@/components/admin/BlogPostManager';
+import { SubscriptionSection } from '@/components/admin/SubscriptionSection';
 
 const Admin = () => {
   return (
@@ -30,10 +31,14 @@ const Admin = () => {
           </div>
 
           <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6">
+            <TabsList className="grid w-full grid-cols-7">
               <TabsTrigger value="overview" className="flex items-center gap-2">
                 <Shield className="h-4 w-4" />
                 Overview
+              </TabsTrigger>
+              <TabsTrigger value="subscriptions" className="flex items-center gap-2">
+                <CreditCard className="h-4 w-4" />
+                Subscriptions
               </TabsTrigger>
               <TabsTrigger value="users" className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
@@ -59,6 +64,10 @@ const Admin = () => {
 
             <TabsContent value="overview">
               <OverviewSection />
+            </TabsContent>
+
+            <TabsContent value="subscriptions">
+              <SubscriptionSection />
             </TabsContent>
 
             <TabsContent value="users" className="space-y-6">
