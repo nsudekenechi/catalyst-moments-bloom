@@ -44,21 +44,24 @@ const SubscriptionGuard = ({ children, fallback }: SubscriptionGuardProps) => {
   if (!subscribed) {
     console.log('[SUBSCRIPTION_GUARD] Not subscribed, showing modal:', showModal);
     
+    const isPublicRoute = publicRoutes.includes(location.pathname);
+    
+    // If on public route, show content normally
+    if (isPublicRoute) {
+      return <>{children}</>;
+    }
+    
+    // If on protected route, show fallback or modal only (no content access)
     if (fallback) {
       return <>{fallback}</>;
     }
     
-    // Show the subscription modal when accessing protected features
+    // Show only the subscription modal for protected routes
     return (
-      <>
-        {children}
-        {showModal && (
-          <CheckoutModal 
-            isOpen={true} 
-            onClose={() => setShowModal(false)} 
-          />
-        )}
-      </>
+      <CheckoutModal 
+        isOpen={true} 
+        onClose={() => window.location.href = '/'} 
+      />
     );
   }
   
