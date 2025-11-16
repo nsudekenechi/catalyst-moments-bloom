@@ -22,6 +22,7 @@ import { Loader2, Sparkles, Award, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const GoogleAuthOnboarding = () => {
   const { user, profile, updateProfile } = useAuth();
@@ -137,175 +138,189 @@ export const GoogleAuthOnboarding = () => {
       setOpen(isOpen);
     }}>
       <DialogContent 
-        className="sm:max-w-md" 
+        className="sm:max-w-md overflow-hidden" 
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
-        {showIntro ? (
-          <>
-            <DialogHeader>
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-6 h-6 text-primary" />
-                <DialogTitle className="text-2xl">Welcome to Catalyst Mom! 🎉</DialogTitle>
-              </div>
-              <DialogDescription>
-                Your personalized wellness journey starts here
-              </DialogDescription>
-            </DialogHeader>
+        <AnimatePresence mode="wait">
+          {showIntro ? (
+            <motion.div
+              key="intro"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <DialogHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                  <DialogTitle className="text-2xl">Welcome to Catalyst Mom! 🎉</DialogTitle>
+                </div>
+                <DialogDescription>
+                  Your personalized wellness journey starts here
+                </DialogDescription>
+              </DialogHeader>
 
-            <div className="space-y-4 py-4">
-              <div className="grid gap-3">
-                <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
-                  <Sparkles className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-semibold text-sm mb-1">Journey-Tailored Content</h3>
-                    <p className="text-xs text-muted-foreground">
-                      Workouts, nutrition, and wellness tips customized to your current stage
-                    </p>
+              <div className="space-y-4 py-4">
+                <div className="grid gap-3">
+                  <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
+                    <Sparkles className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-sm mb-1">Journey-Tailored Content</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Workouts, nutrition, and wellness tips customized to your current stage
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
+                    <Award className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-sm mb-1">Expert Guidance</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Access certified trainers and nutritionists who understand your journey
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
+                    <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-sm mb-1">Supportive Community</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Connect with moms at the same stage and grow together
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
-                  <Award className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-semibold text-sm mb-1">Expert Guidance</h3>
-                    <p className="text-xs text-muted-foreground">
-                      Access certified trainers and nutritionists who understand your journey
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
-                  <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-semibold text-sm mb-1">Supportive Community</h3>
-                    <p className="text-xs text-muted-foreground">
-                      Connect with moms at the same stage and grow together
-                    </p>
-                  </div>
+                <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-3 rounded-lg border border-primary/20">
+                  <p className="text-xs font-medium text-center">
+                    🎁 Complete your profile and earn <span className="font-bold text-primary">100 bonus points</span>!
+                  </p>
                 </div>
               </div>
 
-              <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-3 rounded-lg border border-primary/20">
-                <p className="text-xs font-medium text-center">
-                  🎁 Complete your profile and earn <span className="font-bold text-primary">100 bonus points</span>!
-                </p>
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate('/dashboard');
+                  }}
+                  className="flex-1"
+                >
+                  Skip for Now
+                </Button>
+                <Button
+                  onClick={() => setShowIntro(false)}
+                  className="flex-1"
+                >
+                  Get Started
+                </Button>
               </div>
-            </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="form"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <DialogHeader>
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                  <DialogTitle className="text-2xl">Complete Your Profile</DialogTitle>
+                </div>
+                <DialogDescription>
+                  Let's personalize your experience. Complete your profile to earn bonus points!
+                </DialogDescription>
+              </DialogHeader>
 
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setOpen(false);
-                  navigate('/dashboard');
-                }}
-                className="flex-1"
-              >
-                Skip for Now
-              </Button>
-              <Button
-                onClick={() => setShowIntro(false)}
-                className="flex-1"
-              >
-                Get Started
-              </Button>
-            </div>
-          </>
-        ) : (
-          <>
-            <DialogHeader>
-              <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-6 h-6 text-primary" />
-                <DialogTitle className="text-2xl">Complete Your Profile</DialogTitle>
-              </div>
-              <DialogDescription>
-                Let's personalize your experience. Complete your profile to earn bonus points!
-              </DialogDescription>
-            </DialogHeader>
-
-        {/* Progress Indicator */}
-        <div className="space-y-2 mb-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground font-medium">Profile Completion</span>
-            <div className="flex items-center gap-2">
-              <Award className="w-4 h-4 text-primary" />
-              <span className="font-bold text-primary">{Math.round(currentFormCompletion())}%</span>
-            </div>
-          </div>
-          <Progress value={currentFormCompletion()} className="h-2" />
-          <p className="text-xs text-muted-foreground">
-            Complete your profile to earn <strong className="text-primary">100 bonus points!</strong>
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="displayName" className="flex items-center gap-2">
-              Display Name *
-              {displayName.trim() && <CheckCircle2 className="w-4 h-4 text-green-500" />}
-            </Label>
-            <Input
-              id="displayName"
-              placeholder="How should we call you?"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="motherhoodStage" className="flex items-center gap-2">
-              Motherhood Journey *
-              {motherhoodStage && motherhoodStage !== 'none' && <CheckCircle2 className="w-4 h-4 text-green-500" />}
-            </Label>
-            <Select onValueChange={(value) => setMotherhoodStage(value as MotherhoodStage)} required>
-              <SelectTrigger id="motherhoodStage">
-                <SelectValue placeholder="Select your current stage" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ttc">Trying to Conceive</SelectItem>
-                <SelectItem value="pregnant">Pregnant</SelectItem>
-                <SelectItem value="postpartum">Postpartum (0-12 months)</SelectItem>
-                <SelectItem value="toddler">Toddler Mom</SelectItem>
-                <SelectItem value="none">Prefer not to say</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 rounded-lg p-4">
-            <div className="flex items-start gap-3">
-              <Award className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-medium mb-1">Earn Rewards!</p>
+              {/* Progress Indicator */}
+              <div className="space-y-2 mb-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground font-medium">Profile Completion</span>
+                  <div className="flex items-center gap-2">
+                    <Award className="w-4 h-4 text-primary" />
+                    <span className="font-bold text-primary">{Math.round(currentFormCompletion())}%</span>
+                  </div>
+                </div>
+                <Progress value={currentFormCompletion()} className="h-2" />
                 <p className="text-xs text-muted-foreground">
-                  Complete your profile to unlock <strong className="text-primary">100 bonus points</strong> and 
-                  personalized fitness plans, nutrition guidance, and community recommendations.
+                  Complete your profile to earn <strong className="text-primary">100 bonus points!</strong>
                 </p>
               </div>
-            </div>
-          </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={loading || !displayName.trim() || !motherhoodStage || motherhoodStage === 'none'}
-          >
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Setting up...
-              </>
-            ) : (
-              <>
-                {currentFormCompletion() === 100 && <Award className="mr-2 h-4 w-4" />}
-                Complete Setup {currentFormCompletion() === 100 && '& Earn 100 Points!'}
-              </>
-            )}
-          </Button>
-        </form>
-          </>
-        )}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="displayName" className="flex items-center gap-2">
+                    Display Name *
+                    {displayName.trim() && <CheckCircle2 className="w-4 h-4 text-green-500" />}
+                  </Label>
+                  <Input
+                    id="displayName"
+                    placeholder="How should we call you?"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="motherhoodStage" className="flex items-center gap-2">
+                    Motherhood Journey *
+                    {motherhoodStage && motherhoodStage !== 'none' && <CheckCircle2 className="w-4 h-4 text-green-500" />}
+                  </Label>
+                  <Select onValueChange={(value) => setMotherhoodStage(value as MotherhoodStage)} required>
+                    <SelectTrigger id="motherhoodStage">
+                      <SelectValue placeholder="Select your current stage" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ttc">Trying to Conceive</SelectItem>
+                      <SelectItem value="pregnant">Pregnant</SelectItem>
+                      <SelectItem value="postpartum">Postpartum (0-12 months)</SelectItem>
+                      <SelectItem value="toddler">Toddler Mom</SelectItem>
+                      <SelectItem value="none">Prefer not to say</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <Award className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium mb-1">Earn Rewards!</p>
+                      <p className="text-xs text-muted-foreground">
+                        Complete your profile to unlock <strong className="text-primary">100 bonus points</strong> and 
+                        personalized fitness plans, nutrition guidance, and community recommendations.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={loading || !displayName.trim() || !motherhoodStage || motherhoodStage === 'none'}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Setting up...
+                    </>
+                  ) : (
+                    <>
+                      {currentFormCompletion() === 100 && <Award className="mr-2 h-4 w-4" />}
+                      Complete Setup {currentFormCompletion() === 100 && '& Earn 100 Points!'}
+                    </>
+                  )}
+                </Button>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </DialogContent>
     </Dialog>
   );
