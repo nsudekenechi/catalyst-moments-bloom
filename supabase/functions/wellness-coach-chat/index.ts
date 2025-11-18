@@ -44,6 +44,22 @@ serve(async (req) => {
       }
     }
 
+    // Fetch recent weekly check-ins
+    let checkInData = null;
+    if (userId) {
+      const { data } = await supabase
+        .from('weekly_checkins')
+        .select('*')
+        .eq('user_id', userId)
+        .order('week_date', { ascending: false })
+        .limit(4);
+      
+      if (data && data.length > 0) {
+        checkInData = data;
+        console.log('[WELLNESS_COACH] Found', data.length, 'check-ins for user');
+      }
+    }
+
     // Get journey context
     const motherhoodStage = userProfile?.motherhood_stage || null;
     const displayName = userProfile?.display_name || 'there';
@@ -79,9 +95,83 @@ When providing advice, reference their specific assessment results and focus on 
 - "Since your primary goal is ${assessmentData.primary_goal}, I recommend..."
 - "Given your ${assessmentData.activity_level} activity level and ${assessmentData.equipment} equipment availability..."`;
     }
+
+    // Build check-in context if available
+    let checkInContext = '';
+    if (checkInData && checkInData.length > 0) {
+      const latestCheckIn = checkInData[0];
+      let focusAreaProgress = '';
+      
+      try {
+        const notes = JSON.parse(latestCheckIn.notes || '{}');
+        if (notes.categoryProgress) {
+          const progressEntries = Object.entries(notes.categoryProgress)
+            .map(([category, score]) => `${category}: ${score}/10`)
+            .join(', ');
+          focusAreaProgress = `\n- Latest Focus Area Progress: ${progressEntries}`;
+        }
+      } catch (e) {
+        console.error('Error parsing check-in notes:', e);
+      }
+
+      const measurements = [];
+      if (latestCheckIn.weight) measurements.push(`Weight: ${latestCheckIn.weight}`);
+      if (latestCheckIn.waist_measurement) measurements.push(`Waist: ${latestCheckIn.waist_measurement}`);
+      
+      checkInContext = `
+
+## RECENT CHECK-IN DATA
+- Latest Check-In: ${new Date(latestCheckIn.week_date).toLocaleDateString()}${focusAreaProgress}
+- Measurements: ${measurements.length > 0 ? measurements.join(', ') : 'not recorded'}
+- Total Check-Ins: ${checkInData.length}
+- Description: ${latestCheckIn.description || 'not provided'}
+`;
+
+      // Add trend analysis if multiple check-ins
+      if (checkInData.length > 1) {
+        const trends = [];
+        const firstCheckIn = checkInData[checkInData.length - 1];
+        
+        if (latestCheckIn.weight && firstCheckIn.weight) {
+          const weightChange = Number(latestCheckIn.weight) - Number(firstCheckIn.weight);
+          trends.push(`Weight ${weightChange > 0 ? 'increased' : 'decreased'} by ${Math.abs(weightChange).toFixed(1)} units`);
+        }
+
+        try {
+          const latestNotes = JSON.parse(latestCheckIn.notes || '{}');
+          const firstNotes = JSON.parse(firstCheckIn.notes || '{}');
+          
+          if (latestNotes.categoryProgress && firstNotes.categoryProgress) {
+            const improvements = [];
+            for (const [category, latestScore] of Object.entries(latestNotes.categoryProgress)) {
+              const firstScore = firstNotes.categoryProgress[category];
+              if (firstScore && Number(latestScore) > Number(firstScore)) {
+                improvements.push(`${category} improved from ${firstScore}/10 to ${latestScore}/10`);
+              }
+            }
+            if (improvements.length > 0) {
+              trends.push(`Progress: ${improvements.join(', ')}`);
+            }
+          }
+        } catch (e) {
+          console.error('Error analyzing trends:', e);
+        }
+
+        if (trends.length > 0) {
+          checkInContext += `- Trends: ${trends.join('; ')}\n`;
+        }
+      }
+
+      checkInContext += `
+Use check-in data to provide targeted advice:
+- Reference their specific focus area progress when relevant
+- Celebrate improvements in their tracked categories
+- Provide actionable tips for areas showing slower progress
+- Connect their measurements to their wellness goals`;
+    }
     
     // Build comprehensive system prompt focused on the four pillars and conversion
-    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.${assessmentContext}
+    const systemPrompt = `You are Coach Sarah, an expert wellness coach for Catalyst Mom - providing nutrition guidance, expert advice, personalized plans, and tools that grow with women through every stage of motherhood.${assessmentContext}${checkInContext}
 
 ## CATALYST MOM CORE OFFERING
 The four pillars of our platform:
