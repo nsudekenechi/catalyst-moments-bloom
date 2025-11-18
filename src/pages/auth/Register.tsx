@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 const Register = () => {
   const navigate = useNavigate();
   const { register, isLoading } = useAuth();
+  const [searchParams] = useSearchParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +22,21 @@ const Register = () => {
   const [motherhoodStage, setMotherhoodStage] = useState<MotherhoodStage>("none");
   const [error, setError] = useState("");
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [referralCode, setReferralCode] = useState<string | null>(null);
+
+  // Read URL parameters on mount
+  useEffect(() => {
+    const emailParam = searchParams.get('email');
+    const refParam = searchParams.get('ref');
+    
+    if (emailParam) {
+      setEmail(emailParam);
+    }
+    
+    if (refParam) {
+      setReferralCode(refParam);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +48,7 @@ const Register = () => {
     }
     
     try {
-      await register(name, email, password, motherhoodStage);
+      await register(name, email, password, motherhoodStage, referralCode);
       navigate("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to register");
@@ -48,10 +64,15 @@ const Register = () => {
     setError("");
     
     try {
+      // Include referral code in redirect URL if present
+      const redirectUrl = referralCode 
+        ? `${window.location.origin}/?ref=${referralCode}`
+        : `${window.location.origin}/`;
+        
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: redirectUrl,
         },
       });
       
