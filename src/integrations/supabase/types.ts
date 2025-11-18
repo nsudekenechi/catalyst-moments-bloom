@@ -668,6 +668,8 @@ export type Database = {
           display_name: string | null
           id: string
           motherhood_stage: string | null
+          referral_code: string | null
+          referred_by_code: string | null
           updated_at: string
           user_id: string
         }
@@ -678,6 +680,8 @@ export type Database = {
           display_name?: string | null
           id?: string
           motherhood_stage?: string | null
+          referral_code?: string | null
+          referred_by_code?: string | null
           updated_at?: string
           user_id: string
         }
@@ -688,6 +692,8 @@ export type Database = {
           display_name?: string | null
           id?: string
           motherhood_stage?: string | null
+          referral_code?: string | null
+          referred_by_code?: string | null
           updated_at?: string
           user_id?: string
         }

@@ -27,7 +27,7 @@ interface AuthContextType {
   showCheckoutModal: boolean;
   setShowCheckoutModal: (show: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string, stage: MotherhoodStage) => Promise<void>;
+  register: (name: string, email: string, password: string, stage: MotherhoodStage, referralCode?: string | null) => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (data: { display_name?: string; motherhood_stage?: string; bio?: string }) => Promise<void>;
   checkSubscription: () => Promise<void>;
@@ -86,6 +86,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             user_id: u.id,
             display_name: (u.user_metadata as any)?.full_name ?? null,
             motherhood_stage: (u.user_metadata as any)?.motherhood_stage ?? 'none',
+            referred_by_code: (u.user_metadata as any)?.referral_code ?? null,
           })
           .select('*')
           .single();
@@ -182,7 +183,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (name: string, email: string, password: string, stage: MotherhoodStage) => {
+  const register = async (name: string, email: string, password: string, stage: MotherhoodStage, referralCode?: string | null) => {
     setIsLoading(true);
     
     try {
@@ -196,7 +197,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           data: {
             name: name,
             full_name: name,
-            motherhood_stage: stage
+            motherhood_stage: stage,
+            ...(referralCode && { referral_code: referralCode })
           }
         }
       });
