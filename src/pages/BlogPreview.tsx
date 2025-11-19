@@ -4,8 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { ArrowLeft, Eye, FileEdit, Trash2 } from 'lucide-react';
+import { ArrowLeft, Eye, FileEdit, Trash2, Save, X } from 'lucide-react';
 import PageLayout from '@/components/layout/PageLayout';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -30,6 +32,9 @@ export default function BlogPreview() {
   const [blog, setBlog] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [publishing, setPublishing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedBlog, setEditedBlog] = useState<BlogPost | null>(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (blogId) {
@@ -47,12 +52,41 @@ export default function BlogPreview() {
 
       if (error) throw error;
       setBlog(data);
+      setEditedBlog(data);
     } catch (error) {
       console.error('Error fetching blog:', error);
       toast.error('Failed to load blog post');
       navigate('/admin');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSaveEdits = async () => {
+    if (!editedBlog) return;
+    
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('blogs')
+        .update({
+          title: editedBlog.title,
+          content: editedBlog.content,
+          excerpt: editedBlog.excerpt,
+          tags: editedBlog.tags
+        })
+        .eq('id', editedBlog.id);
+
+      if (error) throw error;
+
+      setBlog(editedBlog);
+      setIsEditing(false);
+      toast.success('Changes saved successfully!');
+    } catch (error) {
+      console.error('Error saving changes:', error);
+      toast.error('Failed to save changes');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -137,16 +171,38 @@ export default function BlogPreview() {
           </Button>
           
           <div className="flex gap-2">
-            {blog.status === 'draft' && (
-              <Button onClick={handlePublish} disabled={publishing}>
-                <Eye className="mr-2 h-4 w-4" />
-                {publishing ? 'Publishing...' : 'Publish'}
-              </Button>
+            {isEditing ? (
+              <>
+                <Button onClick={handleSaveEdits} disabled={saving}>
+                  <Save className="mr-2 h-4 w-4" />
+                  {saving ? 'Saving...' : 'Save'}
+                </Button>
+                <Button variant="outline" onClick={() => {
+                  setIsEditing(false);
+                  setEditedBlog(blog);
+                }}>
+                  <X className="mr-2 h-4 w-4" />
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" onClick={() => setIsEditing(true)}>
+                  <FileEdit className="mr-2 h-4 w-4" />
+                  Edit
+                </Button>
+                {blog.status === 'draft' && (
+                  <Button onClick={handlePublish} disabled={publishing}>
+                    <Eye className="mr-2 h-4 w-4" />
+                    {publishing ? 'Publishing...' : 'Publish'}
+                  </Button>
+                )}
+                <Button variant="outline" onClick={handleDelete}>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete
+                </Button>
+              </>
             )}
-            <Button variant="outline" onClick={handleDelete}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
-            </Button>
           </div>
         </div>
 
@@ -155,10 +211,27 @@ export default function BlogPreview() {
           <CardHeader>
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <CardTitle className="text-3xl mb-2">{blog.title}</CardTitle>
-                <CardDescription className="text-base">
-                  {blog.excerpt}
-                </CardDescription>
+                {isEditing ? (
+                  <Input
+                    value={editedBlog?.title || ''}
+                    onChange={(e) => setEditedBlog(prev => prev ? {...prev, title: e.target.value} : null)}
+                    className="text-3xl font-bold mb-2"
+                  />
+                ) : (
+                  <CardTitle className="text-3xl mb-2">{blog.title}</CardTitle>
+                )}
+                {isEditing ? (
+                  <Textarea
+                    value={editedBlog?.excerpt || ''}
+                    onChange={(e) => setEditedBlog(prev => prev ? {...prev, excerpt: e.target.value} : null)}
+                    className="text-base"
+                    rows={2}
+                  />
+                ) : (
+                  <CardDescription className="text-base">
+                    {blog.excerpt}
+                  </CardDescription>
+                )}
               </div>
               <Badge variant={blog.status === 'published' ? 'default' : 'secondary'}>
                 {blog.status}
@@ -179,14 +252,24 @@ export default function BlogPreview() {
             </div>
 
             {/* Tags */}
-            {blog.tags && blog.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 pt-4">
-                {blog.tags.map((tag, index) => (
-                  <Badge key={index} variant="outline">
-                    {tag}
-                  </Badge>
-                ))}
+            {isEditing ? (
+              <div className="pt-4">
+                <Input
+                  value={editedBlog?.tags?.join(', ') || ''}
+                  onChange={(e) => setEditedBlog(prev => prev ? {...prev, tags: e.target.value.split(',').map(t => t.trim())} : null)}
+                  placeholder="Tags (comma-separated)"
+                />
               </div>
+            ) : (
+              blog.tags && blog.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 pt-4">
+                  {blog.tags.map((tag, index) => (
+                    <Badge key={index} variant="outline">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )
             )}
           </CardHeader>
 
@@ -203,20 +286,29 @@ export default function BlogPreview() {
             )}
 
             {/* HTML Content Rendering */}
-            <div 
-              className="prose prose-lg max-w-none dark:prose-invert
-                prose-headings:font-bold prose-headings:text-foreground
-                prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
-                prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
-                prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-4
-                prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
-                prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
-                prose-li:text-muted-foreground prose-li:mb-2
-                prose-strong:text-foreground prose-strong:font-semibold
-                prose-img:rounded-lg prose-img:shadow-md"
-              dangerouslySetInnerHTML={{ __html: blog.content }}
-            />
+            {isEditing ? (
+              <Textarea
+                value={editedBlog?.content || ''}
+                onChange={(e) => setEditedBlog(prev => prev ? {...prev, content: e.target.value} : null)}
+                className="min-h-[400px] font-mono text-sm"
+                placeholder="HTML content..."
+              />
+            ) : (
+              <div 
+                className="prose prose-lg max-w-none dark:prose-invert
+                  prose-headings:font-bold prose-headings:text-foreground
+                  prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
+                  prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
+                  prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-4
+                  prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                  prose-ul:my-4 prose-ul:list-disc prose-ul:pl-6
+                  prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
+                  prose-li:text-muted-foreground prose-li:mb-2
+                  prose-strong:text-foreground prose-strong:font-semibold
+                  prose-img:rounded-lg prose-img:shadow-md"
+                dangerouslySetInnerHTML={{ __html: blog.content }}
+              />
+            )}
           </CardContent>
         </Card>
       </div>
