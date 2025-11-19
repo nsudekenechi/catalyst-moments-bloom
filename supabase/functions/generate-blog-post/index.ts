@@ -135,7 +135,6 @@ Format the response as JSON with this structure:
         content: generatedContent.content,
         slug: slug,
         excerpt: generatedContent.excerpt,
-        meta_description: generatedContent.metaDescription,
         tags: generatedContent.tags,
         author: user.email,
         published_at: new Date().toISOString(),
