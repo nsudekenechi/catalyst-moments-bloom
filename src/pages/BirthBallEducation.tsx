@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Brain, Heart, TrendingUp, CheckCircle, AlertCircle } from 'lucide-react';
 import { educationalContent } from '@/data/birthBallGuideData';
+import pelvicFloorDiagram from '@/assets/birth-ball/pelvic-floor-diagram.png';
 
 const BirthBallEducation = () => {
   const { pelvicFloor } = educationalContent;
@@ -25,6 +26,17 @@ const BirthBallEducation = () => {
           <p className="text-xl text-muted-foreground">
             Learn how your body works and how the birth ball supports you
           </p>
+        </div>
+
+        {/* Pelvic Floor Diagram */}
+        <div className="mb-8">
+          <div className="aspect-video bg-background rounded-lg overflow-hidden border">
+            <img 
+              src={pelvicFloorDiagram} 
+              alt="Pelvic Floor Muscle Diagram"
+              className="w-full h-full object-contain"
+            />
+          </div>
         </div>
 
         {/* Main Sections */}

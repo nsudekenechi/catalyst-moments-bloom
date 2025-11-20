@@ -4,7 +4,7 @@ import PageLayout from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Clock, Heart, CheckCircle, Play } from 'lucide-react';
+import { ArrowLeft, Clock, Heart, CheckCircle } from 'lucide-react';
 import { birthBallExercises } from '@/data/birthBallGuideData';
 import { toast } from 'sonner';
 
@@ -97,12 +97,15 @@ const BirthBallExercise = () => {
           </div>
         </div>
 
-        <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg mb-8 flex items-center justify-center">
-          <div className="text-center">
-            <Play className="h-16 w-16 text-primary mx-auto mb-4" />
-            <p className="text-muted-foreground">Exercise demonstration</p>
+        {exercise.imageUrl && (
+          <div className="aspect-video bg-muted rounded-lg mb-8 overflow-hidden">
+            <img 
+              src={exercise.imageUrl} 
+              alt={exercise.name}
+              className="w-full h-full object-contain"
+            />
           </div>
-        </div>
+        )}
 
         <div className="flex gap-3 mb-8">
           <Button onClick={toggleComplete} className="flex-1">

@@ -7,6 +7,9 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Clock, Target, Check, Heart, AlertTriangle, CheckCircle } from 'lucide-react';
 import { trimesterPrograms, Exercise } from '@/data/birthBallGuideData';
 import { toast } from 'sonner';
+import trimester1Cover from '@/assets/birth-ball/trimester-1-cover.png';
+import trimester2Cover from '@/assets/birth-ball/trimester-2-cover.jpg';
+import trimester3Cover from '@/assets/birth-ball/trimester-3-cover.jpg';
 
 const BirthBallTrimester = () => {
   const { trimester } = useParams<{ trimester: string }>();
@@ -14,6 +17,12 @@ const BirthBallTrimester = () => {
   const trimesterNum = parseInt(trimester?.replace('trimester-', '') || '1');
   
   const program = trimesterPrograms.find(p => p.trimester === trimesterNum);
+  
+  const trimesterImages: Record<number, string> = {
+    1: trimester1Cover,
+    2: trimester2Cover,
+    3: trimester3Cover,
+  };
   
   const [completedExercises, setCompletedExercises] = useState<string[]>([]);
   const [savedExercises, setSavedExercises] = useState<string[]>([]);
@@ -84,7 +93,18 @@ const BirthBallTrimester = () => {
           </div>
           <h1 className="text-4xl font-bold mb-4">{program.title}</h1>
           <p className="text-xl text-muted-foreground mb-4">{program.subtitle}</p>
-          
+        </div>
+
+        {/* Hero Image */}
+        <div className="aspect-video bg-background rounded-lg mb-8 overflow-hidden border">
+          <img 
+            src={trimesterImages[program.trimester]} 
+            alt={`Trimester ${program.trimester}`}
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        <div className="mb-8">
           {/* Goal Card */}
           <Card className="border-primary/20 bg-primary/5">
             <CardContent className="pt-6">
@@ -207,7 +227,19 @@ const ExerciseCard = ({ exercise, isCompleted, isSaved, onToggleSave, onViewDeta
         <Heart className={`h-4 w-4 ${isSaved ? 'fill-current text-primary' : 'text-muted-foreground'}`} />
       </button>
 
-      <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center relative">
+      <div className="aspect-video bg-muted flex items-center justify-center relative overflow-hidden">
+        {exercise.imageUrl ? (
+          <img 
+            src={exercise.imageUrl} 
+            alt={exercise.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="text-center p-4">
+            <Clock className="h-12 w-12 text-primary mx-auto mb-2" />
+            <p className="text-sm font-medium text-muted-foreground">{exercise.duration}</p>
+          </div>
+        )}
         {isCompleted && (
           <div className="absolute top-2 left-2">
             <Badge variant="default" className="bg-green-600">
@@ -216,10 +248,6 @@ const ExerciseCard = ({ exercise, isCompleted, isSaved, onToggleSave, onViewDeta
             </Badge>
           </div>
         )}
-        <div className="text-center p-4">
-          <Clock className="h-12 w-12 text-primary mx-auto mb-2" />
-          <p className="text-sm font-medium text-muted-foreground">{exercise.duration}</p>
-        </div>
       </div>
 
       <CardHeader>
