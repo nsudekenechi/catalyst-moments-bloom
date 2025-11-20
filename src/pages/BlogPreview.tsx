@@ -163,15 +163,18 @@ export default function BlogPreview() {
         blog_id: blog.id,
         blog_title: blog.title,
         blog_content: blog.content,
-        blog_excerpt: blog.excerpt,
-        blog_author: blog.author,
-        blog_featured_image_url: blog.featured_image_url || '',
         blog_slug: blog.slug,
-        blog_tags: blog.tags || [],
-        blog_status: 'published'
+        blog_status: 'published',
+        blog_author: blog.author,
+        blog_excerpt: blog.excerpt,
+        blog_featured_image_url: blog.featured_image_url || '',
+        blog_tags: blog.tags || []
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('RPC error:', error);
+        throw error;
+      }
 
       toast.success('Blog post published successfully!');
       navigate('/admin');
