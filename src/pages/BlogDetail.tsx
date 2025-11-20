@@ -12,6 +12,7 @@ import { NewsletterWidget } from '@/components/blog/NewsletterWidget';
 import { BlogComments } from '@/components/blog/BlogComments';
 import { SocialShareButtons } from '@/components/blog/SocialShareButtons';
 import { InternalLinkingSuggestions } from '@/components/blog/InternalLinkingSuggestions';
+import { Breadcrumb } from '@/components/blog/Breadcrumb';
 import DOMPurify from 'dompurify';
 import SEO from '@/components/seo/SEO';
 
@@ -116,6 +117,9 @@ const BlogDetail = () => {
     );
   }
 
+  const primaryCategory = blog.tags?.[0] || 'General';
+  const truncatedTitle = blog.title.length > 50 ? blog.title.substring(0, 47) + '...' : blog.title;
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -158,6 +162,13 @@ const BlogDetail = () => {
         <meta itemProp="datePublished" content={blog.published_at} />
         <meta itemProp="dateModified" content={blog.published_at} />
         <div className="max-w-4xl mx-auto">
+          <Breadcrumb 
+            items={[
+              { label: 'Blog', href: '/blog' },
+              { label: primaryCategory, href: `/blog?category=${encodeURIComponent(primaryCategory)}` },
+              { label: truncatedTitle, href: `/blog/${slug}` }
+            ]}
+          />
           {blog.featured_image_url && (
             <figure className="w-full h-96 overflow-hidden rounded-lg mb-8">
               <img 
@@ -166,6 +177,9 @@ const BlogDetail = () => {
                 itemProp="image"
                 className="w-full h-full object-cover"
                 loading="eager"
+                width="1200"
+                height="630"
+                fetchPriority="high"
               />
             </figure>
           )}
@@ -218,9 +232,14 @@ const BlogDetail = () => {
                   prose-ol:my-4 prose-ol:list-decimal prose-ol:pl-6
                   prose-li:text-muted-foreground prose-li:mb-2
                   prose-strong:text-foreground prose-strong:font-semibold
-                  prose-img:rounded-lg prose-img:shadow-md"
+                  prose-img:rounded-lg prose-img:shadow-md prose-img:my-6
+                  [&_img]:loading-lazy [&_img]:w-full [&_img]:h-auto"
                 itemProp="articleBody"
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content) }}
+                dangerouslySetInnerHTML={{ 
+                  __html: DOMPurify.sanitize(blog.content, {
+                    ADD_ATTR: ['loading', 'decoding'],
+                  }).replace(/<img/g, '<img loading="lazy" decoding="async"')
+                }}
               />
             </CardContent>
           </Card>
