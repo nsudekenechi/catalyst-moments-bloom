@@ -157,9 +157,17 @@ export default function BlogPreview() {
   const handlePublish = async () => {
     if (!blog) return;
     
+    console.log('Publishing blog:', blog);
     setPublishing(true);
     try {
-      const { error } = await supabase.rpc('admin_update_blog', {
+      console.log('Calling admin_update_blog with:', {
+        blog_id: blog.id,
+        blog_title: blog.title,
+        blog_slug: blog.slug,
+        blog_status: 'published',
+      });
+
+      const { data, error } = await supabase.rpc('admin_update_blog', {
         blog_id: blog.id,
         blog_title: blog.title,
         blog_content: blog.content,
@@ -171,8 +179,10 @@ export default function BlogPreview() {
         blog_tags: blog.tags || []
       });
 
+      console.log('RPC response:', { data, error });
+
       if (error) {
-        console.error('RPC error:', error);
+        console.error('RPC error details:', error);
         throw error;
       }
 
@@ -180,7 +190,7 @@ export default function BlogPreview() {
       navigate('/admin');
     } catch (error) {
       console.error('Error publishing blog:', error);
-      toast.error('Failed to publish blog post');
+      toast.error(`Failed to publish: ${error.message || 'Unknown error'}`);
     } finally {
       setPublishing(false);
     }
