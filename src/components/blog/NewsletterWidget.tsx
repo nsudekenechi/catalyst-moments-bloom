@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Mail, Check } from 'lucide-react';
+import { Mail, Check, Bell } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -52,6 +52,12 @@ export const NewsletterWidget = () => {
               <p className="text-sm text-muted-foreground">Welcome to our community</p>
             </div>
           </div>
+          <div className="mt-4 p-3 rounded-lg bg-background/50 flex items-start gap-2">
+            <Bell className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-muted-foreground">
+              You'll receive email notifications when new blogs are published
+            </p>
+          </div>
         </CardContent>
       </Card>
     );
@@ -65,7 +71,7 @@ export const NewsletterWidget = () => {
           <CardTitle className="text-lg">Stay Updated</CardTitle>
         </div>
         <CardDescription>
-          Get our latest articles on pregnancy, wellness, and motherhood delivered to your inbox.
+          Get our latest articles and instant email notifications when new content is published.
         </CardDescription>
       </CardHeader>
       <CardContent>
