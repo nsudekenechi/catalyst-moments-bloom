@@ -222,6 +222,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "2 mins",
     category: "Strength + Mobility",
     trimester: 2,
+    imageUrl: "/birth-ball-images/breathing-arm-swings.png",
     instructions: [
       "Sit upright on the ball",
       "Inhale as you open arms wide to the sides",
@@ -328,6 +329,7 @@ export const birthBallExercises: Exercise[] = [
     duration: "1-2 mins",
     category: "Labor Prep",
     trimester: 3,
+    imageUrl: "/birth-ball-images/butterfly-stretch.png",
     instructions: [
       "Sit on the floor with the ball nearby for support",
       "Bring the soles of your feet together",
