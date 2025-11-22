@@ -92,32 +92,19 @@ const Dashboard = () => {
           </div>
         ) : (
           <>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+            {/* Header Section - More Compact */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
               <div>
                 <h1 className="text-3xl font-bold mb-1">Welcome back, {profile?.display_name || user?.email?.split('@')[0] || 'Ashley'}!</h1>
-                <p className="text-muted-foreground">
-                  {isTTC ? 'Your TTC journey tracker and support center' : 
-                   isPregnant ? 'Your pregnancy companion and wellness guide' :
-                   isPostpartum ? 'Your postpartum recovery and wellness hub' :
+                <p className="text-muted-foreground text-sm">
+                  {isTTC ? 'Your TTC journey tracker' : 
+                   isPregnant ? 'Your pregnancy companion' :
+                   isPostpartum ? 'Your postpartum wellness hub' :
                    isToddler ? 'Your busy mom wellness center' :
-                   'Here\'s your wellness overview for today'}
+                   'Your wellness overview'}
                 </p>
               </div>
-              <div className="mt-4 md:mt-0 flex items-center space-x-2">
-                {subscribed && (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="gap-2"
-                    onClick={handleManageSubscription}
-                    disabled={isManagingSubscription}
-                  >
-                    <CreditCard className="h-4 w-4" />
-                    {isManagingSubscription ? 'Loading...' : 'Manage Subscription'}
-                  </Button>
-                )}
-                <AffiliateButton variant="outline" size="sm" />
-                <span className="text-sm text-muted-foreground">Current stage:</span>
+              <div className="mt-4 md:mt-0 flex items-center gap-2">
                 <Dialog open={isJourneySelectorOpen} onOpenChange={setIsJourneySelectorOpen}>
                   <DialogTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-2">
@@ -135,263 +122,218 @@ const Dashboard = () => {
               </div>
             </div>
         
-        {subscribed && (
-          <Card className="mb-8 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-            <CardContent className="pt-6">
-              <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-4">
-                  <div className="bg-primary/10 p-3 rounded-lg">
-                    <Crown className="h-6 w-6 text-primary" />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-lg">Premium Membership</h3>
-                      <div className="flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
-                        <CheckCircle className="h-3 w-3" />
-                        <span className="text-xs font-medium">Active</span>
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Full access to all premium features
-                    </p>
-                    {subscriptionEnd && (
-                      <p className="text-xs text-muted-foreground mt-2">
-                        Renews on {new Date(subscriptionEnd).toLocaleDateString('en-US', { 
-                          month: 'long', 
-                          day: 'numeric', 
-                          year: 'numeric' 
-                        })}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleManageSubscription}
-                  disabled={isManagingSubscription}
-                  className="gap-2"
-                >
-                  <CreditCard className="h-4 w-4" />
-                  Manage
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {!subscribed && (
-          <Card className="mb-8 border-amber-200 dark:border-amber-900/30 bg-gradient-to-br from-amber-50 to-transparent dark:from-amber-950/20">
-            <CardContent className="pt-6">
-              <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-4">
-                  <div className="bg-amber-100 dark:bg-amber-900/30 p-3 rounded-lg">
-                    <AlertCircle className="h-6 w-6 text-amber-600 dark:text-amber-500" />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-lg">Free Plan</h3>
-                      <div className="flex items-center gap-1 px-2 py-0.5 bg-muted rounded-full">
-                        <span className="text-xs font-medium text-muted-foreground">Limited Access</span>
-                      </div>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Upgrade to unlock all premium features, workouts, and meal plans
-                    </p>
-                  </div>
-                </div>
-                <SubscriptionButton />
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Monthly Challenge, Profile Completion and Achievement Badges */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="space-y-6">
-            <MonthlyChallenge />
-            <ProfileCompletionWidget />
-          </div>
-          <AchievementBadges />
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <StatsCard
-            title="Weekly Workouts"
-            value={`${workoutSessions.length}/${weeklyWorkoutGoal}`}
-            description={`${weeklyWorkoutProgress.toFixed(0)}% of your goal completed`}
-            icon={<Activity />}
-            color="bg-primary/10"
-          />
-          <StatsCard
-            title="Wellness Score"
-            value={wellnessScore || "—"}
-            description={wellnessScore ? "Based on recent check-ins" : "Complete a mood check-in"}
-            icon={<Heart />}
-            color="bg-red-100"
-          />
-          <StatsCard
-            title="This Week"
-            value={workoutSessions.reduce((sum, s) => sum + s.duration_minutes, 0)}
-            description="Total workout minutes"
-            icon={<TrendingUp />}
-            color="bg-green-100"
-          />
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <Tabs defaultValue="today" className="mb-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">Your Plan</h2>
-                <TabsList>
-                  <TabsTrigger value="today">Today</TabsTrigger>
-                  <TabsTrigger value="week">This Week</TabsTrigger>
-                </TabsList>
-              </div>
-              
-              <TabsContent value="today">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-                  {isTTC ? <TTCTracker /> : 
-                   isPregnant ? <PregnancyTracker /> : (
-                    <Dialog open={isCheckInOpen} onOpenChange={setIsCheckInOpen}>
-                      <DialogTrigger asChild>
-                        <Card className="p-6 cursor-pointer hover:shadow-md transition-shadow border-dashed border-2">
-                          <div className="flex flex-col items-center justify-center space-y-4 h-full min-h-[120px]">
-                            <CheckCircle className="h-8 w-8 text-primary" />
-                            <div className="text-center">
-                              <h3 className="font-semibold">Weekly Check-In</h3>
-                              <p className="text-sm text-muted-foreground">Track your progress</p>
-                            </div>
-                          </div>
-                        </Card>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-                        <WeeklyCheckIn />
-                      </DialogContent>
-                    </Dialog>
-                  )}
-                  {isPregnant ? <PregnancyWellnessDigest /> : <MoodCheckIn />}
-                </div>
-                <div className="space-y-4">
-                  {isPregnant ? (
-                    <div className="grid grid-cols-1 gap-4">
-                      <PregnancyJournal />
-                      <PostpartumPrepGuide />
-                    </div>
-                  ) : (
-                    <PlanCard
-                      title={isTTC ? "Fertility Flow Yoga" : "10-Minute Core Workout"}
-                      category="Workout"
-                      description={isTTC ? "Gentle yoga to support reproductive health and reduce stress" : "Gentle core strengthening for postpartum recovery"}
-                      completed={false}
-                      icon={<Activity className="h-5 w-5" />}
-                      time={isTTC ? "20 mins" : "10 mins"}
-                      link={isTTC ? "/workouts/fertility-flow-yoga" : "/workouts/postpartum-core"}
-                      buttonText="Start Workout"
-                      progress={0}
-                      tags={isTTC ? ["TTC", "Fertility", "Gentle"] : ["Postpartum", "Core", "Beginner"]}
-                    />
-                  )}
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="week">
-                <div className="p-6 text-center border rounded-lg bg-muted/30">
-                  <h3 className="font-medium mb-2">Weekly Plan Coming Soon</h3>
-                  <p className="text-muted-foreground">
-                    We're building your personalized weekly plan based on your goals and progress.
-                  </p>
-                </div>
-              </TabsContent>
-            </Tabs>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <LineChart className="mr-2 h-5 w-5" />
-                  Your Progress
-                </CardTitle>
-                <CardDescription>
-                  Track your wellness journey over time
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[200px] flex items-center justify-center border rounded-md bg-muted/30">
-                  <p className="text-muted-foreground text-sm">
-                    Progress charts will appear as you log more activities
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          
-          <div className="space-y-6">
-            {isTTC ? <TTCNutritionSection /> : 
-             isPregnant ? <PregnancyCommunity /> : 
-             <NutritionSection />}
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <CalendarIcon className="mr-2 h-5 w-5" />
-                  Calendar
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  className="rounded-md border pointer-events-auto"
-                />
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" size="sm" className="w-full" asChild>
-                  <Link to="/wellness">View Schedule</Link>
-                </Button>
-              </CardFooter>
-            </Card>
-            
-            {isTTC ? (
-              <TTCCommunitySection />
-            ) : !isPregnant ? (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Users className="mr-2 h-5 w-5" />
-                    Community Updates
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="rounded-full bg-primary/20 h-10 w-10 flex items-center justify-center flex-shrink-0">
-                      <User className="h-5 w-5 text-primary" />
+            {/* Subscription Status - Simplified & Compact */}
+            <div className="mb-8">
+              {subscribed ? (
+                <div className="flex items-center justify-between p-4 rounded-lg border border-primary/20 bg-gradient-to-r from-primary/5 to-transparent">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-primary/10 p-2 rounded-lg">
+                      <Crown className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm"><span className="font-medium">Jessica</span> completed the 30-day Challenge</p>
-                      <p className="text-xs text-muted-foreground">2 hours ago</p>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold">Premium</h3>
+                        <div className="flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full">
+                          <CheckCircle className="h-3 w-3" />
+                          <span className="text-xs font-medium">Active</span>
+                        </div>
+                      </div>
+                      {subscriptionEnd && (
+                        <p className="text-xs text-muted-foreground">
+                          Renews {new Date(subscriptionEnd).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </p>
+                      )}
                     </div>
                   </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="rounded-full bg-primary/20 h-10 w-10 flex items-center justify-center flex-shrink-0">
-                      <User className="h-5 w-5 text-primary" />
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={handleManageSubscription}
+                      disabled={isManagingSubscription}
+                      className="gap-1"
+                    >
+                      <CreditCard className="h-4 w-4" />
+                      Manage
+                    </Button>
+                    <AffiliateButton variant="ghost" size="sm" />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between p-4 rounded-lg border border-amber-200 dark:border-amber-900/30 bg-gradient-to-r from-amber-50 to-transparent dark:from-amber-950/20">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-amber-100 dark:bg-amber-900/30 p-2 rounded-lg">
+                      <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-500" />
                     </div>
                     <div>
-                      <p className="text-sm"><span className="font-medium">Maria</span> shared a new postpartum recipe</p>
-                      <p className="text-xs text-muted-foreground">Yesterday</p>
+                      <h3 className="font-semibold">Free Plan</h3>
+                      <p className="text-xs text-muted-foreground">Limited access to features</p>
                     </div>
                   </div>
-                </CardContent>
-                <CardFooter>
-                  <Button variant="outline" size="sm" className="w-full" asChild>
-                    <Link to="/community">View Community</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ) : null}
-          </div>
+                  <div className="flex items-center gap-2">
+                    <SubscriptionButton />
+                    <AffiliateButton variant="ghost" size="sm" />
+                  </div>
+                </div>
+              )}
             </div>
+
+            {/* Quick Stats - More Compact */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <StatsCard
+                title="Weekly Workouts"
+                value={`${workoutSessions.length}/${weeklyWorkoutGoal}`}
+                description={`${weeklyWorkoutProgress.toFixed(0)}% complete`}
+                icon={<Activity className="h-5 w-5" />}
+                color="bg-primary/10"
+              />
+              <StatsCard
+                title="Wellness Score"
+                value={wellnessScore || "—"}
+                description={wellnessScore ? "Recent check-ins" : "Check-in to track"}
+                icon={<Heart className="h-5 w-5" />}
+                color="bg-primary/10"
+              />
+              <StatsCard
+                title="This Week"
+                value={workoutSessions.reduce((sum, s) => sum + s.duration_minutes, 0)}
+                description="Workout minutes"
+                icon={<TrendingUp className="h-5 w-5" />}
+                color="bg-primary/10"
+              />
+            </div>
+            
+            {/* Main Content Grid - Reorganized */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left Column - Primary Actions */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Today's Focus */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>Today's Focus</span>
+                      <Timer className="h-5 w-5 text-muted-foreground" />
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {isTTC ? <TTCTracker /> : 
+                       isPregnant ? <PregnancyTracker /> : (
+                        <Dialog open={isCheckInOpen} onOpenChange={setIsCheckInOpen}>
+                          <DialogTrigger asChild>
+                            <Card className="p-6 cursor-pointer hover:shadow-md transition-shadow border-dashed border-2">
+                              <div className="flex flex-col items-center justify-center space-y-3 h-full min-h-[100px]">
+                                <CheckCircle className="h-7 w-7 text-primary" />
+                                <div className="text-center">
+                                  <h3 className="font-semibold text-sm">Weekly Check-In</h3>
+                                  <p className="text-xs text-muted-foreground">Track progress</p>
+                                </div>
+                              </div>
+                            </Card>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                            <WeeklyCheckIn />
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                      {isPregnant ? <PregnancyWellnessDigest /> : <MoodCheckIn />}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Recommended Activity */}
+                {isPregnant ? (
+                  <div className="grid grid-cols-1 gap-4">
+                    <PregnancyJournal />
+                    <PostpartumPrepGuide />
+                  </div>
+                ) : (
+                  <PlanCard
+                    title={isTTC ? "Fertility Flow Yoga" : "10-Minute Core Workout"}
+                    category="Workout"
+                    description={isTTC ? "Gentle yoga to support reproductive health" : "Gentle core strengthening"}
+                    completed={false}
+                    icon={<Activity className="h-5 w-5" />}
+                    time={isTTC ? "20 mins" : "10 mins"}
+                    link={isTTC ? "/workouts/fertility-flow-yoga" : "/workouts/postpartum-core"}
+                    buttonText="Start Workout"
+                    progress={0}
+                    tags={isTTC ? ["TTC", "Fertility"] : ["Postpartum", "Core"]}
+                  />
+                )}
+
+                {/* Challenge & Achievements - Collapsible */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <MonthlyChallenge />
+                  <ProfileCompletionWidget />
+                </div>
+              </div>
+              
+              {/* Right Column - Quick Access */}
+              <div className="space-y-6">
+                {/* Calendar */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center text-base">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      Calendar
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      className="rounded-md border pointer-events-auto"
+                    />
+                  </CardContent>
+                </Card>
+
+                {/* Quick Links */}
+                {isTTC ? <TTCNutritionSection /> : 
+                 isPregnant ? <PregnancyCommunity /> : 
+                 <NutritionSection />}
+                
+                {/* Community Preview */}
+                {isTTC ? (
+                  <TTCCommunitySection />
+                ) : !isPregnant ? (
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center text-base">
+                        <Users className="mr-2 h-4 w-4" />
+                        Community
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex items-start space-x-3">
+                        <div className="rounded-full bg-primary/20 h-8 w-8 flex items-center justify-center flex-shrink-0">
+                          <User className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm truncate"><span className="font-medium">Jessica</span> completed the 30-day Challenge</p>
+                          <p className="text-xs text-muted-foreground">2 hours ago</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="pt-3">
+                      <Button variant="outline" size="sm" className="w-full" asChild>
+                        <Link to="/community">Join Community</Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ) : null}
+
+                {/* Badges - Compact */}
+                <AchievementBadges />
+              </div>
+            </div>
+
+            {isTTC && (
+              <div className="mt-6">
+                <TTCEducationalResources />
+              </div>
+            )}
           </>
         )}
       </div>
@@ -400,16 +342,18 @@ const Dashboard = () => {
 };
 
 const StatsCard = ({ title, value, description, icon, color }: StatsCardProps) => (
-  <Card>
-    <CardContent className="pt-6">
-      <div className="flex items-center justify-between mb-2">
-        <div className={`${color} p-2 rounded-md`}>
+  <Card className="border-muted/50">
+    <CardContent className="p-4">
+      <div className="flex items-center justify-between">
+        <div className="space-y-0.5 flex-1">
+          <p className="text-xs font-medium text-muted-foreground">{title}</p>
+          <p className="text-2xl font-bold">{value}</p>
+          <p className="text-xs text-muted-foreground">{description}</p>
+        </div>
+        <div className={`${color} rounded-lg p-2.5`}>
           {icon}
         </div>
-        <span className="text-3xl font-bold">{value}</span>
       </div>
-      <h3 className="font-medium mb-1">{title}</h3>
-      <p className="text-sm text-muted-foreground">{description}</p>
     </CardContent>
   </Card>
 );
