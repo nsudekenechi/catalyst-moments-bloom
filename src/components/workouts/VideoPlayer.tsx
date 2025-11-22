@@ -1,13 +1,26 @@
-import { useState } from 'react';
-import { Play } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Play, Gauge } from 'lucide-react';
 import { VideoPlayerProps } from './types';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
 
 export default function VideoPlayer({ videoUrl, title, thumbnail }: VideoPlayerProps) {
   console.log('VideoPlayer - URL:', videoUrl, 'Title:', title, 'Thumbnail:', thumbnail);
   
   const [showIframe, setShowIframe] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const isMp4 = /\.mp4($|[?])/i.test(videoUrl || '');
   const isYouTube = videoUrl && /youtube|youtu\.be/i.test(videoUrl);
+
+  const speedOptions = [0.5, 0.75, 1, 1.25, 1.5, 2];
+
+  const handleSpeedChange = (speed: number) => {
+    setPlaybackSpeed(speed);
+    if (videoRef.current) {
+      videoRef.current.playbackRate = speed;
+    }
+  };
 
   if (!videoUrl) {
     return (
@@ -22,16 +35,50 @@ export default function VideoPlayer({ videoUrl, title, thumbnail }: VideoPlayerP
 
   return (
     <div className="w-full mb-6">
-      <h4 className="font-medium mb-2">Exercise Video:</h4>
+      <div className="flex items-center justify-between mb-2">
+        <h4 className="font-medium">Exercise Video:</h4>
+        {isMp4 && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Gauge className="h-4 w-4" />
+                <span>{playbackSpeed}x</span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-40 p-2">
+              <div className="grid gap-1">
+                <p className="text-sm font-medium mb-1">Playback Speed</p>
+                {speedOptions.map((speed) => (
+                  <Button
+                    key={speed}
+                    variant={playbackSpeed === speed ? "secondary" : "ghost"}
+                    size="sm"
+                    className="justify-start"
+                    onClick={() => handleSpeedChange(speed)}
+                  >
+                    {speed}x
+                  </Button>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
+        )}
+      </div>
       <div className="relative w-full overflow-hidden rounded-lg bg-black" style={{ paddingBottom: '56.25%' }}>
         {isMp4 ? (
           <video
+            ref={videoRef}
             src={videoUrl}
             controls
             playsInline
             poster={thumbnail}
             className="absolute top-0 left-0 w-full h-full object-contain"
             title={title}
+            onLoadedMetadata={() => {
+              if (videoRef.current) {
+                videoRef.current.playbackRate = playbackSpeed;
+              }
+            }}
           />
         ) : isYouTube && !showIframe && thumbnail ? (
           // YouTube thumbnail with play overlay
