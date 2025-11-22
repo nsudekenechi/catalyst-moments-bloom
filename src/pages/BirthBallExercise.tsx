@@ -8,14 +8,18 @@ import { ArrowLeft, Clock, Heart, CheckCircle } from 'lucide-react';
 import { birthBallExercises } from '@/data/birthBallGuideData';
 import { toast } from 'sonner';
 import VideoPlayer from '@/components/workouts/VideoPlayer';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 
 const BirthBallExercise = () => {
   const { exerciseId } = useParams<{ exerciseId: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const exercise = birthBallExercises.find(ex => ex.id === exerciseId);
   
   const [isCompleted, setIsCompleted] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [startTime, setStartTime] = useState<Date | null>(null);
 
   useEffect(() => {
     if (!exercise) return;
@@ -25,9 +29,11 @@ const BirthBallExercise = () => {
       setIsCompleted(data.completed?.includes(exercise.id) || false);
       setIsSaved(data.saved?.includes(exercise.id) || false);
     }
+    // Start timer when page loads
+    setStartTime(new Date());
   }, [exercise]);
 
-  const toggleComplete = () => {
+  const toggleComplete = async () => {
     if (!exercise) return;
     const saved = localStorage.getItem('birthBallProgress');
     const data = saved ? JSON.parse(saved) : { completed: [], saved: [] };
@@ -42,6 +48,26 @@ const BirthBallExercise = () => {
     }));
     
     setIsCompleted(!isCompleted);
+
+    // Log to database if completing exercise and user is logged in
+    if (!isCompleted && user && startTime) {
+      const durationSeconds = Math.round((new Date().getTime() - startTime.getTime()) / 1000);
+      const sessionId = crypto.randomUUID();
+
+      try {
+        await supabase.from('birth_ball_exercise_logs').insert({
+          user_id: user.id,
+          exercise_id: exercise.id,
+          exercise_name: exercise.name,
+          trimester: exercise.trimester,
+          duration_seconds: durationSeconds,
+          session_id: sessionId,
+        });
+      } catch (error) {
+        console.error('Error logging exercise:', error);
+      }
+    }
+    
     toast.success(isCompleted ? 'Marked as incomplete' : 'Exercise completed! 🎉');
   };
 

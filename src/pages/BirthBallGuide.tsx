@@ -11,6 +11,7 @@ import { trimesterPrograms, educationalContent } from '@/data/birthBallGuideData
 import HeroVideoSection from '@/components/birth-ball/HeroVideoSection';
 import WeeklyChallengeTracker from '@/components/birth-ball/WeeklyChallengeTracker';
 import PrintableWorkoutCards from '@/components/birth-ball/PrintableWorkoutCards';
+import { BirthBallAnalytics } from '@/components/birth-ball/analytics/BirthBallAnalytics';
 
 const BirthBallGuide = () => {
   const [completedExercises, setCompletedExercises] = useState<string[]>([]);
@@ -141,6 +142,11 @@ const BirthBallGuide = () => {
 
         {/* Weekly Challenge Tracker */}
         <WeeklyChallengeTracker />
+
+        {/* Progress Analytics */}
+        <div className="my-8">
+          <BirthBallAnalytics />
+        </div>
 
         {/* Introduction Card */}
         <Card className="my-8">
