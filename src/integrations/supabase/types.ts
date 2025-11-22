@@ -107,6 +107,42 @@ export type Database = {
         }
         Relationships: []
       }
+      birth_ball_exercise_logs: {
+        Row: {
+          completed_at: string
+          created_at: string
+          duration_seconds: number | null
+          exercise_id: string
+          exercise_name: string
+          id: string
+          session_id: string | null
+          trimester: number | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          duration_seconds?: number | null
+          exercise_id: string
+          exercise_name: string
+          id?: string
+          session_id?: string | null
+          trimester?: number | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          duration_seconds?: number | null
+          exercise_id?: string
+          exercise_name?: string
+          id?: string
+          session_id?: string | null
+          trimester?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       birth_ball_reminders: {
         Row: {
           created_at: string | null
