@@ -12,12 +12,7 @@ import HeroVideoSection from '@/components/birth-ball/HeroVideoSection';
 import WeeklyChallengeTracker from '@/components/birth-ball/WeeklyChallengeTracker';
 import PrintableWorkoutCards from '@/components/birth-ball/PrintableWorkoutCards';
 import { BirthBallAnalytics } from '@/components/birth-ball/analytics/BirthBallAnalytics';
-import { PersonalizedSchedule } from '@/components/birth-ball/PersonalizedSchedule';
-import { WeeklyGoals } from '@/components/birth-ball/WeeklyGoals';
-import { NotificationSettings } from '@/components/birth-ball/NotificationSettings';
-import { AchievementBadges } from '@/components/birth-ball/AchievementBadges';
-import { CustomReminders } from '@/components/birth-ball/CustomReminders';
-import { ReminderHistory } from '@/components/birth-ball/ReminderHistory';
+import { ToolsDrawer } from '@/components/birth-ball/ToolsDrawer';
 
 const BirthBallGuide = () => {
   const [completedExercises, setCompletedExercises] = useState<string[]>([]);
@@ -144,24 +139,6 @@ const BirthBallGuide = () => {
               </div>
             )}
           </div>
-        </div>
-
-        {/* Personalized Schedule and Weekly Goals */}
-        <div className="grid gap-6 lg:grid-cols-2 mb-8">
-          <PersonalizedSchedule />
-          <WeeklyGoals />
-        </div>
-
-        {/* Achievements and Notifications */}
-        <div className="grid gap-6 lg:grid-cols-2 mb-8">
-          <AchievementBadges />
-          <NotificationSettings />
-        </div>
-
-        {/* Custom Reminders and History */}
-        <div className="grid gap-6 lg:grid-cols-2 mb-8">
-          <CustomReminders />
-          <ReminderHistory />
         </div>
 
         {/* Weekly Challenge Tracker */}
@@ -310,6 +287,9 @@ const BirthBallGuide = () => {
         {/* Printable Workout Cards */}
         <PrintableWorkoutCards />
       </div>
+
+      {/* Floating Tools Menu */}
+      <ToolsDrawer />
     </PageLayout>
   );
 };
