@@ -4,11 +4,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, RefreshCw, Target, Sparkles, ChevronRight } from 'lucide-react';
+import { Calendar, RefreshCw, Target, Sparkles, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { birthBallExercises } from '@/data/birthBallGuideData';
 import { generatePersonalizedSchedule, getMotivationalMessage, ScheduleRecommendation } from '@/utils/birthBallRecommendations';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 export const PersonalizedSchedule = () => {
   const { user, profile } = useAuth();
@@ -58,6 +59,41 @@ export const PersonalizedSchedule = () => {
     const exercise = birthBallExercises.find(ex => ex.id === exerciseId);
     if (exercise) {
       navigate(`/birth-ball/exercise/${exercise.trimester}/${exerciseId}`);
+    }
+  };
+
+  const handleMarkComplete = async (exerciseId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!user) {
+      toast.error('Please log in to track your progress');
+      return;
+    }
+
+    const exercise = birthBallExercises.find(ex => ex.id === exerciseId);
+    if (!exercise) return;
+
+    try {
+      const sessionId = crypto.randomUUID();
+      const durationMinutes = parseInt(exercise.duration) || 10;
+      const { error } = await supabase
+        .from('birth_ball_exercise_logs')
+        .insert({
+          user_id: user.id,
+          exercise_id: exerciseId,
+          exercise_name: exercise.name,
+          trimester: exercise.trimester,
+          duration_seconds: durationMinutes * 60,
+          session_id: sessionId,
+        });
+
+      if (error) throw error;
+
+      toast.success(`${exercise.name} marked as complete!`);
+      loadRecommendations();
+    } catch (error) {
+      console.error('Error logging exercise:', error);
+      toast.error('Failed to log exercise');
     }
   };
 
@@ -156,7 +192,7 @@ export const PersonalizedSchedule = () => {
                           {rec.reason}
                         </p>
 
-                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
                           <span>{rec.exercise.duration} min</span>
                           <span>•</span>
                           <span className="capitalize">{rec.exercise.category}</span>
@@ -167,9 +203,19 @@ export const PersonalizedSchedule = () => {
                             </>
                           )}
                         </div>
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full gap-2"
+                          onClick={(e) => handleMarkComplete(rec.exercise.id, e)}
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                          Mark as Complete
+                        </Button>
                       </div>
 
-                      <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                      <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-1" />
                     </div>
                   </CardContent>
                 </Card>
