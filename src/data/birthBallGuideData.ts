@@ -1,3 +1,18 @@
+export interface ExerciseModification {
+  title: string;
+  description: string;
+  whenToUse: string;
+  instructions: string[];
+}
+
+export interface BreathingPattern {
+  name: string;
+  description: string;
+  pattern: string[];
+  timing: string;
+  benefits: string[];
+}
+
 export interface Exercise {
   id: string;
   name: string;
@@ -8,6 +23,8 @@ export interface Exercise {
   videoUrl?: string;
   category: string;
   trimester: number;
+  modifications?: ExerciseModification[];
+  breathingPattern?: BreathingPattern;
 }
 
 export interface TrimesterProgram {

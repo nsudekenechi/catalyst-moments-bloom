@@ -33,6 +33,13 @@ const BirthBallGuide = () => {
 
   const resources = [
     {
+      title: 'Breathing Practice Tool',
+      description: 'Interactive breathing techniques for pregnancy & labor',
+      icon: Heart,
+      link: '/birth-ball-guide/breathing-practice',
+      color: 'text-cyan-600'
+    },
+    {
       title: 'Buying Guide',
       description: 'Choose the right birth ball for your height',
       icon: ShoppingCart,
