@@ -13,6 +13,7 @@ import WeeklyChallengeTracker from '@/components/birth-ball/WeeklyChallengeTrack
 import PrintableWorkoutCards from '@/components/birth-ball/PrintableWorkoutCards';
 import { BirthBallAnalytics } from '@/components/birth-ball/analytics/BirthBallAnalytics';
 import { ToolsDrawer } from '@/components/birth-ball/ToolsDrawer';
+import { BirthBallCommunitySection } from '@/components/birth-ball/BirthBallCommunitySection';
 
 const BirthBallGuide = () => {
   const [completedExercises, setCompletedExercises] = useState<string[]>([]);
@@ -286,6 +287,11 @@ const BirthBallGuide = () => {
 
         {/* Printable Workout Cards */}
         <PrintableWorkoutCards />
+
+        {/* Birth Ball Community Section */}
+        <section className="mb-12">
+          <BirthBallCommunitySection />
+        </section>
       </div>
 
       {/* Floating Tools Menu */}

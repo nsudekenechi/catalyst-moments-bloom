@@ -90,6 +90,15 @@ export const groups: CommunityGroup[] = [
     coverImage: prenatalFitnessCover,
     badge: 'PF'
   },
+  {
+    slug: 'birth-ball',
+    name: 'Birth Ball Community',
+    description: 'Share your birth ball journey, get exercise tips, and connect with other moms practicing prenatal birth ball exercises. Daily challenges and weekly progress celebrations.',
+    journey: 'pregnant',
+    memberCount: 856,
+    coverImage: prenatalFitnessCover,
+    badge: 'BB'
+  },
 
   // Postpartum groups
   {
