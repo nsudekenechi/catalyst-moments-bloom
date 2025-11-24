@@ -62,6 +62,7 @@ import BirthBallEarlyLabor from "./pages/BirthBallEarlyLabor";
 import SavedBirthBallExercises from "./pages/SavedBirthBallExercises";
 import AssessmentResults from "./pages/AssessmentResults";
 import BirthBallCommunityFeed from "./pages/BirthBallCommunityFeed";
+import BirthBallBreathingPractice from "./pages/BirthBallBreathingPractice";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 // Create a client
@@ -273,6 +274,13 @@ function AppContent() {
           <PrivateRoute>
             <SubscriptionGuard>
               <BirthBallEarlyLabor />
+            </SubscriptionGuard>
+          </PrivateRoute>
+        } />
+        <Route path="/birth-ball-guide/breathing-practice" element={
+          <PrivateRoute>
+            <SubscriptionGuard>
+              <BirthBallBreathingPractice />
             </SubscriptionGuard>
           </PrivateRoute>
         } />
