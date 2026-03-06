@@ -1,50 +1,86 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Favicon and Apple Touch Icons -->
-    <link rel="icon" href="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png" type="image/png">
-    <link rel="apple-touch-icon" href="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png">
-    
-    <!-- Primary Meta Tags -->
-    <title>Catalyst Mom - Wellness for Every Stage of Motherhood</title>
-    <meta name="title" content="Catalyst Mom - Wellness for Every Stage of Motherhood" />
-    <meta name="description" content="Catalyst Mom - Empowering mothers through fitness, nutrition, self-care, and community. Join thousands of moms on their wellness journey." />
-    <meta name="author" content="Catalyst Mom" />
-    <meta name="keywords" content="mom wellness, maternal fitness, pregnancy nutrition, postpartum support, motherhood community" />
-    <link rel="canonical" href="https://catalystmom.lovable.app" />
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://catalystmom.lovable.app" />
-    <meta property="og:title" content="Catalyst Mom - Wellness for Every Stage of Motherhood" />
-    <meta property="og:description" content="Empowering mothers through fitness, nutrition, self-care, and community. Join thousands of moms on their wellness journey." />
-    <meta property="og:image" content="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:site_name" content="Catalyst Mom" />
-    
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://catalystmom.lovable.app" />
-    <meta name="twitter:title" content="Catalyst Mom - Wellness for Every Stage of Motherhood" />
-    <meta name="twitter:description" content="Empowering mothers through fitness, nutrition, self-care, and community. Join thousands of moms on their wellness journey." />
-    <meta name="twitter:image" content="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png" />
-    <meta name="twitter:site" content="@catalystmom" />
-    
-    <!-- Fonts - Optimized to avoid render blocking -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Preconnect to image CDN for faster LCP -->
-    <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
-    
-    <!-- Structured Data for Google -->
-    <script type="application/ld+json">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Favicon and Apple Touch Icons -->
+  <link rel="icon"
+    href="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png"
+    type="image/png">
+  <link rel="apple-touch-icon"
+    href="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png">
+
+  <!-- Apple Splash Screen -->
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/ios/iphone-splash-640x1136.png"
+    media="(device-width: 640px) and (device-height: 1136px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/ios/iphone-splash-750x1334.png"
+    media="(device-width: 750px) and (device-height: 1334px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/ios/iphone-splash-828x1792.png"
+    media="(device-width: 828px) and (device-height: 1792px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/ios/iphone-splash-1024x1366.png"
+    media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/ios/iphone-splash-1125x2436.png"
+    media="(device-width: 1125px) and (device-height: 2436px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/ios/iphone-splash-1242x2208.png"
+    media="(device-width: 1242px) and (device-height: 2208px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/ios/iphone-splash-1242x2688.png"
+    media="(device-width: 1242px) and (device-height: 2688px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/ios/iphone-splash-1536x2048.png"
+    media="(device-width: 1536px) and (device-height: 2048px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/ios/iphone-splash-2208x1242.png"
+    media="(device-width: 2208px) and (device-height: 1242px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/ios/iphone-splash-2688x1242.png"
+    media="(device-width: 2688px) and (device-height: 1242px) and (-webkit-device-pixel-ratio: 3)" />
+  <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/splash/ios/iphone-splash-2732x2732.png"
+    media="(device-width: 2732px) and (device-height: 2732px) and (-webkit-device-pixel-ratio: 3)" />
+
+  <!-- Primary Meta Tags -->
+  <title>Catalyst Mom - Wellness for Every Stage of Motherhood</title>
+  <meta name="title" content="Catalyst Mom - Wellness for Every Stage of Motherhood" />
+  <meta name="description"
+    content="Catalyst Mom - Empowering mothers through fitness, nutrition, self-care, and community. Join thousands of moms on their wellness journey." />
+  <meta name="author" content="Catalyst Mom" />
+  <meta name="keywords"
+    content="mom wellness, maternal fitness, pregnancy nutrition, postpartum support, motherhood community" />
+  <link rel="canonical" href="https://catalystmom.lovable.app" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://catalystmom.lovable.app" />
+  <meta property="og:title" content="Catalyst Mom - Wellness for Every Stage of Motherhood" />
+  <meta property="og:description"
+    content="Empowering mothers through fitness, nutrition, self-care, and community. Join thousands of moms on their wellness journey." />
+  <meta property="og:image"
+    content="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Catalyst Mom" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://catalystmom.lovable.app" />
+  <meta name="twitter:title" content="Catalyst Mom - Wellness for Every Stage of Motherhood" />
+  <meta name="twitter:description"
+    content="Empowering mothers through fitness, nutrition, self-care, and community. Join thousands of moms on their wellness journey." />
+  <meta name="twitter:image"
+    content="https://moxxceccaftkeuaowctw.supabase.co/storage/v1/object/public/catalystcourses/Logo/LOGO%20(3)%20(1).png" />
+  <meta name="twitter:site" content="@catalystmom" />
+
+  <!-- Fonts - Optimized to avoid render blocking -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Preconnect to image CDN for faster LCP -->
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"
+    media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </noscript>
+
+  <!-- Structured Data for Google -->
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
@@ -57,31 +93,34 @@
       ]
     }
     </script>
-  </head>
- 
-  <body>
-    <div id="root"></div>
-    <!-- CAPTCHA providers (loaded lazily). If you enabled only one in Supabase, the widget will pick it. -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    <script src="https://hcaptcha.com/1/api.js" async defer></script>
-    
-    <!-- Stripe.js -->
-    <script src="https://js.stripe.com/v3/"></script>
-    
-    <!-- Omnisend Email Marketing -->
-    <script type="text/javascript">
-        window.omnisend = window.omnisend || [];
-        omnisend.push(["brandID", "6900970c13ca46de858ceadb"]);
-        omnisend.push(["track", "$pageViewed"]);
-        !function(){var e=document.createElement("script");
-        e.type="text/javascript",e.async=!0,
-        e.src="https://omnisnippet1.com/inshop/launcher-v2.js";
-        var t=document.getElementsByTagName("script")[0];
-        t.parentNode.insertBefore(e,t)}();
-    </script>
-    
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+</head>
+
+<body>
+  <div id="root"></div>
+  <!-- CAPTCHA providers (loaded lazily). If you enabled only one in Supabase, the widget will pick it. -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script src="https://hcaptcha.com/1/api.js" async defer></script>
+
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
+
+  <!-- Omnisend Email Marketing -->
+  <script type="text/javascript">
+    window.omnisend = window.omnisend || [];
+    omnisend.push(["brandID", "6900970c13ca46de858ceadb"]);
+    omnisend.push(["track", "$pageViewed"]);
+    !function () {
+      var e = document.createElement("script");
+      e.type = "text/javascript", e.async = !0,
+        e.src = "https://omnisnippet1.com/inshop/launcher-v2.js";
+      var t = document.getElementsByTagName("script")[0];
+      t.parentNode.insertBefore(e, t)
+    }();
+  </script>
+
+  <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
