@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PageLayout from "@/components/layout/PageLayout";
 import VideoModal from "@/components/ui/video-modal";
 import HeroSection from "@/components/home/HeroSection";
@@ -9,11 +10,41 @@ import CTASection from "@/components/home/CTASection";
 import FoodCalorieCheckerCard from "@/components/home/FoodCalorieCheckerCard";
 import SEO from "@/components/seo/SEO";
 
+const isStandaloneMode = () =>
+  window.matchMedia("(display-mode: standalone)").matches ||
+  (navigator as any).standalone === true;
+
 const Index = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useAuth();
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
   const [isWelcomeVideo, setIsWelcomeVideo] = useState(false);
+
+  const isPWA = isStandaloneMode();
+
+  useEffect(() => {
+    if (!isPWA || isLoading) return;
+    navigate(isAuthenticated ? "/dashboard" : "/login", { replace: true });
+  }, [isAuthenticated, isLoading, navigate, isPWA]);
+
+  if (isPWA && isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-primary/90 to-primary gap-6">
+        <div className="animate-pulse flex flex-col items-center gap-4">
+          <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center shadow-lg">
+            <span className="text-4xl font-bold text-white">C</span>
+          </div>
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            Catalyst Mom
+          </h1>
+        </div>
+        <div className="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+        <p className="text-white/70 text-sm">Loading your wellness journey…</p>
+      </div>
+    );
+  }
 
   const openVideoModal = (url: string, title: string) => {
     setVideoUrl(url);
